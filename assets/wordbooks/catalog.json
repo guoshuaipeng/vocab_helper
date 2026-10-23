@@ -103,8 +103,18 @@
       "file": "hj-jh-7.json",
       "version": "沪教版",
       "grade": "七年级",
-      "title": "沪教牛津 · 七年级（精选）",
+      "title": "沪教牛津 · 七年级（精选·非七上全书）",
       "wordCount": 73
+    },
+    {
+      "id": "hj-ox-7a-2024",
+      "file": "hj-ox-7a-2024.json",
+      "version": "沪教牛津2024",
+      "grade": "七年级上",
+      "title": "沪教牛津 · 七年级上（2024）",
+      "wordCount": 330,
+      "sourceLabel": "2024六三",
+      "source": "对照公开教辅整理（英语朗读宝等）；个人学习用，最终以纸质课本为准"
     },
     {
       "id": "hj-jh-8",
