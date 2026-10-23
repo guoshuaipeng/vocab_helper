@@ -238,3 +238,8 @@
 - UI 只做可解释短提示（下次·文案）+ 我的弱说明；不做 EF/曲线图。
 - 旧 stage3 下次认识进 30 天档；单测覆盖升档/打回/封顶/兼容。
 - 截图：学习提示窄宽深浅 + 我的两态。
+## Round 39（2026-10-23）
+- 计划：错词本可浏览清单（我的入口 → sheet 词+义 → 复习/测）
+- 实际：WrongBookList 组装+截断；MeScreen 入口+sheet；CTA 置标题下以免 drag-handle 滚出首屏；单测+六图自验
+- 卡住：Material 底栏 sheet 在测试里坐标常低于视口；底部 sticky CTA 易不可见
+- 预防：双 CTA 的 sheet 优先「标题下即 CTA」；截图前 ensureVisible
