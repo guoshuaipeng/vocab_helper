@@ -729,7 +729,7 @@ class _MeScreenState extends State<MeScreen> {
                                 key: const ValueKey('me_quiz_wrong_pool'),
                                 onPressed: hasWrong ? widget.onQuizWrong : null,
                                 icon: const Icon(Icons.fact_check_outlined),
-                                label: const Text('去测错词'),
+                                label: const Text('测这些'),
                               ),
                             ],
                           ),
@@ -788,7 +788,7 @@ class _MeScreenState extends State<MeScreen> {
                                     ),
                                     const SizedBox(height: 2),
                                     Text(
-                                      hasBook ? '查看错词' : '先选一本词书',
+                                      hasBook ? '查看 · 测这些' : '先选一本词书',
                                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                             color: scheme.onSurfaceVariant,
                                           ),
@@ -1216,6 +1216,10 @@ class _WrongBookSheetState extends State<_WrongBookSheet> {
             const SizedBox(height: 16),
             FilledButton(
               key: const ValueKey('wrong_book_learn_new'),
+              style: FilledButton.styleFrom(
+                backgroundColor: const Color(0xFF0D9488),
+                foregroundColor: Colors.white,
+              ),
               onPressed: widget.onLearnNew,
               child: const Padding(
                 padding: EdgeInsets.symmetric(vertical: 12),
@@ -1282,22 +1286,34 @@ class _WrongBookSheetState extends State<_WrongBookSheet> {
           children: [
             Text('错词本', style: Theme.of(context).textTheme.titleLarge),
             if (!_loading && _words.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              Text(
+                '共 ${_words.length} 个错词 · 一键测掉',
+                key: const ValueKey('wrong_book_subtitle'),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: scheme.onSurfaceVariant,
+                    ),
+              ),
               const SizedBox(height: 12),
               FilledButton(
+                key: const ValueKey('wrong_book_quiz'),
+                style: FilledButton.styleFrom(
+                  backgroundColor: const Color(0xFF0D9488),
+                  foregroundColor: Colors.white,
+                ),
+                onPressed: widget.onQuiz,
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 14),
+                  child: Text('测这些'),
+                ),
+              ),
+              const SizedBox(height: 8),
+              OutlinedButton(
                 key: const ValueKey('wrong_book_review'),
                 onPressed: widget.onReview,
                 child: const Padding(
                   padding: EdgeInsets.symmetric(vertical: 14),
                   child: Text('复习这些错词'),
-                ),
-              ),
-              const SizedBox(height: 8),
-              OutlinedButton(
-                key: const ValueKey('wrong_book_quiz'),
-                onPressed: widget.onQuiz,
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 14),
-                  child: Text('去测错词'),
                 ),
               ),
               if (hasUnit) ...[

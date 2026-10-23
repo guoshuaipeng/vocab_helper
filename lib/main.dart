@@ -176,6 +176,10 @@ class _HomeShellState extends State<HomeShell> {
           final unit = id == null ? null : widget.store.unitFilterForBook(id);
           _openQuiz((unit != null && unit.isNotEmpty) ? QuizMode.unit : QuizMode.book);
         },
+        onQuizWrong: () {
+          _learnNew();
+          _openQuiz(QuizMode.wrong);
+        },
       ),
       BooksScreen(
         store: widget.store,

@@ -21,6 +21,7 @@ class LearnScreen extends StatefulWidget {
     this.reviewWrongUnitScoped = false,
     this.speaker,
     this.onStartQuiz,
+    this.onQuizWrong,
     this.onLearnNew,
     this.onReviewWrongAll,
     this.onChangeBook,
@@ -35,6 +36,8 @@ class LearnScreen extends StatefulWidget {
   final bool reviewWrongUnitScoped;
   final WordSpeaker? speaker;
   final VoidCallback? onStartQuiz;
+  /// R46: from wrong-review done → QuizMode.wrong.
+  final VoidCallback? onQuizWrong;
   /// Exit wrong-review and stay on 认读 (今日任务 · 学新词).
   final VoidCallback? onLearnNew;
   /// Enter whole-book wrong flashcards (今日任务 · 复习错词).
@@ -486,7 +489,17 @@ class _LearnScreenState extends State<LearnScreen> {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
-              if (isEmptyDay && widget.onStartQuiz != null)
+              if (widget.reviewWrongOnly && widget.onQuizWrong != null)
+                FilledButton(
+                  key: const ValueKey('learn_wrong_done_quiz'),
+                  style: FilledButton.styleFrom(
+                    backgroundColor: const Color(0xFF0D9488),
+                    foregroundColor: Colors.white,
+                  ),
+                  onPressed: widget.onQuizWrong,
+                  child: const Text('测这些错词'),
+                )
+              else if (isEmptyDay && widget.onStartQuiz != null)
                 FilledButton(onPressed: widget.onStartQuiz, child: const Text('去自测一下'))
               else
                 FilledButton(onPressed: _boot, child: const Text('再来一轮')),

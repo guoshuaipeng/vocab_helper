@@ -555,7 +555,7 @@ class _QuizScreenState extends State<QuizScreen> {
     if (_retryRound) return '错题再练';
     switch (widget.mode) {
       case QuizMode.wrong:
-        return widget.wrongUnitScoped ? '自测错词·当前单元' : '自测错词';
+        return widget.wrongUnitScoped ? '测这些错词·当前单元' : '测这些错词';
       case QuizMode.unit:
         final id = widget.store.selectedBookId();
         final unit = id == null ? null : widget.store.unitFilterForBook(id);
@@ -818,28 +818,46 @@ class _QuizScreenState extends State<QuizScreen> {
           ],
           if (widget.seedQuestions == null && !_retryRound) ...[
             const SizedBox(height: 8),
-            Wrap(
-              key: const ValueKey('quiz_pool_chips'),
-              spacing: 8,
-              runSpacing: 4,
-              children: [
-                FilterChip(
-                  key: const ValueKey('quiz_pool_all'),
-                  label: const Text('全部词'),
-                  selected: !_poolWrongOnly,
-                  onSelected: (_) => _setPoolWrongOnly(false),
+            if (widget.mode == QuizMode.wrong)
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Chip(
+                  key: const ValueKey('quiz_pool_locked'),
+                  avatar: const Icon(Icons.lock_outline, size: 16, color: _quizTeal),
+                  label: Text(
+                    _wrongInScope > 0 ? '测这些错词 · $_wrongInScope' : '测这些错词',
+                    style: const TextStyle(
+                      color: _quizTeal,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  backgroundColor: _quizTeal.withValues(alpha: 0.12),
+                  side: BorderSide(color: _quizTeal.withValues(alpha: 0.45)),
                 ),
-                FilterChip(
-                  key: const ValueKey('quiz_pool_wrong'),
-                  label: Text(_wrongInScope > 0 ? '只测错词 · $_wrongInScope' : '只测错词'),
-                  selected: _poolWrongOnly,
-                  onSelected: (v) {
-                    if (!v && _poolWrongOnly) return;
-                    _setPoolWrongOnly(true);
-                  },
-                ),
-              ],
-            ),
+              )
+            else
+              Wrap(
+                key: const ValueKey('quiz_pool_chips'),
+                spacing: 8,
+                runSpacing: 4,
+                children: [
+                  FilterChip(
+                    key: const ValueKey('quiz_pool_all'),
+                    label: const Text('全部词'),
+                    selected: !_poolWrongOnly,
+                    onSelected: (_) => _setPoolWrongOnly(false),
+                  ),
+                  FilterChip(
+                    key: const ValueKey('quiz_pool_wrong'),
+                    label: Text(_wrongInScope > 0 ? '只测错词 · $_wrongInScope' : '只测错词'),
+                    selected: _poolWrongOnly,
+                    onSelected: (v) {
+                      if (!v && _poolWrongOnly) return;
+                      _setPoolWrongOnly(true);
+                    },
+                  ),
+                ],
+              ),
           ],
           const SizedBox(height: 12),
           if (_usesSpellInput)

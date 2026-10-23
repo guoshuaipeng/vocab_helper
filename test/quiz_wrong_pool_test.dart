@@ -82,15 +82,15 @@ void main() {
         ),
       ),
     );
-    await pumpUntilChips(tester);
-    expect(
-      tester.widget<FilterChip>(find.byKey(const ValueKey('quiz_pool_wrong'))).selected,
-      isTrue,
-    );
-    expect(
-      tester.widget<FilterChip>(find.byKey(const ValueKey('quiz_pool_all'))).selected,
-      isFalse,
-    );
+    // R46: wrong mode locks pool (no switch chips).
+    for (var i = 0; i < 80; i++) {
+      await tester.pump(const Duration(milliseconds: 50));
+      if (find.byKey(const ValueKey('quiz_pool_locked')).evaluate().isNotEmpty) break;
+    }
+    expect(find.byKey(const ValueKey('quiz_pool_locked')), findsOneWidget);
+    expect(find.textContaining('测这些错词'), findsWidgets);
+    expect(find.byKey(const ValueKey('quiz_pool_all')), findsNothing);
+    expect(find.byKey(const ValueKey('quiz_pool_chips')), findsNothing);
 
     // --- book mode: switch to wrong-only ---
     await tester.pumpWidget(const SizedBox.shrink());

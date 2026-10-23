@@ -295,3 +295,10 @@
 - 测试：quiz 套件绿；word-pick 宽短视口 700→560（compact 腾出高度后仍要 grid）；listen 提示改 textContaining（文案本含「/ 听写」）
 - Soft-pass：截图喇叭字形可能空方块（对比已加强）；未做宽屏双栏
 - 预防：学/测锁色共用常量注释；改 chrome 密度后复查依赖「空间紧」的 grid/list 断言视口高度
+
+## Round 46 · 错词本→自测闭环（2026-10-23）
+- 计划：B03 RICE 20 — sheet 一键「测这些」进既有错词池；锁档提示；空态友好；对齐 R45 teal
+- 实际：WrongBookSheet 主次 CTA 对调（测 Filled teal / 复习 Outlined）；QuizMode.wrong 锁池 Chip；Learn 错词结束 onQuizWrong；单测+四图自验
+- 顺利：复用 QuizMode.wrong / buildQuizPool，零改引擎；book 模式 Chip 测仍绿
+- 注意：我的卡与 sheet 同文案「测这些」→ find.text 会双命中，断言用 descendant(of: key)
+- 预防：从清单进场的模式应用锁态，避免用户一脚切回「全部词」冲淡闭环；下一轮 R47 我的页信息层级

@@ -7,7 +7,7 @@
 
 ## 进行中
 
-（空 · R45 已收口 2026-10-23）
+（空 · R46 已收口 2026-10-23）
 
 ---
 
@@ -43,7 +43,7 @@
 | R43 | 学习页眼前一亮大改 | [design-r43.md](design-r43.md) · [prd-learn-wow.md](prd-learn-wow.md) | **已完成** |
 | R44 | 推荐本 hj-ox 补音标 | [design-r44.md](design-r44.md) · [prd-hj-ox-phonetic.md](prd-hj-ox-phonetic.md) | **已完成** |
 | R45 | 自测页视觉对齐学习页（B01） | [design-r45.md](design-r45.md) · [prd-r45-quiz-chrome.md](prd-r45-quiz-chrome.md) | **已完成** |
-| R46 | 错词本→自测闭环（RICE #3） | 见迭代 PRD B03 | **已排期** |
+| R46 | 错词本→自测闭环（B03） | [design-r46.md](design-r46.md) · [prd-r46-wrong-quiz-loop.md](prd-r46-wrong-quiz-loop.md) | **已完成** |
 | R47 | 我的页信息层级（RICE #5） | 见迭代 PRD B05 | **已排期** |
 
 ---
@@ -78,7 +78,7 @@
 - [x] **R43** 学习页眼前一亮大改（见 design-r43 / prd-learn-wow；**UI 自验通过** 2026-10-23 · docs/shots/r43-ui-acceptance.md）
 - [x] **R44** 推荐本 hj-ox 补音标（prd-hj-ox-phonetic；design-r44；**UI 自验通过** 2026-10-23 · 单字词 phonetic ~92.6%）
 - [x] **R45** 自测页视觉对齐学习页（迭代 PRD B01；**UI 自验通过** 2026-10-23 · docs/shots/r45-ui-acceptance.md）
-- [ ] **R46** 错词本→自测一键闭环（迭代 PRD B03；待 design）
+- [x] **R46** 错词本→自测一键闭环（迭代 PRD B03；**UI 自验通过** 2026-10-23 · docs/shots/r46-ui-acceptance.md）
 - [ ] **R47** 我的页信息层级（迭代 PRD B05；待 design）
 
 ## P2（体验）
@@ -92,6 +92,16 @@
 ## 已完成轮次（详情）
 
 
+
+### Round 46 · 错词本→自测一键闭环（已完成）
+
+**PRD**：[prd-r46-wrong-quiz-loop.md](prd-r46-wrong-quiz-loop.md) · **设计**：[design-r46.md](design-r46.md) · **RICE** B03（20.0）  
+**状态**：**已完成**（UI 自验 · docs/shots/r46-ui-acceptance.md）
+
+- [x] sheet 主 CTA「测这些」Filled teal → QuizMode.wrong；认读次要 Outlined
+- [x] wrong 模式锁池「测这些错词 · N」；book/unit Chip 不回归
+- [x] 空态 teal「去学新词」；认读错词结束「测这些错词」
+- [x] 截图 r46-sheet / empty / quiz-locked 浅深；git push github master
 
 ### Round 45 · 自测页视觉对齐学习页（已完成）
 

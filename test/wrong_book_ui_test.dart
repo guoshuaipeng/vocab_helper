@@ -72,8 +72,10 @@ void main() {
     expect(store.wrongCountForBook('pep-ps-3'), 2);
     await openWrongSheet(tester);
     expect(find.byKey(const ValueKey('wrong_book_list')), findsOneWidget);
-    expect(find.byKey(const ValueKey('wrong_book_review')), findsOneWidget);
+    expect(find.byKey(const ValueKey('wrong_book_subtitle')), findsOneWidget);
     expect(find.byKey(const ValueKey('wrong_book_quiz')), findsOneWidget);
+    expect(find.byKey(const ValueKey('wrong_book_review')), findsOneWidget);
+    expect(find.descendant(of: find.byKey(const ValueKey('wrong_book_quiz')), matching: find.text('测这些')), findsOneWidget);
   });
 
   testWidgets('empty wrong book shows learn-new CTA', (tester) async {
