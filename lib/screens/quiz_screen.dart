@@ -60,6 +60,10 @@ class _QuizScreenState extends State<QuizScreen> {
   bool _listenAvailable = true;
   /// After TTS failure, force meaning for the rest of the round.
   bool _forceMeaning = false;
+  final TextEditingController _spellCtrl = TextEditingController();
+  final FocusNode _spellFocus = FocusNode();
+  /// null until checked; true/false after grade.
+  bool? _spellOk;
 
   @override
   void initState() {
@@ -85,6 +89,8 @@ class _QuizScreenState extends State<QuizScreen> {
 
   @override
   void dispose() {
+    _spellCtrl.dispose();
+    _spellFocus.dispose();
     if (_ownsSpeaker) {
       _speaker.dispose();
     }
@@ -103,6 +109,8 @@ class _QuizScreenState extends State<QuizScreen> {
         _index = 0;
         _selected = null;
         _answered = false;
+        _spellOk = null;
+        _spellCtrl.clear();
         _correctCount = 0;
         _wrongCount = 0;
         _loading = false;
@@ -193,6 +201,8 @@ class _QuizScreenState extends State<QuizScreen> {
         _index = 0;
         _selected = null;
         _answered = false;
+        _spellOk = null;
+        _spellCtrl.clear();
         _correctCount = 0;
         _wrongCount = 0;
         _loading = false;
@@ -245,12 +255,53 @@ class _QuizScreenState extends State<QuizScreen> {
       _index++;
       _selected = null;
       _answered = false;
+      _spellOk = null;
+      _spellCtrl.clear();
     });
     _speakCurrentIfListen();
   }
 
   bool get _effectiveListen =>
       !_forceMeaning && _variant == 'listen' && _listenAvailable;
+
+  bool get _isSpell => _variant == 'spell' && !_forceMeaning;
+
+  String get _segmentValue {
+    if (_forceMeaning) return 'meaning';
+    if (_effectiveListen) return 'listen';
+    if (_isSpell) return 'spell';
+    return 'meaning';
+  }
+
+  Future<void> _checkSpell() async {
+    if (_answered) return;
+    final q = _current;
+    if (q == null) return;
+    final grade = QuizEngine.gradeSpell(input: _spellCtrl.text, target: q.target.word);
+    if (grade == SpellGrade.empty) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('先写出单词')),
+      );
+      return;
+    }
+    final ok = grade == SpellGrade.correct;
+    setState(() {
+      _answered = true;
+      _spellOk = ok;
+      if (ok) {
+        _correctCount++;
+      } else {
+        _wrongCount++;
+      }
+    });
+    if (ok) {
+      await widget.store.removeWrong(q.target.id);
+      await widget.store.bumpTodayCount();
+    } else {
+      await widget.store.markWrong(q.target.id);
+    }
+  }
 
   Future<void> _speak(String text) async {
     await _speaker.setAccent(widget.store.ttsAccent());
@@ -317,6 +368,7 @@ class _QuizScreenState extends State<QuizScreen> {
     final body = _buildBody(context);
     if (widget.embedded) return body;
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(title: Text(_title)),
       body: body,
     );
@@ -403,25 +455,39 @@ class _QuizScreenState extends State<QuizScreen> {
             ),
           ),
           const SizedBox(height: 8),
-          AnimatedSize(
-            duration: const Duration(milliseconds: 150),
-            child: SegmentedButton<String>(
-              segments: [
-                const ButtonSegment(value: 'meaning', label: Text('看义选词'), icon: Icon(Icons.translate)),
-                ButtonSegment(
-                  value: 'listen',
-                  label: const Text('听音选义'),
-                  icon: const Icon(Icons.hearing),
-                  enabled: _listenAvailable,
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final narrow = constraints.maxWidth < 400;
+              return AnimatedSize(
+                duration: const Duration(milliseconds: 150),
+                child: SegmentedButton<String>(
+                  segments: [
+                    ButtonSegment(
+                      value: 'meaning',
+                      label: Text(narrow ? '看' : '看义选词'),
+                      icon: const Icon(Icons.translate),
+                    ),
+                    ButtonSegment(
+                      value: 'listen',
+                      label: Text(narrow ? '听' : '听音选义'),
+                      icon: const Icon(Icons.hearing),
+                      enabled: _listenAvailable,
+                    ),
+                    ButtonSegment(
+                      value: 'spell',
+                      label: Text(narrow ? '写' : '拼写'),
+                      icon: const Icon(Icons.edit_outlined),
+                    ),
+                  ],
+                  selected: {_segmentValue},
+                  onSelectionChanged: (s) {
+                    final v = s.first;
+                    if (v == 'listen' && !_listenAvailable) return;
+                    _onVariantChanged(v);
+                  },
                 ),
-              ],
-              selected: {_effectiveListen ? 'listen' : 'meaning'},
-              onSelectionChanged: (s) {
-                final v = s.first;
-                if (v == 'listen' && !_listenAvailable) return;
-                _onVariantChanged(v);
-              },
-            ),
+              );
+            },
           ),
           if (!_listenAvailable) ...[
             const SizedBox(height: 6),
@@ -431,129 +497,197 @@ class _QuizScreenState extends State<QuizScreen> {
             ),
           ],
           const SizedBox(height: 12),
-          Card(
-            key: ValueKey(_effectiveListen ? 'prompt_listen' : 'prompt_meaning'),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 28),
-              child: _effectiveListen
-                  ? Column(
-                      children: [
-                        Text('听英文，选意思', style: Theme.of(context).textTheme.labelLarge),
-                        const SizedBox(height: 12),
-                        Icon(Icons.volume_up, size: 56, color: scheme.primary),
-                        const SizedBox(height: 12),
-                        SizedBox(
-                          height: 48,
-                          child: OutlinedButton.icon(
-                            key: const ValueKey('quiz_replay'),
-                            onPressed: _answered ? null : _replayListen,
-                            icon: const Icon(Icons.replay),
-                            label: const Text('再听一遍'),
-                          ),
-                        ),
-                        if (_answered) ...[
-                          const SizedBox(height: 12),
+          if (_isSpell)
+            Expanded(
+              child: ListView(
+                key: const ValueKey('quiz_spell_pane'),
+                children: [
+                  Card(
+                    key: const ValueKey('prompt_spell'),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 28),
+                      child: Column(
+                        children: [
                           Text(
-                            '${q.target.word} · ${q.target.meaning}',
+                            q.promptMeaning,
                             textAlign: TextAlign.center,
-                            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                            style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                           ),
                         ],
-                      ],
-                    )
-                  : Column(
-                      children: [
-                        Text('选出对应的英文单词', style: Theme.of(context).textTheme.labelLarge),
-                        const SizedBox(height: 12),
-                        Text(
-                          q.promptMeaning,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-                        ),
-                      ],
+                      ),
                     ),
-            ),
-          ),
-          const SizedBox(height: 16),
-          Expanded(
-            child: ListView.separated(
-              itemCount: q.options.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 10),
-              itemBuilder: (context, i) {
-                final opt = q.options[i];
-                Color? bg;
-                Color? fg;
-                BorderSide? side;
-                if (_answered) {
-                  if (i == q.correctIndex) {
-                    bg = scheme.primaryContainer;
-                    fg = scheme.onPrimaryContainer;
-                    side = BorderSide(color: scheme.primary, width: 2);
-                  } else if (i == _selected) {
-                    bg = scheme.errorContainer;
-                    fg = scheme.onErrorContainer;
-                    side = BorderSide(color: scheme.error, width: 2);
-                  }
-                }
-                final label = _effectiveListen ? opt.meaning : opt.word;
-                return SizedBox(
-                  height: 56,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                            backgroundColor: bg,
-                            foregroundColor: fg,
-                            side: side,
-                            alignment: Alignment.center,
+                  ),
+                  const SizedBox(height: 16),
+                  TextField(
+                    key: const ValueKey('quiz_spell_input'),
+                    controller: _spellCtrl,
+                    focusNode: _spellFocus,
+                    enabled: !_answered,
+                    autocorrect: false,
+                    enableSuggestions: false,
+                    textCapitalization: TextCapitalization.none,
+                    style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+                    decoration: InputDecoration(
+                      hintText: '输入英文单词',
+                      filled: true,
+                      fillColor: scheme.surfaceContainerHighest,
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+                    ),
+                    onSubmitted: (_) => _checkSpell(),
+                  ),
+                  const SizedBox(height: 12),
+                  if (_answered) ...[
+                    if (_spellOk == true)
+                      Text('拼对了', style: TextStyle(color: scheme.primary, fontWeight: FontWeight.w600, fontSize: 16))
+                    else
+                      Text(
+                        '正确答案：${q.target.word}',
+                        style: TextStyle(color: scheme.error, fontWeight: FontWeight.w600, fontSize: 16),
+                      ),
+                    const SizedBox(height: 8),
+                  ],
+                  FilledButton(
+                    key: ValueKey(_answered ? 'quiz_spell_next' : 'quiz_spell_check'),
+                    onPressed: _answered ? _next : _checkSpell,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      child: Text(
+                        _answered
+                            ? (_index + 1 >= _questions.length ? '查看结果' : '下一题')
+                            : '检查',
+                        style: const TextStyle(fontSize: 18),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: MediaQuery.viewInsetsOf(context).bottom + 8),
+                ],
+              ),
+            )
+          else ...[
+            Card(
+              key: ValueKey(_effectiveListen ? 'prompt_listen' : 'prompt_meaning'),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 28),
+                child: _effectiveListen
+                    ? Column(
+                        children: [
+                          Text('听英文，选意思', style: Theme.of(context).textTheme.labelLarge),
+                          const SizedBox(height: 12),
+                          Icon(Icons.volume_up, size: 56, color: scheme.primary),
+                          const SizedBox(height: 12),
+                          SizedBox(
+                            height: 48,
+                            child: OutlinedButton.icon(
+                              key: const ValueKey('quiz_replay'),
+                              onPressed: _answered ? null : _replayListen,
+                              icon: const Icon(Icons.replay),
+                              label: const Text('再听一遍'),
+                            ),
                           ),
-                          onPressed: _answered ? null : () => _onSelect(i),
-                          child: Text(
-                            label,
+                          if (_answered) ...[
+                            const SizedBox(height: 12),
+                            Text(
+                              '${q.target.word} · ${q.target.meaning}',
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                            ),
+                          ],
+                        ],
+                      )
+                    : Column(
+                        children: [
+                          Text('选出对应的英文单词', style: Theme.of(context).textTheme.labelLarge),
+                          const SizedBox(height: 12),
+                          Text(
+                            q.promptMeaning,
                             textAlign: TextAlign.center,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontSize: _effectiveListen ? 16 : 20,
-                              fontWeight: FontWeight.w600,
+                            style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: ListView.separated(
+                itemCount: q.options.length,
+                separatorBuilder: (context, index) => const SizedBox(height: 10),
+                itemBuilder: (context, i) {
+                  final opt = q.options[i];
+                  Color? bg;
+                  Color? fg;
+                  BorderSide? side;
+                  if (_answered) {
+                    if (i == q.correctIndex) {
+                      bg = scheme.primaryContainer;
+                      fg = scheme.onPrimaryContainer;
+                      side = BorderSide(color: scheme.primary, width: 2);
+                    } else if (i == _selected) {
+                      bg = scheme.errorContainer;
+                      fg = scheme.onErrorContainer;
+                      side = BorderSide(color: scheme.error, width: 2);
+                    }
+                  }
+                  final label = _effectiveListen ? opt.meaning : opt.word;
+                  return SizedBox(
+                    height: 56,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              backgroundColor: bg,
+                              foregroundColor: fg,
+                              side: side,
+                              alignment: Alignment.center,
+                            ),
+                            onPressed: _answered ? null : () => _onSelect(i),
+                            child: Text(
+                              label,
+                              textAlign: TextAlign.center,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: _effectiveListen ? 16 : 20,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      if (!_effectiveListen)
-                        IconButton(
-                          tooltip: '朗读',
-                          onPressed: () => _speak(opt.word),
-                          icon: const Icon(Icons.volume_up),
-                        ),
-                    ],
-                  ),
-                );
-              },
+                        if (!_effectiveListen)
+                          IconButton(
+                            tooltip: '朗读',
+                            onPressed: () => _speak(opt.word),
+                            icon: const Icon(Icons.volume_up),
+                          ),
+                      ],
+                    ),
+                  );
+                },
+              ),
             ),
-          ),
-          if (_answered) ...[
+            if (_answered) ...[
+              const SizedBox(height: 8),
+              if (_selected != q.correctIndex)
+                Text(
+                  _effectiveListen
+                      ? '正确答案：${q.target.word} · ${q.target.meaning}'
+                      : '正确答案：${q.target.word}',
+                  style: Theme.of(context).textTheme.titleSmall,
+                )
+              else
+                Text('答对了！', style: TextStyle(color: scheme.primary, fontWeight: FontWeight.w600, fontSize: 16)),
+            ],
             const SizedBox(height: 8),
-            if (_selected != q.correctIndex)
-              Text(
-                _effectiveListen
-                    ? '正确答案：${q.target.word} · ${q.target.meaning}'
-                    : '正确答案：${q.target.word}',
-
-                style: Theme.of(context).textTheme.titleSmall,
-              )
-            else
-              Text('答对了！', style: TextStyle(color: scheme.primary, fontWeight: FontWeight.w600, fontSize: 16)),
-          ],
-          const SizedBox(height: 8),
-          FilledButton(
-            onPressed: _answered ? _next : null,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 14),
-              child: Text(_index + 1 >= _questions.length ? '查看结果' : '下一题', style: const TextStyle(fontSize: 18)),
+            FilledButton(
+              onPressed: _answered ? _next : null,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                child: Text(_index + 1 >= _questions.length ? '查看结果' : '下一题', style: const TextStyle(fontSize: 18)),
+              ),
             ),
-          ),
+          ],
         ],
       ),
         ),
