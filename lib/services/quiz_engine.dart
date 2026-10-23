@@ -20,8 +20,21 @@ class QuizQuestion {
 }
 
 /// Pure helpers for 「看中文选英文」.
+enum SpellGrade { empty, correct, wrong }
+
+/// Pure helpers for quiz variants.
 class QuizEngine {
   QuizEngine._();
+
+  /// Spelling grade: trim + case-insensitive; empty input is not wrong.
+  static SpellGrade gradeSpell({required String input, required String target}) {
+    final typed = input.trim();
+    if (typed.isEmpty) return SpellGrade.empty;
+    if (typed.toLowerCase() == target.trim().toLowerCase()) {
+      return SpellGrade.correct;
+    }
+    return SpellGrade.wrong;
+  }
 
   /// Session size: min(pool, max(5, dailyGoal)).
   static int sessionCap({required int poolSize, required int dailyGoal}) {

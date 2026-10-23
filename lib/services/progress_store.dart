@@ -235,11 +235,12 @@ class ProgressStore {
   /// `meaning` = 看义选词；`listen` = 听音选义.
   String quizVariant() {
     final v = _prefs.getString(_kQuizVariant);
-    return v == 'listen' ? 'listen' : 'meaning';
+    if (v == 'listen' || v == 'spell') return v!;
+    return 'meaning';
   }
 
   Future<void> setQuizVariant(String variant) async {
-    final v = variant == 'listen' ? 'listen' : 'meaning';
+    final v = (variant == 'listen' || variant == 'spell') ? variant : 'meaning';
     await _prefs.setString(_kQuizVariant, v);
   }
 
