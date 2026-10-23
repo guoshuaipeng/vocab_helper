@@ -278,11 +278,16 @@ class _QuizScreenState extends State<QuizScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('本轮自测结束', style: Theme.of(context).textTheme.headlineSmall),
+              Text('本轮自测完成', style: Theme.of(context).textTheme.headlineSmall),
               const SizedBox(height: 12),
-              Text('答对 $_correctCount · 答错 $_wrongCount · 正确率 $rate%', style: Theme.of(context).textTheme.titleMedium),
-              const SizedBox(height: 8),
-              Text('答错已进错词本；答对且曾在错词本已移出。答对计入今日目标。', style: Theme.of(context).textTheme.bodySmall, textAlign: TextAlign.center),
+              Text('正确 $_correctCount / $total（$rate%）', style: Theme.of(context).textTheme.titleMedium),
+              if (rate < 60) ...[
+                const SizedBox(height: 8),
+                Text('先回认读过一遍再测，记得更牢。', style: Theme.of(context).textTheme.bodyMedium, textAlign: TextAlign.center),
+              ] else if (rate >= 90) ...[
+                const SizedBox(height: 8),
+                Text('很棒，可以换下一单元了。', style: Theme.of(context).textTheme.bodyMedium, textAlign: TextAlign.center),
+              ],
               const SizedBox(height: 16),
               FilledButton(onPressed: _boot, child: const Text('再测一轮')),
               if (!widget.embedded)
@@ -296,22 +301,39 @@ class _QuizScreenState extends State<QuizScreen> {
     final q = _current!;
     final scheme = Theme.of(context).colorScheme;
 
-    return Padding(
+    return Align(
+      alignment: Alignment.topCenter,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 520),
+        child: Padding(
       padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            '${_book?.title ?? widget.seedBookTitle ?? ''} · ${_index + 1}/${_questions.length}',
+            '${_book?.title ?? widget.seedBookTitle ?? ''}',
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          Text(
+            '自测 · 题 ${_index + 1}/${_questions.length}',
             style: Theme.of(context).textTheme.bodySmall,
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 8),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: LinearProgressIndicator(
+              value: (_index + 1) / _questions.length,
+              minHeight: 6,
+              backgroundColor: scheme.surfaceContainerHighest,
+            ),
+          ),
+          const SizedBox(height: 12),
           Card(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 28),
               child: Column(
                 children: [
-                  Text('看中文，选英文', style: Theme.of(context).textTheme.labelLarge),
+                  Text('选出对应的英文单词', style: Theme.of(context).textTheme.labelLarge),
                   const SizedBox(height: 12),
                   Text(
                     q.promptMeaning,
@@ -374,21 +396,23 @@ class _QuizScreenState extends State<QuizScreen> {
             const SizedBox(height: 8),
             if (_selected != q.correctIndex)
               Text(
-                '正解：${q.target.word}',
-                style: TextStyle(color: scheme.error, fontWeight: FontWeight.w600, fontSize: 16),
+                '正确答案：${q.target.word}',
+                style: Theme.of(context).textTheme.titleSmall,
               )
             else
               Text('答对了！', style: TextStyle(color: scheme.primary, fontWeight: FontWeight.w600, fontSize: 16)),
-            const SizedBox(height: 8),
-            FilledButton(
-              onPressed: _next,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                child: Text(_index + 1 >= _questions.length ? '查看结果' : '下一题', style: const TextStyle(fontSize: 18)),
-              ),
-            ),
           ],
+          const SizedBox(height: 8),
+          FilledButton(
+            onPressed: _answered ? _next : null,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              child: Text(_index + 1 >= _questions.length ? '查看结果' : '下一题', style: const TextStyle(fontSize: 18)),
+            ),
+          ),
         ],
+      ),
+        ),
       ),
     );
   }

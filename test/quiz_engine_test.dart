@@ -73,6 +73,14 @@ void main() {
     });
   });
 
+
+    test('sessionCap uses min(pool, max(5, dailyGoal))', () {
+      expect(QuizEngine.sessionCap(poolSize: 100, dailyGoal: 20), 20);
+      expect(QuizEngine.sessionCap(poolSize: 3, dailyGoal: 20), 3);
+      expect(QuizEngine.sessionCap(poolSize: 100, dailyGoal: 3), 5);
+      expect(QuizEngine.sessionCap(poolSize: 0, dailyGoal: 20), 0);
+    });
+
   group('QuizScreen scoring', () {
     setUp(() {
       SharedPreferences.setMockInitialValues({'selected_book_id': 'demo'});
@@ -113,7 +121,7 @@ void main() {
       // Wrong: tap banana
       await tester.tap(find.text('banana'));
       await tester.pumpAndSettle();
-      expect(find.textContaining('正解'), findsOneWidget);
+      expect(find.textContaining('正确答案'), findsOneWidget);
       expect(store.wrongIds().contains('b-1'), isTrue);
 
       await tester.tap(find.text('下一题'));
