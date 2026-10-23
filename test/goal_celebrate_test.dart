@@ -125,6 +125,7 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
     expect(find.byKey(const ValueKey('goal_celebrate_banner')), findsOneWidget);
+    expect(find.byKey(const ValueKey('goal_celebrate_title')), findsOneWidget);
     expect(find.textContaining('今日目标达成'), findsOneWidget);
     expect(find.textContaining('已学 5 / 5'), findsOneWidget);
     await tester.tap(find.byKey(const ValueKey('goal_celebrate_continue')));

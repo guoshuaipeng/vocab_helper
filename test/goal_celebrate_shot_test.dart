@@ -165,15 +165,16 @@ void main() {
         correctIndex: 0,
       ),
     ];
+    // RepaintBoundary outside MaterialApp so Overlay card is in the shot.
     await tester.pumpWidget(
-      MaterialApp(
-        theme: themed,
-        darkTheme: themed,
-        themeMode: brightness == Brightness.dark ? ThemeMode.dark : ThemeMode.light,
-        home: ColoredBox(
-          color: themed.colorScheme.surface,
-          child: RepaintBoundary(
-            key: const ValueKey('shot_root'),
+      RepaintBoundary(
+        key: const ValueKey('shot_root'),
+        child: MaterialApp(
+          theme: themed,
+          darkTheme: themed,
+          themeMode: brightness == Brightness.dark ? ThemeMode.dark : ThemeMode.light,
+          home: ColoredBox(
+            color: themed.colorScheme.surface,
             child: QuizScreen(
               store: store,
               repo: WordbookRepository(),
@@ -189,47 +190,25 @@ void main() {
     for (var i = 0; i < 40; i++) {
       await tester.pump(const Duration(milliseconds: 50));
     }
-    // Force-show banner for shot (already at goal; rising edge already passed).
-    showGoalCelebratedBanner(tester.element(find.byType(QuizScreen)), count: 5, goal: 5, autoHide: Duration.zero);
+    showGoalCelebratedBanner(
+      tester.element(find.byType(QuizScreen)),
+      count: 5,
+      goal: 5,
+      autoHide: Duration.zero,
+    );
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
+    expect(find.byKey(const ValueKey('goal_celebrate_title')), findsOneWidget);
+    expect(find.textContaining('今日目标达成'), findsOneWidget);
     await dump(tester, outName);
-    final quizCtx = tester.element(find.byType(QuizScreen));
-    ScaffoldMessenger.of(quizCtx).hideCurrentMaterialBanner();
+    await tester.tap(find.byKey(const ValueKey('goal_celebrate_continue')));
     await tester.pump();
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pump(const Duration(milliseconds: 100));
   }
 
   testWidgets('capture r33 goal celebrate screenshots', (tester) async {
-    await captureMe(
-      tester,
-      size: const Size(390, 920),
-      theme: AppTheme.light(),
-      brightness: Brightness.light,
-      outName: 'r33-me-done-narrow-light.png',
-    );
-    await captureMe(
-      tester,
-      size: const Size(390, 920),
-      theme: AppTheme.dark(),
-      brightness: Brightness.dark,
-      outName: 'r33-me-done-narrow-dark.png',
-    );
-    await captureMe(
-      tester,
-      size: const Size(900, 700),
-      theme: AppTheme.light(),
-      brightness: Brightness.light,
-      outName: 'r33-me-done-wide-light.png',
-    );
-    await captureMe(
-      tester,
-      size: const Size(900, 700),
-      theme: AppTheme.dark(),
-      brightness: Brightness.dark,
-      outName: 'r33-me-done-wide-dark.png',
-    );
+    // Banner re-shoot only (me-done four retained after UI pass).
     await captureBanner(
       tester,
       size: const Size(390, 920),
