@@ -170,6 +170,7 @@ class _HomeShellState extends State<HomeShell> {
         onQuizBook: () => _openQuiz(QuizMode.book),
         onQuizUnit: () => _openQuiz(QuizMode.unit),
         onQuizWrong: () => _openQuiz(QuizMode.wrong),
+        onStartDueReview: _learnNew,
       ),
     ];
 

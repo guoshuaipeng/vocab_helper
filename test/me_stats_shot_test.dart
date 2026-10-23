@@ -75,6 +75,7 @@ void main() {
               onQuizBook: () {},
               onQuizUnit: () {},
               onQuizWrong: () {},
+            onStartDueReview: () {},
             ),
           ),
         ),

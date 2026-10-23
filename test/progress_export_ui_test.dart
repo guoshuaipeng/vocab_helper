@@ -27,6 +27,7 @@ void main() {
             onQuizBook: () {},
             onQuizUnit: () {},
             onQuizWrong: () {},
+          onStartDueReview: () {},
           ),
         ),
       ),
@@ -37,7 +38,7 @@ void main() {
     expect(find.byKey(const ValueKey('export_progress')), findsOneWidget);
     final btn = tester.widget<TextButton>(find.byKey(const ValueKey('export_progress')));
     expect(btn.onPressed, isNull);
-    expect(find.text('先选一本词书'), findsOneWidget);
+    expect(find.text('先选一本词书'), findsWidgets);
   });
 
   testWidgets('export with book shows preview and copy snackbar', (tester) async {
@@ -62,6 +63,7 @@ void main() {
             onQuizBook: () {},
             onQuizUnit: () {},
             onQuizWrong: () {},
+          onStartDueReview: () {},
           ),
         ),
       ),

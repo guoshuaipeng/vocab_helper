@@ -104,15 +104,28 @@ class ProgressStore {
   }
 
   int dueReviewCountForBook(String bookId, {DateTime? now}) {
+    return dueReviewEntriesForBook(bookId, now: now).length;
+  }
+
+  /// Due reviews for [bookId]: earliest [reviewAt] first; same day by id.
+  /// Caller may re-sort by word spelling after resolving [Word]s.
+  List<({String id, String at})> dueReviewEntriesForBook(String bookId, {DateTime? now}) {
     final prefix = '$bookId-';
     final today = dateKey(now);
-    var n = 0;
+    final out = <({String id, String at})>[];
     for (final id in learnedIds()) {
       if (!id.startsWith(prefix)) continue;
       final at = reviewAt(id);
-      if (at != null && at.compareTo(today) <= 0) n++;
+      if (at != null && at.isNotEmpty && at.compareTo(today) <= 0) {
+        out.add((id: id, at: at));
+      }
     }
-    return n;
+    out.sort((a, b) {
+      final c = a.at.compareTo(b.at);
+      if (c != 0) return c;
+      return a.id.compareTo(b.id);
+    });
+    return out;
   }
 
   int newWordCountInScope(Iterable<String> wordIds) {

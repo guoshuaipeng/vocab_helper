@@ -19,6 +19,7 @@ class MeScreen extends StatefulWidget {
     required this.onQuizBook,
     required this.onQuizUnit,
     required this.onQuizWrong,
+    required this.onStartDueReview,
   });
 
   final ProgressStore store;
@@ -30,6 +31,8 @@ class MeScreen extends StatefulWidget {
   final VoidCallback onQuizBook;
   final VoidCallback onQuizUnit;
   final VoidCallback onQuizWrong;
+  /// Switch to learn · 认读 (R20 queue: due first). Used by due-review sheet.
+  final VoidCallback onStartDueReview;
 
   @override
   State<MeScreen> createState() => _MeScreenState();
@@ -217,7 +220,36 @@ class _MeScreenState extends State<MeScreen> {
   }
 
 
-  Future<void> _confirmClearWrong(String bookId) async {
+  static const int _dueListCap = 40;
+
+  Future<void> _openDueReviewSheet() async {
+    final bookId = widget.store.selectedBookId();
+    if (bookId == null || bookId.isEmpty) return;
+
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (ctx) {
+        return _DueReviewSheet(
+          store: widget.store,
+          repo: widget.repo,
+          bookId: bookId,
+          listCap: _dueListCap,
+          onStartReview: () {
+            Navigator.pop(ctx);
+            widget.onStartDueReview();
+          },
+          onLearnNew: () {
+            Navigator.pop(ctx);
+            widget.onStartDueReview();
+          },
+        );
+      },
+    );
+  }
+
+    Future<void> _confirmClearWrong(String bookId) async {
     final book = _book;
     final ok = await showDialog<bool>(
       context: context,
@@ -362,15 +394,48 @@ class _MeScreenState extends State<MeScreen> {
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                   const SizedBox(height: 8),
-                  Text(
-                    () {
+                  Builder(
+                    builder: (context) {
                       final id = widget.store.selectedBookId();
-                      if (id == null || id.isEmpty) return '暂无到期复习';
-                      final due = widget.store.dueReviewCountForBook(id);
-                      return due == 0 ? '暂无到期复习' : '待复习 $due 个（含到期词）';
-                    }(),
-                    key: const ValueKey('me_due_review'),
-                    style: Theme.of(context).textTheme.bodyMedium,
+                      final hasBook = id != null && id.isNotEmpty;
+                      final due = hasBook ? widget.store.dueReviewCountForBook(id) : 0;
+                      final label = !hasBook
+                          ? '先选一本词书'
+                          : (due == 0 ? '暂无到期复习' : '待复习 $due');
+                      final scheme = Theme.of(context).colorScheme;
+                      final color = !hasBook || due == 0
+                          ? scheme.onSurfaceVariant
+                          : scheme.primary;
+                      return Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          key: const ValueKey('me_due_review'),
+                          onTap: hasBook ? _openDueReviewSheet : null,
+                          borderRadius: BorderRadius.circular(12),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    label,
+                                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                          color: color,
+                                          fontWeight: due > 0 ? FontWeight.w600 : FontWeight.w400,
+                                        ),
+                                  ),
+                                ),
+                                if (hasBook)
+                                  Icon(
+                                    Icons.chevron_right,
+                                    color: color,
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
                   ),
                   const SizedBox(height: 16),
                   _WeekCheckIn(store: widget.store),
@@ -791,6 +856,187 @@ class _DayDot extends StatelessWidget {
                       ),
                     )
                   : null),
+        ),
+      ),
+    );
+  }
+}
+
+
+class _DueReviewSheet extends StatefulWidget {
+  const _DueReviewSheet({
+    required this.store,
+    required this.repo,
+    required this.bookId,
+    required this.listCap,
+    required this.onStartReview,
+    required this.onLearnNew,
+  });
+
+  final ProgressStore store;
+  final WordbookRepository repo;
+  final String bookId;
+  final int listCap;
+  final VoidCallback onStartReview;
+  final VoidCallback onLearnNew;
+
+  @override
+  State<_DueReviewSheet> createState() => _DueReviewSheetState();
+}
+
+class _DueReviewSheetState extends State<_DueReviewSheet> {
+  bool _loading = true;
+  List<Word> _words = const [];
+  int _total = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    final entries = widget.store.dueReviewEntriesForBook(widget.bookId);
+    _total = entries.length;
+    if (entries.isEmpty) {
+      if (!mounted) return;
+      setState(() {
+        _words = const [];
+        _loading = false;
+      });
+      return;
+    }
+    try {
+      final book = await widget.repo.loadBook(widget.bookId);
+      final byId = {for (final w in book.words) w.id: w};
+      final paired = <({Word w, String at})>[];
+      for (final e in entries) {
+        final w = byId[e.id];
+        if (w != null) paired.add((w: w, at: e.at));
+      }
+      paired.sort((a, b) {
+        final c = a.at.compareTo(b.at);
+        if (c != 0) return c;
+        return a.w.word.toLowerCase().compareTo(b.w.word.toLowerCase());
+      });
+      final words = paired.map((e) => e.w).toList();
+      if (!mounted) return;
+      setState(() {
+        _words = words;
+        _loading = false;
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _words = const [];
+        _loading = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final maxH = MediaQuery.sizeOf(context).height * 0.7;
+    final listMax = maxH - 140;
+    final shown = _words.length > widget.listCap ? _words.take(widget.listCap).toList() : _words;
+    final more = _total > widget.listCap ? _total - widget.listCap : 0;
+
+    Widget body;
+    if (_loading) {
+      body = const SizedBox(
+        height: 120,
+        child: Center(child: CircularProgressIndicator()),
+      );
+    } else if (_words.isEmpty) {
+      body = Padding(
+        padding: const EdgeInsets.symmetric(vertical: 24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              '暂无到期复习',
+              key: const ValueKey('due_review_empty'),
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 16),
+            FilledButton(
+              key: const ValueKey('due_review_learn_new'),
+              onPressed: widget.onLearnNew,
+              child: const Padding(
+                padding: EdgeInsets.symmetric(vertical: 12),
+                child: Text('去学新词'),
+              ),
+            ),
+          ],
+        ),
+      );
+    } else {
+      body = ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: listMax),
+        child: ListView.separated(
+          key: const ValueKey('due_review_list'),
+          shrinkWrap: true,
+          itemCount: shown.length + (more > 0 ? 1 : 0),
+          separatorBuilder: (_, __) => const Divider(height: 1),
+          itemBuilder: (context, i) {
+            if (more > 0 && i == shown.length) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                child: Text(
+                  '还有 $more 个，开始复习仍会全部入队',
+                  key: const ValueKey('due_review_truncate'),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: scheme.onSurfaceVariant,
+                      ),
+                ),
+              );
+            }
+            final w = shown[i];
+            return ListTile(
+              contentPadding: EdgeInsets.zero,
+              minVerticalPadding: 12,
+              title: Text(
+                w.word,
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              ),
+              subtitle: (w.meaning.trim().isEmpty)
+                  ? null
+                  : Text(w.meaning, style: Theme.of(context).textTheme.bodyMedium),
+              trailing: Text(
+                '复习',
+                style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                      color: scheme.onSurfaceVariant,
+                    ),
+              ),
+            );
+          },
+        ),
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+      child: SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text('到期复习', style: Theme.of(context).textTheme.titleLarge),
+            const SizedBox(height: 12),
+            body,
+            if (!_loading && _words.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              FilledButton(
+                key: const ValueKey('due_review_start'),
+                onPressed: widget.onStartReview,
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 14),
+                  child: Text('开始复习'),
+                ),
+              ),
+            ],
+          ],
         ),
       ),
     );
