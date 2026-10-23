@@ -207,3 +207,10 @@
 - 卡住：MaterialBanner 多行 content 在 Scaffold banner 槽内高度不够，只露副文「已学 n/goal」+「继续」
 - 根因：Banner 槽按单行/旁挂 actions 布局，Column 标题被裁；截图还曾把 Overlay 放在 RepaintBoundary 外
 - 预防：多行非模态提示优先 Overlay/自定义卡，勿依赖 MaterialBanner 多行；shot 的 RepaintBoundary 须包住 MaterialApp（含 Overlay）
+
+## Round 34 · 听写自测（2026-10-23）
+- 计划：自测第五档「默/听写」— 听音后默写；判分前不露拼写；复用 R22 TTS + R26 输入判分 + R32 题池
+- 实际：`quiz_variant=dictation`；窄「默」/宽「听写」；自动朗读+再听；空交不判错；四态+输入截图；UI 通过（tip `3da2979` → 收口 `4d45ff2`）
+- 顺利：听+写组合不新开引擎；行为项（自动播/空交/TTS 降级）靠 FakeWordSpeaker 单测 Soft-pass，截图专攻无泄露与档标
+- 注意：截图环境 Material 图标呈空方块（与既往轮一致，不单打回）；勿为图标假阳性重拍
+- 预防：有声+输入题型 — 难截听感可 Soft-pass（须单测），答案泄露与窄宽档标必须有截图证据

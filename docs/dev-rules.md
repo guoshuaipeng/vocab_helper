@@ -14,3 +14,5 @@
 12. Windows 编带原生插件的包前确认工具链（如 nuget）。
 13. 每轮开始先读 docs/requirements.md；新需求写入该文件并勾选完成项。
 14. 主需求须有 docs/design-rN.md（含线框/文案/验收）才开发；打磨标准见 docs/ux-guidelines.md。
+
+15. UI 验收：听感/自动播报等截图难证项可 Soft-pass（须单测）；答案泄露与档标可读须有截图证据。
