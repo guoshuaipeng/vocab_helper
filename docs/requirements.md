@@ -7,7 +7,7 @@
 
 ## 进行中
 
-（空 · R48 已收口 2026-10-23）
+（空 · R49 已收口 2026-10-23）
 
 ---
 
@@ -46,6 +46,7 @@
 | R46 | 错词本→自测闭环（B03） | [design-r46.md](design-r46.md) · [prd-r46-wrong-quiz-loop.md](prd-r46-wrong-quiz-loop.md) | **已完成** |
 | R47 | 我的页信息层级（B05） | [design-r47.md](design-r47.md) · [prd-r47-mine-hierarchy.md](prd-r47-mine-hierarchy.md) | **已完成** |
 | R48 | 单元 overflow 路径可读（B04） | [design-r48.md](design-r48.md) · [prd-r48-unit-overflow.md](prd-r48-unit-overflow.md) | **已完成** |
+| R49 | 到期复习开练强化（B06） | [design-r49.md](design-r49.md) · [prd-r49-due-review-start.md](prd-r49-due-review-start.md) | **已完成** |
 
 ---
 
@@ -82,6 +83,7 @@
 - [x] **R46** 错词本→自测一键闭环（迭代 PRD B03；**UI 自验通过** 2026-10-23 · docs/shots/r46-ui-acceptance.md）
 - [x] **R47** 我的页信息层级（迭代 PRD B05；**UI 自验通过** 2026-10-23 · docs/shots/r47-ui-acceptance.md）
 - [x] **R48** 单元 overflow 路径可读（迭代 PRD B04；**UI 自验通过** 2026-10-23 · docs/shots/r48-ui-acceptance.md）
+- [x] **R49** 到期复习开练强化（迭代 PRD B06；**UI 自验通过** 2026-10-23 · docs/shots/r49-ui-acceptance.md）
 
 ## P2（体验）
 
@@ -95,6 +97,16 @@
 
 
 
+
+### Round 49 · 到期复习开练强化（已完成）
+
+**PRD**：[prd-r49-due-review-start.md](prd-r49-due-review-start.md) · **设计**：[design-r49.md](design-r49.md) · **RICE** B06（10.5）  
+**状态**：**已完成**（UI 自验 · docs/shots/r49-ui-acceptance.md）
+
+- [x] Hero「去复习」1 点开练；待复习行仍开清单
+- [x] sheet 副标 + teal「开始复习」置于列表上方；空态下一步 + teal「去学新词」
+- [x] 行动区「去复习到期 · N」；既有 due/me keys 保留
+- [x] 截图 r49-hero / sheet 浅深 / empty；git push github master
 
 ### Round 48 · 单元 overflow 路径可读（已完成）
 

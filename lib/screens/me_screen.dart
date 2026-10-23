@@ -612,27 +612,50 @@ class _MeScreenState extends State<MeScreen> {
                             ? _meTeal.withValues(alpha: 0.10)
                             : Colors.transparent,
                         borderRadius: BorderRadius.circular(12),
-                        child: InkWell(
-                          key: const ValueKey('me_due_review'),
-                          onTap: hasBook ? _openDueReviewSheet : null,
-                          borderRadius: BorderRadius.circular(12),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    dueLabel,
-                                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                          color: dueColor,
-                                          fontWeight: due > 0 ? FontWeight.w600 : FontWeight.w400,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(8, 6, 8, 8),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              InkWell(
+                                key: const ValueKey('me_due_review'),
+                                onTap: hasBook ? _openDueReviewSheet : null,
+                                borderRadius: BorderRadius.circular(12),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 8),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          dueLabel,
+                                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                                color: dueColor,
+                                                fontWeight: due > 0 ? FontWeight.w600 : FontWeight.w400,
+                                              ),
                                         ),
+                                      ),
+                                      if (hasBook)
+                                        Icon(Icons.chevron_right, color: dueColor),
+                                    ],
                                   ),
                                 ),
-                                if (hasBook)
-                                  Icon(Icons.chevron_right, color: dueColor),
+                              ),
+                              if (due > 0) ...[
+                                const SizedBox(height: 4),
+                                FilledButton(
+                                  key: const ValueKey('me_due_go'),
+                                  style: FilledButton.styleFrom(
+                                    backgroundColor: _meTeal,
+                                    foregroundColor: Colors.white,
+                                  ),
+                                  onPressed: widget.onStartDueReview,
+                                  child: const Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 10),
+                                    child: Text('去复习'),
+                                  ),
+                                ),
                               ],
-                            ),
+                            ],
                           ),
                         ),
                       ),
@@ -728,6 +751,13 @@ class _MeScreenState extends State<MeScreen> {
                       icon: const Icon(Icons.fact_check_outlined),
                       label: const Text('测这些'),
                     ),
+                    if (due > 0)
+                      FilledButton.tonalIcon(
+                        key: const ValueKey('me_due_action'),
+                        onPressed: widget.onStartDueReview,
+                        icon: const Icon(Icons.replay),
+                        label: Text('去复习到期 · $due'),
+                      ),
                   ],
                 ),
               ],
@@ -1490,11 +1520,13 @@ class _DueReviewSheetState extends State<_DueReviewSheet> {
     }
   }
 
+  static const Color _dueTeal = Color(0xFF0D9488);
+
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final maxH = MediaQuery.sizeOf(context).height * 0.7;
-    final listMax = maxH - 140;
+    final screenH = MediaQuery.sizeOf(context).height;
+    final listMax = (screenH * 0.35).clamp(160.0, 280.0);
     final shown = _words.length > widget.listCap ? _words.take(widget.listCap).toList() : _words;
     final more = _total > widget.listCap ? _total - widget.listCap : 0;
 
@@ -1515,9 +1547,22 @@ class _DueReviewSheetState extends State<_DueReviewSheet> {
               key: const ValueKey('due_review_empty'),
               style: Theme.of(context).textTheme.titleMedium,
             ),
+            const SizedBox(height: 8),
+            Text(
+              '学新词时到期词也会优先出现',
+              key: const ValueKey('due_review_empty_hint'),
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: scheme.onSurfaceVariant,
+                  ),
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: 16),
             FilledButton(
               key: const ValueKey('due_review_learn_new'),
+              style: FilledButton.styleFrom(
+                backgroundColor: _dueTeal,
+                foregroundColor: Colors.white,
+              ),
               onPressed: widget.onLearnNew,
               child: const Padding(
                 padding: EdgeInsets.symmetric(vertical: 12),
@@ -1571,6 +1616,7 @@ class _DueReviewSheetState extends State<_DueReviewSheet> {
       );
     }
 
+    // CTAs above the list so Material drag-handle sheet keeps them on-screen (R49 / R46).
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
       child: SafeArea(
@@ -1579,12 +1625,22 @@ class _DueReviewSheetState extends State<_DueReviewSheet> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text('到期复习', style: Theme.of(context).textTheme.titleLarge),
-            const SizedBox(height: 12),
-            body,
             if (!_loading && _words.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              Text(
+                '共 ${_words.length} 个到期 · 一键开练',
+                key: const ValueKey('due_review_subtitle'),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: scheme.onSurfaceVariant,
+                    ),
+              ),
               const SizedBox(height: 12),
               FilledButton(
                 key: const ValueKey('due_review_start'),
+                style: FilledButton.styleFrom(
+                  backgroundColor: _dueTeal,
+                  foregroundColor: Colors.white,
+                ),
                 onPressed: widget.onStartReview,
                 child: const Padding(
                   padding: EdgeInsets.symmetric(vertical: 14),
@@ -1592,12 +1648,15 @@ class _DueReviewSheetState extends State<_DueReviewSheet> {
                 ),
               ),
             ],
+            const SizedBox(height: 12),
+            body,
           ],
         ),
       ),
     );
   }
 }
+
 
 
 class _UnitProgressSheet extends StatefulWidget {
