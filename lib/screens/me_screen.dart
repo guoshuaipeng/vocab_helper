@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../models/word.dart';
+import '../services/progress_export.dart';
 import '../services/progress_store.dart';
 import '../services/wordbook_repository.dart';
 
@@ -113,6 +116,104 @@ class _MeScreenState extends State<MeScreen> {
   }
 
 
+  Future<void> _exportProgress() async {
+    final meta = _book;
+    if (meta == null) return;
+    WordBook book;
+    try {
+      book = await widget.repo.loadBook(meta.id);
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('加载词书失败：$e')),
+      );
+      return;
+    }
+    final prefix = '${meta.id}-';
+    final learnedIds = widget.store.learnedIds().where((id) => id.startsWith(prefix)).toSet();
+    final wrongIds = widget.store.wrongIds().where((id) => id.startsWith(prefix)).toSet();
+    final text = ProgressExport.build(
+      bookTitle: book.title,
+      date: DateTime.now(),
+      totalCount: book.words.isNotEmpty ? book.words.length : book.wordCount,
+      streak: widget.store.streakDays(),
+      learned: ProgressExport.wordsInSet(book.words, learnedIds),
+      wrong: ProgressExport.wordsInSet(book.words, wrongIds),
+    );
+    if (!mounted) return;
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (ctx) {
+        final previewLines = text.split('\n').take(12).join('\n');
+        return Padding(
+          padding: EdgeInsets.only(
+            left: 20,
+            right: 20,
+            top: 8,
+            bottom: MediaQuery.viewInsetsOf(ctx).bottom + 20,
+          ),
+          child: SafeArea(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text('导出进度', style: Theme.of(ctx).textTheme.titleLarge),
+                const SizedBox(height: 12),
+                ConstrainedBox(
+                  constraints: const BoxConstraints(maxHeight: 220),
+                  child: SingleChildScrollView(
+                    child: SelectableText(
+                      previewLines,
+                      style: Theme.of(ctx).textTheme.bodySmall?.copyWith(fontFamily: 'monospace'),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        key: const ValueKey('export_share'),
+                        onPressed: () async {
+                          await SharePlus.instance.share(ShareParams(text: text, subject: '单词小助手 · 进度导出'));
+                        },
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 12),
+                          child: Text('分享'),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: FilledButton(
+                        key: const ValueKey('export_copy'),
+                        onPressed: () async {
+                          await Clipboard.setData(ClipboardData(text: text));
+                          if (ctx.mounted) Navigator.pop(ctx);
+                          if (!mounted) return;
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('已复制到剪贴板')),
+                          );
+                        },
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 12),
+                          child: Text('复制全部'),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+
   Future<void> _confirmClearWrong(String bookId) async {
     final book = _book;
     final ok = await showDialog<bool>(
@@ -214,6 +315,14 @@ class _MeScreenState extends State<MeScreen> {
                               onPressed: widget.onChangeBook,
                               icon: const Icon(Icons.tune),
                               label: const Text('更换教材'),
+                            ),
+                            TextButton.icon(
+                              key: const ValueKey('export_progress'),
+                              onPressed: _book == null ? null : _exportProgress,
+                              icon: const Icon(Icons.upload_file_outlined),
+                              label: Text(_book == null
+                                  ? '先选一本词书'
+                                  : '导出本词书进度'),
                             ),
                             if (_book != null)
                               OutlinedButton.icon(
