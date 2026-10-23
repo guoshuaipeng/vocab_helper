@@ -216,6 +216,33 @@ class _MeScreenState extends State<MeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Text('朗读口音', style: Theme.of(context).textTheme.titleMedium),
+                  const SizedBox(height: 8),
+                  SegmentedButton<String>(
+                    segments: const [
+                      ButtonSegment(value: 'en-US', label: Text('美音'), icon: Icon(Icons.volume_up)),
+                      ButtonSegment(value: 'en-GB', label: Text('英音'), icon: Icon(Icons.volume_up)),
+                    ],
+                    selected: {widget.store.ttsAccent()},
+                    onSelectionChanged: (s) async {
+                      await widget.store.setTtsAccent(s.first);
+                      widget.onRefresh();
+                      setState(() {});
+                    },
+                  ),
+                  const SizedBox(height: 8),
+                  Text('学习页点喇叭时使用该口音（依赖系统已安装的语音包）。', style: Theme.of(context).textTheme.bodySmall),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Text('错词本', style: Theme.of(context).textTheme.titleMedium),
                   const SizedBox(height: 8),
                   Text(

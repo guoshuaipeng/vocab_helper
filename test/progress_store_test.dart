@@ -67,4 +67,13 @@ void main() {
     await store.setUnitFilterForBook('hj-ps-3', null);
     expect(store.unitFilterForBook('hj-ps-3'), isNull);
   });
+
+  test('ttsAccent defaults to en-US and switches', () async {
+    final store = await ProgressStore.open();
+    expect(store.ttsAccent(), 'en-US');
+    await store.setTtsAccent('en-GB');
+    expect(store.ttsAccent(), 'en-GB');
+    await store.setTtsAccent('nope');
+    expect(store.ttsAccent(), 'en-US');
+  });
 }

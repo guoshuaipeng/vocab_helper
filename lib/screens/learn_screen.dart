@@ -43,7 +43,7 @@ class _LearnScreenState extends State<LearnScreen> {
     if (widget.speaker != null) {
       _speaker = widget.speaker!;
     } else {
-      _speaker = FlutterWordSpeaker();
+      _speaker = FlutterWordSpeaker(languageCode: widget.store.ttsAccent());
       _ownsSpeaker = true;
     }
     _boot();
@@ -171,6 +171,7 @@ class _LearnScreenState extends State<LearnScreen> {
   Future<void> _speakCurrent() async {
     final word = _queue?.current;
     if (word == null) return;
+    await _speaker.setAccent(widget.store.ttsAccent());
     await _speaker.speak(word.word);
   }
 

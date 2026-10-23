@@ -11,9 +11,9 @@ void main() {
     expect(s.stopped, isTrue);
   });
 
-  test('FakeWordSpeaker ignores blank after trim via caller contract', () async {
+  test('FakeWordSpeaker setAccent', () async {
     final s = FakeWordSpeaker();
-    await s.speak('hi');
-    expect(s.spoken.single, 'hi');
+    await s.setAccent('en-GB');
+    expect(s.language, 'en-GB');
   });
 }

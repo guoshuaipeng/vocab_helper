@@ -1,25 +1,35 @@
 import 'package:flutter_tts/flutter_tts.dart';
 
 abstract class WordSpeaker {
+  Future<void> setAccent(String languageCode);
   Future<void> speak(String text);
   Future<void> stop();
   void dispose();
 }
 
 class FlutterWordSpeaker implements WordSpeaker {
-  FlutterWordSpeaker() {
+  FlutterWordSpeaker({String languageCode = 'en-US'}) {
+    _language = languageCode;
     _tts = FlutterTts();
     _ready = _init();
   }
 
   late final FlutterTts _tts;
-  late final Future<void> _ready;
+  late Future<void> _ready;
+  late String _language;
 
   Future<void> _init() async {
-    await _tts.setLanguage('en-US');
+    await _tts.setLanguage(_language);
     await _tts.setSpeechRate(0.45);
     await _tts.setVolume(1.0);
     await _tts.setPitch(1.0);
+  }
+
+  @override
+  Future<void> setAccent(String languageCode) async {
+    _language = languageCode;
+    await _ready;
+    await _tts.setLanguage(_language);
   }
 
   @override
@@ -27,6 +37,7 @@ class FlutterWordSpeaker implements WordSpeaker {
     final t = text.trim();
     if (t.isEmpty) return;
     await _ready;
+    await _tts.setLanguage(_language);
     await _tts.stop();
     await _tts.speak(t);
   }
@@ -44,7 +55,13 @@ class FlutterWordSpeaker implements WordSpeaker {
 
 class FakeWordSpeaker implements WordSpeaker {
   final List<String> spoken = <String>[];
+  String language = 'en-US';
   bool stopped = false;
+
+  @override
+  Future<void> setAccent(String languageCode) async {
+    language = languageCode;
+  }
 
   @override
   Future<void> speak(String text) async {
