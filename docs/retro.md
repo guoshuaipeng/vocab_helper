@@ -25,3 +25,9 @@
 - 实际：flutter_tts + WordSpeaker 抽象；卡片右上角喇叭；FakeWordSpeaker 测试
 - 卡住：Windows TTS 依赖本机语音包，真机听感需用户确认
 - 预防：TTS 用接口隔离，便于测试与换引擎
+
+## Round 5（2026-10-23）
+- 计划：词书页点选切换；确认对话框；测试回归
+- 实际：BooksScreen onTap + store.setSelectedBookId；保留全屏选型入口
+- 卡住：无
+- 预防：高频路径提供列表直达，全屏选型作首次/细筛
