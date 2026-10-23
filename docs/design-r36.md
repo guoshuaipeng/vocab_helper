@@ -83,14 +83,24 @@
 
 ## 8. 验收
 
-- [ ] catalog 可见「沪教牛津 · 七年级上（2024）」；可选中学习  
-- [ ] 8 个 Unit；总词数 ≥300 且含义齐全（目标 ~337）  
-- [ ] 与 pep-jh-7a / hj-jh-7 标题不混淆  
-- [ ] `docs/shots/r36-ui-acceptance.md`：词书列表 + 学习页某 Unit 各至少窄浅 1 图  
-- [ ] 草稿文件保留或删除策略写进 commit message
-
----
+- [x] catalog 可见「沪教牛津 · 七年级上（2024）」；可选中学习（tip 2efb150）  
+- [x] 8 个 Unit；总词数 **330** ≥300 且含义齐全（目标 ~337；**差约 7 词**，见 §10 / retro）  
+- [x] 与 pep-jh-7a / hj-jh-7 标题不混淆（hj-jh-7 已标「精选·非七上全书」）  
+- [x] docs/shots/r36-ui-acceptance.md：词书列表窄浅 1 图（
+36-catalog-narrow-light.png）；学习页抛光另轨 74dd9bb，本轮不重拍学习页  
+- [x] 草稿 hj-ox-7a-2024.draft.json **保留**作补词对照，未挂 catalog
 
 ## 9. 并行说明
 
 学习页「单元全铺/溢出/遮挡」→ **紧凑入口 + 选择 sheet** 另提交，不阻塞本词书轮，也不被本轮改回。
+
+---
+
+## 10. 收口备注（2026-10-23）
+
+- 正式书：ssets/wordbooks/hj-ox-7a-2024.json · catalog id hj-ox-7a-2024 · sourceLabel 2024六三 · **330** 词 Unit1–8。  
+- **词量缺口**：公开源交叉后仍较 Quizlet「总词汇表全」337 **少约 7 条**；不以猜词凑满；后续纸质课本核对后再补，不阻塞本轮上架。  
+- 单测：	est/hj_ox_7a_2024_content_test.dart（load/count/8 units/无空义/catalog）。  
+- 不做：不启动 R37/R38；不改回 learn_screen（布局见 74dd9bb / design-r36-learn-layout）。
+
+---
