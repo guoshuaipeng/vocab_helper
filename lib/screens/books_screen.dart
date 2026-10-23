@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
 
 import '../models/word.dart';
+import '../services/progress_store.dart';
 import '../services/wordbook_repository.dart';
 
 class BooksScreen extends StatefulWidget {
   const BooksScreen({
     super.key,
+    required this.store,
     required this.repo,
     required this.selectedBookId,
     required this.onChangeBook,
+    required this.onBookSelected,
   });
 
+  final ProgressStore store;
   final WordbookRepository repo;
   final String? selectedBookId;
   final VoidCallback onChangeBook;
+  final VoidCallback onBookSelected;
 
   @override
   State<BooksScreen> createState() => _BooksScreenState();
@@ -34,6 +39,28 @@ class _BooksScreenState extends State<BooksScreen> {
     });
   }
 
+  Future<void> _selectBook(WordBookMeta b) async {
+    if (b.id == widget.selectedBookId) return;
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('切换到这本词书？'),
+        content: Text('${b.title}\n共 ${b.wordCount} 词。学习进度按词书分开保存。'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('取消')),
+          FilledButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('切换')),
+        ],
+      ),
+    );
+    if (ok != true || !mounted) return;
+    await widget.store.setSelectedBookId(b.id);
+    widget.onBookSelected();
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('已切换到 ${b.title}')),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_loading) {
@@ -50,6 +77,8 @@ class _BooksScreenState extends State<BooksScreen> {
           icon: const Icon(Icons.tune),
           label: const Text('更换教材 / 年级'),
         ),
+        const SizedBox(height: 8),
+        Text('也可直接点下面的词书切换', style: Theme.of(context).textTheme.bodySmall),
         const SizedBox(height: 16),
         ...versions.map((v) {
           final books = widget.repo.booksOf(_catalog, v);
@@ -65,7 +94,8 @@ class _BooksScreenState extends State<BooksScreen> {
                   child: ListTile(
                     title: Text(b.title),
                     subtitle: Text('${b.grade} · 共 ${b.wordCount} 词'),
-                    trailing: selected ? const Icon(Icons.check_circle) : null,
+                    trailing: selected ? const Icon(Icons.check_circle) : const Icon(Icons.chevron_right),
+                    onTap: () => _selectBook(b),
                   ),
                 );
               }),
