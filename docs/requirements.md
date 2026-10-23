@@ -7,7 +7,7 @@
 
 ## 进行中
 
-（空 · R51 已收口 2026-10-23）
+（空 · R52 已收口 2026-10-23）
 
 ---
 
@@ -49,12 +49,16 @@
 | R49 | 到期复习开练强化（B06） | [design-r49.md](design-r49.md) · [prd-r49-due-review-start.md](prd-r49-due-review-start.md) | **已完成** |
 | R50 | 今日达成视觉统一（B08） | [design-r50.md](design-r50.md) · [prd-r50-goal-celebrate-wow.md](prd-r50-goal-celebrate-wow.md) | **已完成** |
 | R51 | 导出发现性（B10） | [design-r51.md](design-r51.md) · [prd-r51-export-discoverability.md](prd-r51-export-discoverability.md) | **已完成** |
+| R52 | 学习喇叭高对比（B02） | [design-r52.md](design-r52.md) · [prd-r52-learn-speak-contrast.md](prd-r52-learn-speak-contrast.md) · [prd-iteration-rice-2026-10-23-r52.md](prd-iteration-rice-2026-10-23-r52.md) | **已完成** |
 
 ---
 
 ## P0（尽快）
 
-- [ ] （环境，产品后置）Android SDK + 真机/模拟器验证 TTS
+- [ ] （环境，产品后置）Android SDK + 真机/模拟器验证 TTS（R52 RICE：**B11** 阻塞）
+- [ ] （内容）沪教牛津补齐约 7 词——**需纸质课本**（R52 RICE：**B07** 阻塞；禁止猜词）
+- [ ] （设备）iOS Vision 真机验收（R52 RICE：**B09** 阻塞）
+- [ ] （后置）Android ML Kit OCR（R52 RICE：**B12**）
 
 ## P1（重要）
 
@@ -88,6 +92,7 @@
 - [x] **R49** 到期复习开练强化（迭代 PRD B06；**UI 自验通过** 2026-10-23 · docs/shots/r49-ui-acceptance.md）
 - [x] **R50** 今日达成视觉统一（迭代 PRD B08；**UI 自验通过** 2026-10-23 · docs/shots/r50-ui-acceptance.md）
 - [x] **R51** 导出发现性（迭代 PRD B10；**UI 自验通过** 2026-10-23 · docs/shots/r51-ui-acceptance.md）
+- [x] **R52** 学习喇叭高对比（迭代 PRD B02；**UI 自验通过** 2026-10-23 · docs/shots/r52-ui-acceptance.md）
 
 ## P2（体验）
 
@@ -104,6 +109,17 @@
 
 
 
+
+### Round 52 · 学习喇叭高对比（已完成）
+
+**PRD**：[prd-r52-learn-speak-contrast.md](prd-r52-learn-speak-contrast.md) · **设计**：[design-r52.md](design-r52.md) · **RICE 重排**：[prd-iteration-rice-2026-10-23-r52.md](prd-iteration-rice-2026-10-23-r52.md) · **B02**（81.0）  
+**状态**：**已完成**（UI 自验 · docs/shots/r52-ui-acceptance.md）
+
+- [x] 学习卡喇叭 idle → onSurface + 浅底圆；朗读中 primary（既有）
+- [x] `flashcard_speak` 保留；热区≠翻卡；拇指零改
+- [x] 截图 r52-speak 浅深；git push github master
+
+### Round 51 · 导出发现性（已完成）
 
 ### Round 51 · 导出发现性（已完成）
 
@@ -433,6 +449,8 @@
 
 | 日期 | 说明 |
 |------|------|
+| 2026-10-23 | **R52 UI 自验通过**：学习喇叭高对比（B02）；RICE 重排后唯一可落软项；阻塞 B07/B09/B11–B12 |
+| 2026-10-23 | **RICE R52 重排**：见 prd-iteration-rice-2026-10-23-r52.md；旧软项 B01/B03–B06/B08/B10 已齐 |
 | 2026-10-23 | **R50 UI 自验通过**：今日达成视觉统一（B08）；纸卡庆祝+teal 继续；tip 见 HEAD |
 | 2026-10-23 | **R48 UI 自验通过**：单元 overflow 路径可读（B04）；选择单元置顶 + 顶栏持久单元；tip 见 HEAD |
 | 2026-10-23 | **RICE 迭代 PRD**：叫停未开工 quiz 编码；现状→缺口→RICE→prd-iteration-rice-2026-10-23；R44 设计就绪待开发；dev-rules §16 出需求门禁 |

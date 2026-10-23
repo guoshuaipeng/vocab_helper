@@ -719,10 +719,13 @@ class _LearnScreenState extends State<LearnScreen> {
                         key: const ValueKey('flashcard_speak'),
                         tooltip: '朗读',
                         onPressed: _speaking ? null : _speakCurrent,
-                        icon: Icon(
-                          Icons.volume_up,
-                          color: _speaking ? scheme.primary : scheme.onSurfaceVariant,
+                        style: IconButton.styleFrom(
+                          foregroundColor:
+                              _speaking ? scheme.primary : scheme.onSurface,
+                          backgroundColor: scheme.surfaceContainerHighest
+                              .withValues(alpha: 0.55),
                         ),
+                        icon: const Icon(Icons.volume_up),
                       ),
                     ),
                     Expanded(

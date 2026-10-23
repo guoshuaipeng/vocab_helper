@@ -1,5 +1,12 @@
 # 复盘
 
+## Round 52 · 学习喇叭高对比（2026-10-23）
+- 计划：R52 先重排 RICE（现状→缺口→阻塞）；唯一可落软项 B02 学习喇叭高对比；禁止空转堆功能；不动拇指
+- 实际：`prd-iteration-rice-2026-10-23-r52.md`；learn IconButton styleFrom onSurface + 浅底圆；单测+两图自验；push
+- 阻塞登记：B07 纸质 / B09 iPhone / B11–B12 Android——无设备下一轮只文档不硬造
+- 预防：Windows 补丁用脚本文件写盘并立刻 `git diff` 确认；PowerShell here-string 易吞 `$`
+- 下一轮：有纸质→B07；有 iPhone→B09；有 Android→B11；否则仅重排/等条件
+
 ## Round 51 · 导出发现性（2026-10-23）
 - 计划：B10 RICE 6.0 — 导出提权到行动下可见行；空态；对齐 R47；截图自验；push
 - 实际：me_export_row + 更多副标「单元 · 口音 · 统计」；sheet 空态+teal 复制；expand_me_more 改探 unit；export UI 单测合并避 prefs 污染；四图自验；push
