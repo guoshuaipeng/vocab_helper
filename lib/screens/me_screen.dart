@@ -182,6 +182,7 @@ class _MeScreenState extends State<MeScreen> {
         await _loadBook();
       },
       child: ListView(
+        cacheExtent: 4000,
         padding: const EdgeInsets.all(20),
         children: [
           Text('我的进度', style: Theme.of(context).textTheme.headlineSmall),
@@ -429,33 +430,110 @@ class _MeScreenState extends State<MeScreen> {
             ),
           ),
           const SizedBox(height: 12),
-          _StatCard(label: '已学单词（全部）', value: '${widget.store.learnedCount()}'),
-          const SizedBox(height: 12),
-          _StatCard(label: '今日新学', value: '$today'),
-          const SizedBox(height: 12),
-          _StatCard(label: '连续天数', value: '${widget.store.streakDays()}'),
+          _StatsSummaryCard(
+            learned: widget.store.learnedCount(),
+            todayNew: today,
+            streak: widget.store.streakDays(),
+          ),
         ],
       ),
     );
   }
 }
 
-class _StatCard extends StatelessWidget {
-  const _StatCard({required this.label, required this.value});
-  final String label;
-  final String value;
+class _StatsSummaryCard extends StatelessWidget {
+  const _StatsSummaryCard({
+    required this.learned,
+    required this.todayNew,
+    required this.streak,
+  });
+
+  final int learned;
+  final int todayNew;
+  final int streak;
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     return Card(
+      key: const ValueKey('me_stats_summary'),
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
         child: Row(
           children: [
-            Expanded(child: Text(label, style: const TextStyle(fontSize: 18))),
-            Text(value, style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
+            Expanded(
+              child: _StatCell(
+                key: const ValueKey('me_stat_learned'),
+                label: '已学单词',
+                value: '$learned',
+                scheme: scheme,
+              ),
+            ),
+            Container(width: 1, height: 44, color: scheme.outlineVariant),
+            Expanded(
+              child: _StatCell(
+                key: const ValueKey('me_stat_today'),
+                label: '今日新学',
+                value: '$todayNew',
+                scheme: scheme,
+              ),
+            ),
+            Container(width: 1, height: 44, color: scheme.outlineVariant),
+            Expanded(
+              child: _StatCell(
+                key: const ValueKey('me_stat_streak'),
+                label: '连续天数',
+                value: '$streak',
+                scheme: scheme,
+              ),
+            ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _StatCell extends StatelessWidget {
+  const _StatCell({
+    super.key,
+    required this.label,
+    required this.value,
+    required this.scheme,
+  });
+
+  final String label;
+  final String value;
+  final ColorScheme scheme;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: scheme.onSurface,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                  color: scheme.onSurfaceVariant,
+                ),
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
       ),
     );
   }
