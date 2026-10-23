@@ -105,6 +105,22 @@
       "wordCount": 73
     },
     {
+      "id": "hj-jh-8",
+      "file": "hj-jh-8.json",
+      "version": "沪教版",
+      "grade": "八年级",
+      "title": "沪教牛津 · 八年级（精选）",
+      "wordCount": 60
+    },
+    {
+      "id": "hj-jh-9",
+      "file": "hj-jh-9.json",
+      "version": "沪教版",
+      "grade": "九年级",
+      "title": "沪教牛津 · 九年级（精选）",
+      "wordCount": 55
+    },
+    {
       "id": "pep-jh-7a",
       "file": "pep_jh_7a_app.json",
       "version": "人教版初中",

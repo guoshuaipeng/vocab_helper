@@ -96,3 +96,9 @@
 - 实际：docs/requirements.md；README 必读指引；dev-rules #13；补 _unitWordCount
 - 卡住：无
 - 预防：需求只进 requirements.md，避免聊天与 backlog 双源
+
+## Round 15（2026-10-23）
+- 计划：按 requirements P0 加沪教八/九年级
+- 实际：hj-jh-8 / hj-jh-9 精选；刷新 catalog；勾选 requirements
+- 卡住：无全书公开 JSON
+- 预防：精选必须在 source 字段标明
