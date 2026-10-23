@@ -85,6 +85,9 @@
 - [x] **R38** 简易记忆曲线：认识/不认识驱动下次复习间隔（扩展 R20；**非**完整 SM-2；见 design-r38；UI 自验 r38-ui-acceptance.md）
 - [x] **R37** 拍照识词（**iOS 优先** · Apple Vision 端侧 OCR）→ 确认 → 自选/新建单元 → 加入学习（见 design-r37；**UI 自验** r37-ui-acceptance.md；Android ML Kit 后置；Vision 真机待验）
 - [x] **R39** 错词本可浏览清单（见 design-r39；原误排 R36 已改号）；**UI 自验通过** 2026-10-23 · `r39-ui-acceptance.md`
+- [x] **R40** 默认推荐沪教牛津2024七上（见 design-r40；**UI 自验通过** 2026-10-23 · tip `df4f5f0`）
+- [x] **R41** 词书列表推荐本置顶（见 design-r41；**UI 自验通过** 2026-10-23 · tip `25b00d3`）
+- [ ] **R42** 非推荐词书弱提示切换跟课（见 design-r42 / prd-learn-v2；待开发）
 
 ## P2（体验）
 
