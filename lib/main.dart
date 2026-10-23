@@ -169,6 +169,7 @@ class _HomeShellState extends State<HomeShell> {
         reviewWrongUnitScoped: _reviewWrongUnitScoped,
         onLearnNew: _learnNew,
         onReviewWrongAll: () => _enterWrongReview(unitScoped: false),
+        onChangeBook: widget.onChangeBook,
         onStartQuiz: () {
           _learnNew();
           final id = widget.store.selectedBookId();

@@ -53,6 +53,7 @@ class ProgressStore {
   static const _kQuizVariant = 'quiz_variant';
   static const _kDayCountPrefix = 'day_count_';
   static const _kGoalCelebratedYmd = 'goal_celebrated_ymd';
+  static const _kRecommendHintHideYmd = 'recommend_hint_hide_ymd';
 
   static Future<ProgressStore> open() async {
     final prefs = await SharedPreferences.getInstance();
@@ -105,6 +106,14 @@ class ProgressStore {
 
   Future<void> setReviewNextHintEnabled(bool enabled) async {
     await _prefs.setBool(_kReviewNextHint, enabled);
+  }
+
+  /// R42: hide learn-page recommend tip for this calendar day only.
+  bool isRecommendHintHiddenToday({DateTime? now}) =>
+      _prefs.getString(_kRecommendHintHideYmd) == dateKey(now);
+
+  Future<void> dismissRecommendHintForToday({DateTime? now}) async {
+    await _prefs.setString(_kRecommendHintHideYmd, dateKey(now));
   }
 
   static String dateKey([DateTime? now]) {

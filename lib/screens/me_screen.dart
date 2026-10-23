@@ -49,6 +49,7 @@ class MeScreen extends StatefulWidget {
 class _MeScreenState extends State<MeScreen> {
   WordBookMeta? _book;
   bool _loadingBook = true;
+  bool _catalogHasRecommended = false;
   /// null = still probing; false = missing English voice pack.
   bool? _englishVoiceOk;
 
@@ -94,12 +95,14 @@ class _MeScreenState extends State<MeScreen> {
     if (id == null || id.isEmpty) {
       setState(() {
         _book = null;
+        _catalogHasRecommended = false;
         _loadingBook = false;
       });
       return;
     }
     try {
       final catalog = await widget.repo.loadCatalog();
+      final hasRec = catalog.any((b) => b.id == WordbookRepository.recommendedBookId);
       WordBookMeta? found;
       for (final b in catalog) {
         if (b.id == id) {
@@ -109,14 +112,23 @@ class _MeScreenState extends State<MeScreen> {
       }
       setState(() {
         _book = found;
+        _catalogHasRecommended = hasRec;
         _loadingBook = false;
       });
     } catch (_) {
       setState(() {
         _book = null;
+        _catalogHasRecommended = false;
         _loadingBook = false;
       });
     }
+  }
+
+  bool get _shouldShowRecommendHint {
+    final id = widget.store.selectedBookId();
+    if (id == null || id.isEmpty) return false;
+    if (!_catalogHasRecommended) return false;
+    return id != WordbookRepository.recommendedBookId;
   }
 
   Future<void> _confirmClear() async {
@@ -445,6 +457,36 @@ class _MeScreenState extends State<MeScreen> {
                         if (_book != null) ...[
                           const SizedBox(height: 4),
                           Text('${_book!.version} · ${_book!.grade} · 本词书已学 $bookLearned / ${_book!.wordCount}'),
+                        ],
+                        if (_shouldShowRecommendHint) ...[
+                          const SizedBox(height: 10),
+                          Material(
+                            key: const ValueKey('me_recommend_switch_hint'),
+                            color: Theme.of(context).colorScheme.secondaryContainer,
+                            borderRadius: BorderRadius.circular(12),
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(12, 10, 8, 10),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      '跟课推荐：沪教牛津2024七上',
+                                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                            color: Theme.of(context).colorScheme.onSecondaryContainer,
+                                          ),
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: widget.onChangeBook,
+                                    style: TextButton.styleFrom(
+                                      foregroundColor: Theme.of(context).colorScheme.onSecondaryContainer,
+                                    ),
+                                    child: const Text('去切换'),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                         ],
                         const SizedBox(height: 12),
                         Wrap(

@@ -22,6 +22,7 @@ class LearnScreen extends StatefulWidget {
     this.onStartQuiz,
     this.onLearnNew,
     this.onReviewWrongAll,
+    this.onChangeBook,
   });
 
   final ProgressStore store;
@@ -37,6 +38,8 @@ class LearnScreen extends StatefulWidget {
   final VoidCallback? onLearnNew;
   /// Enter whole-book wrong flashcards (今日任务 · 复习错词).
   final VoidCallback? onReviewWrongAll;
+  /// R42: open换书 (Setup/Books path).
+  final VoidCallback? onChangeBook;
 
   @override
   State<LearnScreen> createState() => _LearnScreenState();
@@ -62,6 +65,9 @@ class _LearnScreenState extends State<LearnScreen> {
   /// R38: quiet "下次 · …" after 认识 (not a SnackBar).
   String? _reviewNextHint;
   Timer? _reviewNextHintTimer;
+
+  /// R42: catalog contains recommended follow-along book.
+  bool _catalogHasRecommended = false;
 
   @override
   void initState() {
@@ -105,13 +111,17 @@ class _LearnScreenState extends State<LearnScreen> {
       if (id == null || id.isEmpty) {
         setState(() {
           _loading = false;
+          _catalogHasRecommended = false;
           _error = '请先选择教材版本和年级';
         });
         return;
       }
+      final catalog = await widget.repo.loadCatalog();
+      final hasRec = catalog.any((b) => b.id == WordbookRepository.recommendedBookId);
       final book = await widget.repo.loadBook(id);
       if (book.words.isEmpty) {
         setState(() {
+          _catalogHasRecommended = hasRec;
           _loading = false;
           _error = '这本词书还没有单词';
         });
@@ -135,6 +145,7 @@ class _LearnScreenState extends State<LearnScreen> {
           setState(() {
             _book = book;
             _queue = ReviewQueue(list);
+            _catalogHasRecommended = hasRec;
             _flipped = false;
             _loading = false;
             _error = widget.reviewWrongUnitScoped && unitFilter != null && unitFilter.isNotEmpty
@@ -150,6 +161,7 @@ class _LearnScreenState extends State<LearnScreen> {
             _queue = ReviewQueue(const []);
             _queueNewCount = 0;
             _queueDueCount = 0;
+            _catalogHasRecommended = hasRec;
             _flipped = false;
             _loading = false;
             _error = '这个单元暂时没有单词';
@@ -183,6 +195,7 @@ class _LearnScreenState extends State<LearnScreen> {
           _queueNewCount = 0;
           _queueDueCount = 0;
         }
+        _catalogHasRecommended = hasRec;
         _flipped = false;
         _loading = false;
       });
@@ -318,6 +331,21 @@ class _LearnScreenState extends State<LearnScreen> {
     } finally {
       if (mounted) setState(() => _speaking = false);
     }
+  }
+
+  bool get _shouldShowLearnRecommendHint {
+    final id = widget.bookId;
+    if (id == null || id.isEmpty) return false;
+    if (!_catalogHasRecommended) return false;
+    if (id == WordbookRepository.recommendedBookId) return false;
+    if (widget.onChangeBook == null) return false;
+    if (widget.store.isRecommendHintHiddenToday()) return false;
+    return true;
+  }
+
+  Future<void> _dismissRecommendHint() async {
+    await widget.store.dismissRecommendHintForToday();
+    if (mounted) setState(() {});
   }
 
   @override
@@ -630,6 +658,56 @@ class _LearnScreenState extends State<LearnScreen> {
                       ),
                     ],
                   ),
+                  if (_shouldShowLearnRecommendHint) ...[
+                    const SizedBox(height: 8),
+                    Material(
+                      key: const ValueKey('learn_recommend_switch_hint'),
+                      color: scheme.secondaryContainer,
+                      borderRadius: BorderRadius.circular(12),
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(8, 2, 4, 2),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: TextButton(
+                                  onPressed: widget.onChangeBook,
+                                  style: TextButton.styleFrom(
+                                    visualDensity: VisualDensity.compact,
+                                    foregroundColor: scheme.onSecondaryContainer,
+                                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                                  ),
+                                  child: Text(
+                                    '跟课推荐 · 去切换',
+                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                          color: scheme.onSecondaryContainer,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            TextButton(
+                              key: const ValueKey('learn_recommend_hint_dismiss'),
+                              onPressed: _dismissRecommendHint,
+                              style: TextButton.styleFrom(
+                                visualDensity: VisualDensity.compact,
+                                foregroundColor: scheme.onSecondaryContainer,
+                                padding: const EdgeInsets.symmetric(horizontal: 8),
+                              ),
+                              child: Text(
+                                '今日不再',
+                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: scheme.onSecondaryContainer,
+                                    ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                   const SizedBox(height: 8),
                   _TodayTaskBar(
                     compact: true,
