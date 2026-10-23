@@ -259,3 +259,10 @@
 
 - 个人免费使用：产品参考 **跳过付费** Refero / Mobbin；PRD 用 ChatPRD 公开模板 `ai-development-brief` + 公开交互模式即可。
 - 单 bot「单词迭代」全流程，无跨 bot 交接。
+
+## Round 42（2026-10-23）
+- 计划：非推荐词书时「我的」+「学习」弱提示去切换；学习可「今日不再」
+- 实际：Me/Learn secondaryContainer tip；prefs ecommend_hint_hide_ymd\；单测 R1–R5；四图自验
+- 卡住：SharedPreferences mock 单例 — 同文件多测 \setMockInitialValues\ 不重置 → 拆文件 / 单进程只 mock 一次
+- 预防：依赖 prefs 的 widget 测优先「一文件一测」或 setUpAll 一次 + setSelectedBookId 覆盖；勿中途再 setMockInitialValues
+- 工具：继续跳过付费 Refero/Mobbin

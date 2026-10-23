@@ -77,12 +77,12 @@
 
 ## 8. 验收清单
 
-- [ ] 选 pep-ps-3：我的可见 `me_recommend_switch_hint`；学习可见 `learn_recommend_switch_hint`
-- [ ] 选 hj-ox-7a-2024：两处均无
-- [ ] 点「去切换」触发 onChangeBook（单测 verify）
-- [ ] 学习点「今日不再」后同学期内再进学习不显示；我的仍显示
-- [ ] 窄浅：我的 + 学习各 1 张；宽或深至少再 1 张（共≥3）；`docs/shots/r42-ui-acceptance.md`
-- [ ] 对照 [prd-learn-v2.md](prd-learn-v2.md) R1–R7
+- [x] 选 pep-ps-3：我的可见 `me_recommend_switch_hint`；学习可见 `learn_recommend_switch_hint`
+- [x] 选 hj-ox-7a-2024：两处均无
+- [x] 点「去切换」触发 onChangeBook（单测 verify）
+- [x] 学习点「今日不再」后同学期内再进学习不显示；我的仍显示
+- [x] 窄浅：我的 + 学习各 1 张；宽或深至少再 1 张（共≥3）；`docs/shots/r42-ui-acceptance.md`
+- [x] 对照 [prd-learn-v2.md](prd-learn-v2.md) R1–R7
 
 ## 9. 明确不做
 

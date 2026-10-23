@@ -7,33 +7,11 @@
 
 ## 进行中
 
-### Round 42 · 非推荐词书时弱提示切换跟课
-
-**PRD**：[docs/prd-learn-v2.md](prd-learn-v2.md)（ChatPRD `ai-development-brief`）  
-**设计稿**：[docs/design-r42.md](design-r42.md)（必读后再开发）  
-**状态**：**可开发**（2026-10-23 · R41 UI 自验通过后升排）
-
-**用户故事**  
-作为已选非推荐词书的孩子/家长，在「我的」或「学习」想知道跟课推荐是哪本，并能一键去切换，且不被弹窗打断。
-
-**范围（做）**
-
-- [ ] 当前书 ≠ `hj-ox-7a-2024` →「我的」卡内弱提示 +「去切换」
-- [ ] 「学习」顶栏下弱链 +「今日不再」（prefs 按自然日）
-- [ ] 点「去切换」走现有 `onChangeBook`；推荐本两处均不显示
-- [ ] 验收：窄浅我的/学习 + 宽或深 ≥1；单测 verify；对照 PRD R1–R7
-
-**范围（不做）**
-
-- 强推 Dialog、自动换书、迁移进度、改 R41 列表、账号云同步
-
-### 下一轮（R42 后立刻 · 勿抢开发）
-
 ### Round 43 · 学习页眼前一亮大改
 
 **PRD**：[docs/prd-learn-wow.md](prd-learn-wow.md)（ChatPRD `ai-development-brief`）  
 **设计稿**：[docs/design-r43.md](design-r43.md)  
-**状态**：**设计就绪 · R42 后立刻**（2026-10-23）——R42 仍为当前进行中实现；本轮先备文档，**不打断** R42 勾选与开发。
+**状态**：**可开发**（2026-10-23 · R42 UI 自验通过后升排）——本 bot 已收口 R42，**未开始** R43 实现。
 
 **用户故事**  
 作为跟课认读的孩子，打开「学习」后想一眼只盯着当前单词，用大按钮做认识/不认识，并感到比旧版「眼前一亮」。
@@ -79,8 +57,8 @@
 | R39 | 错词本可浏览清单 | [design-r39.md](design-r39.md) | **已完成** |
 | R40 | 默认推荐沪教牛津2024七上 | [design-r40.md](design-r40.md) | **已完成** |
 | R41 | 词书列表推荐本置顶 | [design-r41.md](design-r41.md) | **已完成** |
-| R42 | 非推荐词书弱提示切换跟课 | [design-r42.md](design-r42.md) · [prd-learn-v2.md](prd-learn-v2.md) | **可开发** |
-| R43 | 学习页眼前一亮大改 | [design-r43.md](design-r43.md) · [prd-learn-wow.md](prd-learn-wow.md) | **设计就绪 · R42 后立刻** |
+| R42 | 非推荐词书弱提示切换跟课 | [design-r42.md](design-r42.md) · [prd-learn-v2.md](prd-learn-v2.md) | **已完成** |
+| R43 | 学习页眼前一亮大改 | [design-r43.md](design-r43.md) · [prd-learn-wow.md](prd-learn-wow.md) | **可开发** |
 
 ---
 
@@ -110,8 +88,8 @@
 - [x] **R39** 错词本可浏览清单（见 design-r39；原误排 R36 已改号）；**UI 自验通过** 2026-10-23 · `r39-ui-acceptance.md`
 - [x] **R40** 默认推荐沪教牛津2024七上（见 design-r40；**UI 自验通过** 2026-10-23 · tip `df4f5f0`）
 - [x] **R41** 词书列表推荐本置顶（见 design-r41；**UI 自验通过** 2026-10-23 · tip `25b00d3`）
-- [ ] **R42** 非推荐词书弱提示切换跟课（见 design-r42 / prd-learn-v2；待开发）
-- [ ] **R43** 学习页眼前一亮大改（见 design-r43 / prd-learn-wow；**R42 后立刻**；设计已就绪）
+- [x] **R42** 非推荐词书弱提示切换跟课（见 design-r42 / prd-learn-v2；**UI 自验通过** 2026-10-23 · docs/shots/r42-ui-acceptance.md）
+- [ ] **R43** 学习页眼前一亮大改（见 design-r43 / prd-learn-wow；**可开发**；待实现）
 
 ## P2（体验）
 
@@ -369,6 +347,7 @@
 
 | 日期 | 说明 |
 |------|------|
+| 2026-10-23 | **R42 UI 自验通过**：非推荐弱提示收口；R43 升可开发（未开工） |
 | 2026-10-23 | **R43 设计就绪（R42 后立刻）**：学习页眼前一亮大改 · prd-learn-wow.md + design-r43.md；不打断 R42 进行中勾选；免费工具 only |
 | 2026-10-23 | **R40 补齐**：pep-ps-3 keep 测 + Setup/Books 四态截图；docs/shots/r40-ui-acceptance.md |
 | 2026-10-23 | **R42 升进行中**：非推荐词书弱提示 + `prd-learn-v2.md`（ChatPRD brief）；跳过付费 Refero/Mobbin；单 bot 全流程 |
