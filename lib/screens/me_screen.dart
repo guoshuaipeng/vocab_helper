@@ -8,6 +8,7 @@ import '../services/progress_store.dart';
 import '../services/unit_progress.dart';
 import '../services/word_speaker.dart';
 import '../services/wordbook_repository.dart';
+import '../services/wrong_book_list.dart';
 
 class MeScreen extends StatefulWidget {
   const MeScreen({
@@ -275,6 +276,39 @@ class _MeScreenState extends State<MeScreen> {
   }
 
 
+
+  Future<void> _openWrongBookSheet() async {
+    final bookId = widget.store.selectedBookId();
+    if (bookId == null || bookId.isEmpty) return;
+
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (ctx) {
+        final unit = widget.store.unitFilterForBook(bookId);
+        return _WrongBookSheet(
+          store: widget.store,
+          repo: widget.repo,
+          bookId: bookId,
+          listCap: WrongBookList.listCap,
+          unitFilter: unit,
+          onReview: () {
+            Navigator.pop(ctx);
+            widget.onReviewWrong();
+          },
+          onQuiz: () {
+            Navigator.pop(ctx);
+            widget.onQuizWrong();
+          },
+          onLearnNew: () {
+            Navigator.pop(ctx);
+            widget.onStartDueReview();
+          },
+        );
+      },
+    );
+  }
   Future<void> _openUnitProgressSheet() async {
     final bookId = widget.store.selectedBookId();
     if (bookId == null || bookId.isEmpty) return;
@@ -681,12 +715,55 @@ class _MeScreenState extends State<MeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('错词本', style: Theme.of(context).textTheme.titleMedium),
-                  const SizedBox(height: 8),
-                  Text(
-                    bookId == null
-                        ? '0'
-                        : '${widget.store.wrongCountForBook(bookId)}',
-                    style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                  const SizedBox(height: 4),
+                  Builder(
+                    builder: (context) {
+                      final scheme = Theme.of(context).colorScheme;
+                      final hasBook = bookId != null;
+                      final count = hasBook ? widget.store.wrongCountForBook(bookId) : 0;
+                      final countColor = !hasBook || count == 0
+                          ? scheme.onSurfaceVariant
+                          : scheme.primary;
+                      return InkWell(
+                        key: const ValueKey('me_wrong_book_entry'),
+                        onTap: hasBook ? _openWrongBookSheet : null,
+                        borderRadius: BorderRadius.circular(12),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 6),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '$count',
+                                      style: TextStyle(
+                                        fontSize: 28,
+                                        fontWeight: FontWeight.bold,
+                                        color: countColor,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      hasBook ? '查看错词' : '先选一本词书',
+                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                            color: scheme.onSurfaceVariant,
+                                          ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              if (hasBook)
+                                Icon(
+                                  Icons.chevron_right,
+                                  color: scheme.onSurfaceVariant,
+                                ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
                   ),
                   const SizedBox(height: 4),
                   Text('点「不认识」会加入本词书错词本；点「认识」会移出。', style: Theme.of(context).textTheme.bodySmall),
@@ -994,6 +1071,203 @@ class _DayDot extends StatelessWidget {
 }
 
 
+
+class _WrongBookSheet extends StatefulWidget {
+  const _WrongBookSheet({
+    required this.store,
+    required this.repo,
+    required this.bookId,
+    required this.listCap,
+    required this.onReview,
+    required this.onQuiz,
+    required this.onLearnNew,
+    this.unitFilter,
+  });
+
+  final ProgressStore store;
+  final WordbookRepository repo;
+  final String bookId;
+  final int listCap;
+  final VoidCallback onReview;
+  final VoidCallback onQuiz;
+  final VoidCallback onLearnNew;
+  final String? unitFilter;
+
+  @override
+  State<_WrongBookSheet> createState() => _WrongBookSheetState();
+}
+
+class _WrongBookSheetState extends State<_WrongBookSheet> {
+  bool _loading = true;
+  List<Word> _words = const [];
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    try {
+      final book = await widget.repo.loadBook(widget.bookId);
+      final prefix = '${widget.bookId}-';
+      final ids = widget.store.wrongIds().where((id) => id.startsWith(prefix));
+      final words = WrongBookList.assemble(book.words, ids);
+      if (!mounted) return;
+      setState(() {
+        _words = words;
+        _loading = false;
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _words = const [];
+        _loading = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final maxH = MediaQuery.sizeOf(context).height * 0.7;
+    final listMax = maxH - 180;
+    final truncated = WrongBookList.truncate(_words, cap: widget.listCap);
+    final shown = truncated.shown;
+    final more = truncated.more;
+    final unit = widget.unitFilter;
+    final hasUnit = unit != null && unit.isNotEmpty;
+
+    Widget body;
+    if (_loading) {
+      body = const SizedBox(
+        height: 120,
+        child: Center(child: CircularProgressIndicator()),
+      );
+    } else if (_words.isEmpty) {
+      body = Padding(
+        padding: const EdgeInsets.symmetric(vertical: 24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              '暂无错词',
+              key: const ValueKey('wrong_book_empty'),
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              '认读点「不认识」或自测答错会进来',
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: scheme.onSurfaceVariant,
+                  ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            FilledButton(
+              key: const ValueKey('wrong_book_learn_new'),
+              onPressed: widget.onLearnNew,
+              child: const Padding(
+                padding: EdgeInsets.symmetric(vertical: 12),
+                child: Text('去学新词'),
+              ),
+            ),
+          ],
+        ),
+      );
+    } else {
+      body = ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: listMax),
+        child: ListView.separated(
+          key: const ValueKey('wrong_book_list'),
+          shrinkWrap: true,
+          itemCount: shown.length + (more > 0 ? 1 : 0),
+          separatorBuilder: (_, __) => const Divider(height: 1),
+          itemBuilder: (context, i) {
+            if (more > 0 && i == shown.length) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                child: Text(
+                  '还有 $more 个，复习/自测仍会带上全部错词',
+                  key: const ValueKey('wrong_book_truncate'),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: scheme.onSurfaceVariant,
+                      ),
+                ),
+              );
+            }
+            final w = shown[i];
+            final unitLabel = (w.unit ?? '').trim();
+            return ListTile(
+              contentPadding: EdgeInsets.zero,
+              minVerticalPadding: 12,
+              title: Text(
+                w.word,
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              ),
+              subtitle: (w.meaning.trim().isEmpty)
+                  ? null
+                  : Text(w.meaning, style: Theme.of(context).textTheme.bodyMedium),
+              trailing: unitLabel.isEmpty
+                  ? null
+                  : Text(
+                      unitLabel,
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                            color: scheme.onSurfaceVariant,
+                          ),
+                    ),
+            );
+          },
+        ),
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+      child: SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text('错词本', style: Theme.of(context).textTheme.titleLarge),
+            const SizedBox(height: 12),
+            body,
+            if (!_loading && _words.isNotEmpty) ...[
+              if (hasUnit) ...[
+                const SizedBox(height: 8),
+                Text(
+                  '学习页已筛选 · $unit；这里仍是全部错词',
+                  key: const ValueKey('wrong_book_unit_note'),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: scheme.onSurfaceVariant,
+                      ),
+                ),
+              ],
+              const SizedBox(height: 12),
+              OutlinedButton(
+                key: const ValueKey('wrong_book_quiz'),
+                onPressed: widget.onQuiz,
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 14),
+                  child: Text('去测错词'),
+                ),
+              ),
+              const SizedBox(height: 8),
+              FilledButton(
+                key: const ValueKey('wrong_book_review'),
+                onPressed: widget.onReview,
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 14),
+                  child: Text('复习这些错词'),
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
 class _DueReviewSheet extends StatefulWidget {
   const _DueReviewSheet({
     required this.store,
