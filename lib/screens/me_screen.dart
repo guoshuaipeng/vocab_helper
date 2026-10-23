@@ -40,6 +40,12 @@ class _MeScreenState extends State<MeScreen> {
   void initState() {
     super.initState();
     _loadBook();
+    _rollDay();
+  }
+
+  Future<void> _rollDay() async {
+    await widget.store.ensureDayRolled();
+    if (mounted) setState(() {});
   }
 
   @override
@@ -253,6 +259,8 @@ class _MeScreenState extends State<MeScreen> {
                     key: const ValueKey('me_due_review'),
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
+                  const SizedBox(height: 16),
+                  _WeekCheckIn(store: widget.store),
                 ],
               ),
             ),
@@ -453,3 +461,144 @@ class _StatCard extends StatelessWidget {
   }
 }
 
+
+class _WeekCheckIn extends StatelessWidget {
+  const _WeekCheckIn({required this.store});
+
+  final ProgressStore store;
+
+  static const _labels = ['一', '二', '三', '四', '五', '六', '日'];
+
+  String _tooltip(CheckInDay day) {
+    final goal = store.dailyGoal();
+    switch (day.status) {
+      case CheckInDayStatus.met:
+        return '已达标';
+      case CheckInDayStatus.missed:
+        return '未达标（${day.count ?? 0}/$goal）';
+      case CheckInDayStatus.empty:
+        return '无记录';
+      case CheckInDayStatus.todayProgress:
+        return '今日 ${day.count ?? store.todayCount()}/$goal';
+      case CheckInDayStatus.future:
+        return '未到';
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final days = store.weekCheckIns();
+    final streak = store.streakDays();
+
+    return Column(
+      key: const ValueKey('me_week_checkin'),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('本周打卡', style: Theme.of(context).textTheme.titleSmall),
+        const SizedBox(height: 10),
+        Row(
+          children: [
+            for (var i = 0; i < days.length; i++)
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 2),
+                  child: Tooltip(
+                    message: _tooltip(days[i]),
+                    child: Column(
+                      children: [
+                        Text(
+                          _labels[i],
+                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                color: scheme.onSurfaceVariant,
+                              ),
+                        ),
+                        const SizedBox(height: 6),
+                        _DayDot(day: days[i], scheme: scheme),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
+        const SizedBox(height: 10),
+        Text(
+          '已连续 $streak 天',
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+      ],
+    );
+  }
+}
+
+class _DayDot extends StatelessWidget {
+  const _DayDot({required this.day, required this.scheme});
+
+  final CheckInDay day;
+  final ColorScheme scheme;
+
+  @override
+  Widget build(BuildContext context) {
+    final status = day.status;
+    final isMet = status == CheckInDayStatus.met;
+    final isToday = status == CheckInDayStatus.todayProgress;
+    final isMissed = status == CheckInDayStatus.missed;
+
+    late final Color fill;
+    late final Color border;
+    late final double borderWidth;
+    if (isMet) {
+      fill = scheme.primary;
+      border = scheme.primary;
+      borderWidth = 0;
+    } else if (isToday) {
+      fill = scheme.primary.withValues(alpha: 0.18);
+      border = scheme.primary;
+      borderWidth = 2.5;
+    } else if (isMissed) {
+      fill = Colors.transparent;
+      border = scheme.outline;
+      borderWidth = 1.5;
+    } else if (status == CheckInDayStatus.empty) {
+      fill = Colors.transparent;
+      border = scheme.outlineVariant;
+      borderWidth = 1;
+    } else {
+      fill = scheme.outlineVariant.withValues(alpha: 0.25);
+      border = scheme.outlineVariant.withValues(alpha: 0.4);
+      borderWidth = 1;
+    }
+
+    return SizedBox(
+      width: 40,
+      height: 40,
+      child: Center(
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 180),
+          width: 28,
+          height: 28,
+          decoration: BoxDecoration(
+            color: fill,
+            shape: BoxShape.circle,
+            border: Border.all(color: border, width: borderWidth),
+          ),
+          child: isMet
+              ? Icon(Icons.check, size: 16, color: scheme.onPrimary)
+              : (isToday
+                  ? Center(
+                      child: Container(
+                        width: 6,
+                        height: 6,
+                        decoration: BoxDecoration(
+                          color: scheme.primary,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    )
+                  : null),
+        ),
+      ),
+    );
+  }
+}
