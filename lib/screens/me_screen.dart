@@ -213,6 +213,17 @@ class _MeScreenState extends State<MeScreen> {
                     widget.store.todayGoalMet ? '今日目标已完成，棒！' : '再学 ${goal - today} 个就达标',
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
+                  const SizedBox(height: 8),
+                  Text(
+                    () {
+                      final id = widget.store.selectedBookId();
+                      if (id == null || id.isEmpty) return '暂无到期复习';
+                      final due = widget.store.dueReviewCountForBook(id);
+                      return due == 0 ? '暂无到期复习' : '待复习 $due 个（含到期词）';
+                    }(),
+                    key: const ValueKey('me_due_review'),
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
                 ],
               ),
             ),
