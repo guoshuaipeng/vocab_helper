@@ -37,3 +37,21 @@ class ReviewQueue {
     _queue.add(w);
   }
 }
+
+/// Build self-test pool: optional unit ∩ optional wrong-only (R32).
+List<Word> buildQuizPool({
+  required List<Word> bookWords,
+  required Set<String> wrongIds,
+  String? unitFilter,
+  bool wrongOnly = false,
+}) {
+  Iterable<Word> list = bookWords;
+  if (unitFilter != null && unitFilter.isNotEmpty) {
+    list = list.where((w) => w.unit == unitFilter);
+  }
+  if (wrongOnly) {
+    list = list.where((w) => wrongIds.contains(w.id));
+  }
+  return list.toList();
+}
+

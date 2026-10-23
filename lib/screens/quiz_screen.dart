@@ -64,6 +64,9 @@ class _QuizScreenState extends State<QuizScreen> {
   final FocusNode _spellFocus = FocusNode();
   /// null until checked; true/false after grade.
   bool? _spellOk;
+  /// R32: quiz pool = wrong words only (respects unit when mode/unit filter).
+  bool _poolWrongOnly = false;
+  int _wrongInScope = 0;
 
   @override
   void initState() {
@@ -75,6 +78,7 @@ class _QuizScreenState extends State<QuizScreen> {
       _ownsSpeaker = true;
     }
     _variant = widget.store.quizVariant();
+    _poolWrongOnly = widget.mode == QuizMode.wrong;
     _prepareAndBoot();
   }
 
@@ -141,43 +145,53 @@ class _QuizScreenState extends State<QuizScreen> {
       }
 
       final unitFilter = widget.store.unitFilterForBook(id);
-      List<Word> pool;
-      if (widget.mode == QuizMode.wrong) {
-        pool = filterWrongWords(
-          words: book.words,
-          wrongIds: widget.store.wrongIds(),
-          unitFilter: widget.wrongUnitScoped ? unitFilter : null,
-        );
-        if (pool.isEmpty) {
-          setState(() {
-            _book = book;
-            _loading = false;
-            _error = widget.wrongUnitScoped && (unitFilter ?? '').isNotEmpty
-                ? '当前单元没有错词可自测'
-                : '错词本是空的，先去学习或自测里答错几题吧';
-          });
-          return;
-        }
-      } else if (widget.mode == QuizMode.unit) {
-        if (unitFilter == null || unitFilter.isEmpty) {
-          setState(() {
-            _book = book;
-            _loading = false;
-            _error = '请先在学习页选择一个单元，再自测当前单元';
-          });
-          return;
-        }
-        pool = QuizEngine.poolForUnit(bookWords: book.words, unitFilter: unitFilter);
-        if (pool.isEmpty) {
-          setState(() {
-            _book = book;
-            _loading = false;
+      if (widget.mode == QuizMode.unit && (unitFilter == null || unitFilter.isEmpty)) {
+        setState(() {
+          _book = book;
+          _loading = false;
+          _error = '请先在学习页选择一个单元，再自测当前单元';
+        });
+        return;
+      }
+
+      final wrongIds = widget.store.wrongIds();
+      final String? scopeUnit = switch (widget.mode) {
+        QuizMode.unit => unitFilter,
+        QuizMode.wrong => widget.wrongUnitScoped ? unitFilter : null,
+        QuizMode.book => null,
+      };
+
+      final wrongInScope = buildQuizPool(
+        bookWords: book.words,
+        wrongIds: wrongIds,
+        unitFilter: scopeUnit,
+        wrongOnly: true,
+      ).length;
+
+      // book/unit: chip controls; wrong mode: starts wrong-only, chip can clear.
+      final useWrong = _poolWrongOnly;
+
+      final pool = buildQuizPool(
+        bookWords: book.words,
+        wrongIds: wrongIds,
+        unitFilter: scopeUnit,
+        wrongOnly: useWrong,
+      );
+
+      if (pool.isEmpty) {
+        setState(() {
+          _book = book;
+          _wrongInScope = wrongInScope;
+          _loading = false;
+          if (useWrong) {
+            _error = (scopeUnit ?? '').isNotEmpty ? '本单元没有错词' : '还没有错词，先去学或自测';
+          } else if (widget.mode == QuizMode.unit) {
             _error = '这个单元暂时没有单词';
-          });
-          return;
-        }
-      } else {
-        pool = List<Word>.from(book.words);
+          } else {
+            _error = '无法生成题目';
+          }
+        });
+        return;
       }
 
       final session = QuizEngine.buildSession(
@@ -205,6 +219,7 @@ class _QuizScreenState extends State<QuizScreen> {
         _spellCtrl.clear();
         _correctCount = 0;
         _wrongCount = 0;
+        _wrongInScope = wrongInScope;
         _loading = false;
       });
       await _speakCurrentIfListen();
@@ -258,6 +273,20 @@ class _QuizScreenState extends State<QuizScreen> {
       _spellOk = null;
       _spellCtrl.clear();
     });
+    if (_poolWrongOnly) {
+      final wrong = widget.store.wrongIds();
+      final left = _questions.skip(_index).where((q) => wrong.contains(q.target.id)).length;
+      if (left == 0) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('错词已测完')),
+        );
+        setState(() {
+          _poolWrongOnly = false;
+          _index = _questions.length;
+        });
+        return;
+      }
+    }
     _speakCurrentIfListen();
   }
 
@@ -335,6 +364,34 @@ class _QuizScreenState extends State<QuizScreen> {
     );
     setState(() {});
     await _boot();
+  }
+
+
+  Future<void> _setPoolWrongOnly(bool wrongOnly) async {
+    if (wrongOnly == _poolWrongOnly) return;
+    if (wrongOnly && _wrongInScope == 0) {
+      if (!mounted) return;
+      final unit = widget.store.selectedBookId() == null
+          ? null
+          : widget.store.unitFilterForBook(widget.store.selectedBookId()!);
+      final msg = widget.mode == QuizMode.unit && (unit ?? '').isNotEmpty
+          ? '本单元没有错词'
+          : '还没有错词，先去学或自测';
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+      return;
+    }
+    setState(() => _poolWrongOnly = wrongOnly);
+    await _boot();
+    if (!mounted) return;
+    if (wrongOnly) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('改测错词 · $_wrongInScope 个')),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('改测全部')),
+      );
+    }
   }
 
   Future<void> _onVariantChanged(String next) async {
@@ -538,6 +595,31 @@ class _QuizScreenState extends State<QuizScreen> {
             Text(
               '请安装系统英文语音包后再用听音',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
+            ),
+          ],
+          if (widget.seedQuestions == null) ...[
+            const SizedBox(height: 8),
+            Wrap(
+              key: const ValueKey('quiz_pool_chips'),
+              spacing: 8,
+              runSpacing: 4,
+              children: [
+                FilterChip(
+                  key: const ValueKey('quiz_pool_all'),
+                  label: const Text('全部词'),
+                  selected: !_poolWrongOnly,
+                  onSelected: (_) => _setPoolWrongOnly(false),
+                ),
+                FilterChip(
+                  key: const ValueKey('quiz_pool_wrong'),
+                  label: Text(_wrongInScope > 0 ? '只测错词 · $_wrongInScope' : '只测错词'),
+                  selected: _poolWrongOnly,
+                  onSelected: (v) {
+                    if (!v && _poolWrongOnly) return;
+                    _setPoolWrongOnly(true);
+                  },
+                ),
+              ],
             ),
           ],
           const SizedBox(height: 12),

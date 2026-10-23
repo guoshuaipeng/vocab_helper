@@ -608,9 +608,10 @@ class _MeScreenState extends State<MeScreen> {
                                 label: Text(hasUnit ? '自测$unit' : '自测当前单元'),
                               ),
                               FilledButton.tonalIcon(
+                                key: const ValueKey('me_quiz_wrong_pool'),
                                 onPressed: hasWrong ? widget.onQuizWrong : null,
                                 icon: const Icon(Icons.fact_check_outlined),
-                                label: const Text('自测错词'),
+                                label: const Text('去测错词'),
                               ),
                             ],
                           ),
