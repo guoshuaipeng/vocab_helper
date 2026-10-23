@@ -185,3 +185,11 @@
 - 注意：loadBook 会 withUnits()，生产词书几乎总有 unit；「全无 unit」空态用合成 WordBook 单测覆盖即可
 - 预防：sheet 截图继续用 MaterialApp.builder + ColoredBox 铺底，避免黑边被当成深色主题（承接 accent-tts 教训）
 
+
+## Round 31（2026-10-23）
+- 计划：自测第四档「词」看词选义 — 英文题干 + 四中文义；窄窗义词听写
+- 实际：quiz_variant=word；听音同款义项去重；我的页副文案四档；UI 首轮打回后宽窗 2×2 四义同屏（b66fcb2）
+- 卡住：宽窗 900×700 纵向 ListView 只露 3 项，第 4 项被「查看结果」顶出首屏
+- 根因：矮屏 Expanded 剩余高度 < 4×56；默认滚动位裁掉一项
+- 预防：多选项交验必须含宽×矮；空间不够改网格/压缩题干，勿假设 ListView「可滚」等于「首屏齐全」
+
