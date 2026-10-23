@@ -19,19 +19,21 @@ class FriendlyThumb extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final img = ColorFiltered(
-      colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+    return SizedBox(
+      width: size,
+      height: size,
       child: Image.asset(
         down
             ? 'assets/icons/thumb_down_friendly.png'
             : 'assets/icons/thumb_up_friendly.png',
         width: size,
         height: size,
+        color: color,
+        colorBlendMode: BlendMode.srcIn,
         filterQuality: FilterQuality.high,
         gaplessPlayback: true,
       ),
     );
-    return SizedBox(width: size, height: size, child: img);
   }
 }
 

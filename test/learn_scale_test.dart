@@ -62,6 +62,13 @@ void main() {
         ),
       ),
     );
+    final ctx = tester.element(find.byType(FriendlyThumb));
+    await tester.runAsync(() async {
+      await precacheImage(
+        const AssetImage('assets/icons/thumb_up_friendly.png'),
+        ctx,
+      );
+    });
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
     await expectLater(
