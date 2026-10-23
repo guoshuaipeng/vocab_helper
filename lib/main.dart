@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'screens/books_screen.dart';
 import 'screens/learn_screen.dart';
 import 'screens/me_screen.dart';
+import 'screens/photo_vocab_screen.dart';
 import 'screens/quiz_screen.dart';
 import 'screens/setup_screen.dart';
+import 'services/custom_word_overlay.dart';
 import 'services/progress_store.dart';
 import 'services/wordbook_repository.dart';
 import 'theme/app_theme.dart';
@@ -13,6 +15,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final store = await ProgressStore.open();
   final repo = WordbookRepository();
+  repo.overlay = await CustomWordOverlay.open();
   runApp(VocabApp(store: store, repo: repo));
 }
 
@@ -133,6 +136,26 @@ class _HomeShellState extends State<HomeShell> {
     if (mounted) setState(() {});
   }
 
+  Future<void> _openPhotoVocab() async {
+    final id = widget.store.selectedBookId();
+    if (id == null || id.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('请先选择词书')),
+      );
+      return;
+    }
+    final changed = await Navigator.of(context).push<bool>(
+      MaterialPageRoute(
+        builder: (_) => PhotoVocabScreen(
+          store: widget.store,
+          repo: widget.repo,
+          bookId: id,
+        ),
+      ),
+    );
+    if (mounted && changed == true) setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     final bookId = widget.store.selectedBookId();
@@ -171,6 +194,7 @@ class _HomeShellState extends State<HomeShell> {
         onQuizUnit: () => _openQuiz(QuizMode.unit),
         onQuizWrong: () => _openQuiz(QuizMode.wrong),
         onStartDueReview: _learnNew,
+        onPhotoVocab: _openPhotoVocab,
       ),
     ];
 
@@ -178,7 +202,13 @@ class _HomeShellState extends State<HomeShell> {
       appBar: AppBar(
         title: const Text('单词小助手'),
         actions: [
-          if (_index == 0)
+          if (_index == 0) ...[
+            IconButton(
+              key: const ValueKey('nav_photo_vocab'),
+              tooltip: '拍照加词',
+              onPressed: _openPhotoVocab,
+              icon: const Icon(Icons.document_scanner_outlined),
+            ),
             IconButton(
               tooltip: '自测本单元',
               onPressed: () {
@@ -188,6 +218,7 @@ class _HomeShellState extends State<HomeShell> {
               },
               icon: const Icon(Icons.quiz_outlined),
             ),
+          ],
         ],
       ),
       body: IndexedStack(index: _index, children: pages),

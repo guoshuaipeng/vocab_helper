@@ -26,16 +26,32 @@ class Word {
     );
   }
 
-  Word copyWith({String? unit}) {
+  Word copyWith({
+    String? id,
+    String? word,
+    String? meaning,
+    String? phonetic,
+    String? example,
+    String? unit,
+  }) {
     return Word(
-      id: id,
-      word: word,
-      meaning: meaning,
-      phonetic: phonetic,
-      example: example,
+      id: id ?? this.id,
+      word: word ?? this.word,
+      meaning: meaning ?? this.meaning,
+      phonetic: phonetic ?? this.phonetic,
+      example: example ?? this.example,
       unit: unit ?? this.unit,
     );
   }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'word': word,
+        'meaning': meaning,
+        if (phonetic != null) 'phonetic': phonetic,
+        if (example != null) 'example': example,
+        if (unit != null) 'unit': unit,
+      };
 }
 
 class WordBookMeta {
@@ -148,5 +164,31 @@ class WordBook {
       out.add(u);
     }
     return out;
+  }
+
+  /// Append [extra] words whose id / spelling are not already present.
+  WordBook mergedWith(List<Word> extra) {
+    if (extra.isEmpty) return this;
+    final ids = words.map((w) => w.id).toSet();
+    final spells = {for (final w in words) w.word.toLowerCase()};
+    final added = <Word>[];
+    for (final w in extra) {
+      if (ids.contains(w.id)) continue;
+      if (spells.contains(w.word.toLowerCase())) continue;
+      added.add(w);
+      ids.add(w.id);
+      spells.add(w.word.toLowerCase());
+    }
+    if (added.isEmpty) return this;
+    final all = [...words, ...added];
+    return WordBook(
+      id: id,
+      version: version,
+      grade: grade,
+      title: title,
+      wordCount: all.length,
+      source: source,
+      words: all,
+    );
   }
 }

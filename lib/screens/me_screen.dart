@@ -22,6 +22,7 @@ class MeScreen extends StatefulWidget {
     required this.onQuizUnit,
     required this.onQuizWrong,
     required this.onStartDueReview,
+    this.onPhotoVocab,
     this.speaker,
   });
 
@@ -36,6 +37,7 @@ class MeScreen extends StatefulWidget {
   final VoidCallback onQuizWrong;
   /// Switch to learn · 认读 (R20 queue: due first). Used by due-review sheet.
   final VoidCallback onStartDueReview;
+  final VoidCallback? onPhotoVocab;
   /// Optional TTS; when null, probes with a short-lived FlutterWordSpeaker.
   final WordSpeaker? speaker;
 
@@ -434,6 +436,13 @@ class _MeScreenState extends State<MeScreen> {
                               icon: const Icon(Icons.view_list_outlined),
                               label: Text(_book == null ? '先选一本词书' : '单元进度'),
                             ),
+                            if (widget.onPhotoVocab != null)
+                              FilledButton.tonalIcon(
+                                key: const ValueKey('me_photo_vocab'),
+                                onPressed: _book == null ? null : widget.onPhotoVocab,
+                                icon: const Icon(Icons.document_scanner_outlined),
+                                label: const Text('拍照加词'),
+                              ),
                             if (_book != null)
                               OutlinedButton.icon(
                                 onPressed: _confirmClear,

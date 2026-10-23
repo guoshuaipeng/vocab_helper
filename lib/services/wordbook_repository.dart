@@ -4,12 +4,16 @@ import 'package:flutter/services.dart';
 
 import '../models/word.dart';
 import 'cross_book_search.dart';
+import 'custom_word_overlay.dart';
 
 class WordbookRepository {
   List<WordBookMeta>? _catalog;
   final Map<String, WordBook> _cache = {};
   final CrossBookSearchIndex searchIndex = CrossBookSearchIndex();
   Future<void>? _indexBuild;
+
+  /// Optional R37 overlay; set from app boot.
+  CustomWordOverlay? overlay;
 
   Future<List<WordBookMeta>> loadCatalog() async {
     if (_catalog != null) return _catalog!;
@@ -31,17 +35,25 @@ class WordbookRepository {
   }
 
   Future<WordBook> loadBook(String id) async {
-    if (_cache.containsKey(id)) return _cache[id]!;
-    final catalog = await loadCatalog();
-    final meta = catalog.firstWhere(
-      (b) => b.id == id,
-      orElse: () => throw StateError('词书不存在：$id'),
-    );
-    final raw = await rootBundle.loadString('assets/wordbooks/${meta.file}');
-    final book = WordBook.fromJson(jsonDecode(raw) as Map<String, dynamic>).withUnits();
-    _cache[id] = book;
-    return book;
+    WordBook base;
+    if (_cache.containsKey(id)) {
+      base = _cache[id]!;
+    } else {
+      final catalog = await loadCatalog();
+      final meta = catalog.firstWhere(
+        (b) => b.id == id,
+        orElse: () => throw StateError('词书不存在：$id'),
+      );
+      final raw = await rootBundle.loadString('assets/wordbooks/${meta.file}');
+      base = WordBook.fromJson(jsonDecode(raw) as Map<String, dynamic>).withUnits();
+      _cache[id] = base;
+    }
+    final extra = await overlay?.wordsForBook(id) ?? const <Word>[];
+    return base.mergedWith(extra);
   }
+
+  /// Drop cached base so next load picks up asset changes (overlay always fresh).
+  void invalidateBookCache(String id) => _cache.remove(id);
 
   /// Start or await background index build after catalog is ready.
   Future<void> ensureSearchIndex() {
