@@ -4,13 +4,13 @@
   "grade": "七年级上",
   "title": "沪教牛津 · 七年级上（2024）",
   "wordCount": 330,
-  "source": "对照公开教辅整理（英语朗读宝 Unit1–8 词+义；bzxz 词头交叉）。个人学习用，非官方授权原文。校验草稿日期 2026-10-23。最终以纸质课本词汇表为准。目标约337；本文件 330 条。",
+  "source": "对照公开教辅整理（英语朗读宝 Unit1–8 词+义；bzxz 词头交叉）。个人学习用，非官方授权原文。校验草稿日期 2026-10-23。最终以纸质课本词汇表为准。目标约337；本文件 330 条。；phonetic: dictionaryapi.dev + spot-check (R44)",
   "words": [
     {
       "id": "hj-ox-7a-1",
       "word": "guitar",
       "meaning": "吉他",
-      "phonetic": "",
+      "phonetic": "/ɡɪˈtɑː(ɹ)/",
       "example": "",
       "unit": "Unit 1"
     },
@@ -18,47 +18,47 @@
       "id": "hj-ox-7a-2",
       "word": "honest",
       "meaning": "诚实的",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈɒnɪst/",
+      "example": "We’re the most honest people you will ever come across.",
       "unit": "Unit 1"
     },
     {
       "id": "hj-ox-7a-3",
       "word": "patient",
       "meaning": "有耐心的",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈpeɪʃənt/",
+      "example": "The subject of a passive verb is usually a patient.",
       "unit": "Unit 1"
     },
     {
       "id": "hj-ox-7a-4",
       "word": "improve",
       "meaning": "改进；改善",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ɪmˈpɹuːv/",
+      "example": "Buying more servers would improve performance.",
       "unit": "Unit 1"
     },
     {
       "id": "hj-ox-7a-5",
       "word": "confident",
       "meaning": "自信的；有自信心的",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈkɒn.fɪ.dənt/",
+      "example": "I'm pretty confident that she's not lying, she's acting normally.",
       "unit": "Unit 1"
     },
     {
       "id": "hj-ox-7a-6",
       "word": "courage",
       "meaning": "勇气；胆量",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈkʌɹɪdʒ/",
+      "example": "It takes a lot of courage to be successful in business.",
       "unit": "Unit 1"
     },
     {
       "id": "hj-ox-7a-7",
       "word": "friendship",
       "meaning": "友谊；朋友关系",
-      "phonetic": "",
+      "phonetic": "/ˈfɹɛndʃɪp/",
       "example": "",
       "unit": "Unit 1"
     },
@@ -66,32 +66,32 @@
       "id": "hj-ox-7a-8",
       "word": "admiration",
       "meaning": "钦佩；赞赏",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˌæd.mɚˈeɪʃ.ən/",
+      "example": "They looked at the landscape in admiration.",
       "unit": "Unit 1"
     },
     {
       "id": "hj-ox-7a-9",
       "word": "respect",
       "meaning": "尊敬；尊重",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ɹɪˈspɛkt/",
+      "example": "He is an intellectual giant, and I have great respect for him.",
       "unit": "Unit 1"
     },
     {
       "id": "hj-ox-7a-10",
       "word": "support",
       "meaning": "支持；鼓励",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/səˈpɔːt/",
+      "example": "Don't move that beam! It's a support for the whole platform.",
       "unit": "Unit 1"
     },
     {
       "id": "hj-ox-7a-11",
       "word": "trust",
       "meaning": "信任；信赖",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/trʊst/",
+      "example": "He needs to regain her trust if he is ever going to win her back.",
       "unit": "Unit 1"
     },
     {
@@ -99,127 +99,127 @@
       "word": "survey",
       "meaning": "调查",
       "phonetic": "",
-      "example": "",
+      "example": "The owners of the adjoining plots had conflicting surveys.",
       "unit": "Unit 1"
     },
     {
       "id": "hj-ox-7a-13",
       "word": "personal",
       "meaning": "个性的",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈpɜː.sən.əl/",
+      "example": "Her song was her personal look at the values of friendship.",
       "unit": "Unit 1"
     },
     {
       "id": "hj-ox-7a-14",
       "word": "quality",
       "meaning": "品质；品德",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈkwɒlɪti/",
+      "example": "Quality of life is usually determined by health, education, and income.",
       "unit": "Unit 1"
     },
     {
       "id": "hj-ox-7a-15",
       "word": "caring",
       "meaning": "关心他人的；体贴人的",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈkɛə.ɹɪŋ/",
+      "example": "\"She doesn't care what you think.\" \"I don't care, I'm still going.\"",
       "unit": "Unit 1"
     },
     {
       "id": "hj-ox-7a-16",
       "word": "describe",
       "meaning": "描述；形容",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/dəˈskɹaɪb/",
+      "example": "The feeling is difficult to describe, but not unpleasant.",
       "unit": "Unit 1"
     },
     {
       "id": "hj-ox-7a-17",
       "word": "appearance",
       "meaning": "外貌",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/əˈpɪəɹəns/",
+      "example": "His sudden appearance surprised me.",
       "unit": "Unit 1"
     },
     {
       "id": "hj-ox-7a-18",
       "word": "straight",
       "meaning": "直的",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/stɹeɪt/",
+      "example": "My friends call straights \"heteros\".",
       "unit": "Unit 1"
     },
     {
       "id": "hj-ox-7a-19",
       "word": "dark",
       "meaning": "褐色的；乌黑的",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/dɑːk/",
+      "example": "The room was too dark for reading.",
       "unit": "Unit 1"
     },
     {
       "id": "hj-ox-7a-20",
       "word": "same",
       "meaning": "同一的；相同的",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/seɪm/",
+      "example": "Are you the same person who phoned me yesterday?",
       "unit": "Unit 1"
     },
     {
       "id": "hj-ox-7a-21",
       "word": "basic",
       "meaning": "基本的；基础的",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈbeɪsɪk/",
+      "example": "Rice is a basic for many Asian villagers.",
       "unit": "Unit 1"
     },
     {
       "id": "hj-ox-7a-22",
       "word": "thought",
       "meaning": "想法",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/θɔːt/",
+      "example": "Idly, the detective thought what his next move should be.",
       "unit": "Unit 1"
     },
     {
       "id": "hj-ox-7a-23",
       "word": "however",
       "meaning": "然而；不过",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/hɑʊˈɛvə/",
+      "example": "However clear you think you've been, many questions will remain.",
       "unit": "Unit 1"
     },
     {
       "id": "hj-ox-7a-24",
       "word": "glad",
       "meaning": "高兴的；愉快的",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ɡlæd/",
+      "example": "I'm glad the rain has finally stopped.",
       "unit": "Unit 1"
     },
     {
       "id": "hj-ox-7a-25",
       "word": "rise",
       "meaning": "上升",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ɹaɪs/",
+      "example": "to rise a hill",
       "unit": "Unit 1"
     },
     {
       "id": "hj-ox-7a-26",
       "word": "end",
       "meaning": "结局",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ɛnd/",
+      "example": "At the end of the road, turn left.",
       "unit": "Unit 1"
     },
     {
       "id": "hj-ox-7a-27",
       "word": "heart",
       "meaning": "心",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/hɑːt/",
+      "example": "The team lost, but they showed a lot of heart.",
       "unit": "Unit 1"
     },
     {
@@ -362,7 +362,7 @@
       "id": "hj-ox-7a-45",
       "word": "geography",
       "meaning": "地理(学)",
-      "phonetic": "",
+      "phonetic": "/dʒɪˈɒɡɹəfi/",
       "example": "",
       "unit": "Unit 2"
     },
@@ -370,39 +370,39 @@
       "id": "hj-ox-7a-46",
       "word": "corner",
       "meaning": "角；墙角",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈkɔːnə(ɹ)/",
+      "example": "The corners of the wire mesh were reinforced with little blobs of solder.",
       "unit": "Unit 2"
     },
     {
       "id": "hj-ox-7a-47",
       "word": "activity",
       "meaning": "活动",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ækˈtɪ.və.ti/",
+      "example": "Pit row was abuzz with activity.",
       "unit": "Unit 2"
     },
     {
       "id": "hj-ox-7a-48",
       "word": "club",
       "meaning": "社团",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/klʌb/",
+      "example": "She was sitting in a jazz club, sipping wine and listening to a bass player's solo.",
       "unit": "Unit 2"
     },
     {
       "id": "hj-ox-7a-49",
       "word": "practise",
       "meaning": "练习；训练",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈpɹæktɪs/",
+      "example": "You should practise playing piano every day.",
       "unit": "Unit 2"
     },
     {
       "id": "hj-ox-7a-50",
       "word": "solve",
       "meaning": "解答",
-      "phonetic": "",
+      "phonetic": "/sɒlv/",
       "example": "",
       "unit": "Unit 2"
     },
@@ -410,15 +410,15 @@
       "id": "hj-ox-7a-51",
       "word": "develop",
       "meaning": "加强；增强",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/dɛˈvɛ.ləp/",
+      "example": "Let's see how things develop and then make our decision.",
       "unit": "Unit 2"
     },
     {
       "id": "hj-ox-7a-52",
       "word": "skill",
       "meaning": "技术；技能",
-      "phonetic": "",
+      "phonetic": "/skɪl/",
       "example": "",
       "unit": "Unit 2"
     },
@@ -434,7 +434,7 @@
       "id": "hj-ox-7a-54",
       "word": "magazine",
       "meaning": "杂志",
-      "phonetic": "",
+      "phonetic": "/mæɡəˈziːn/",
       "example": "",
       "unit": "Unit 2"
     },
@@ -442,7 +442,7 @@
       "id": "hj-ox-7a-55",
       "word": "teenager",
       "meaning": "(13至19岁之间的)青少年",
-      "phonetic": "",
+      "phonetic": "/ˈtiːnˌeɪ.dʒə(ɹ)/",
       "example": "",
       "unit": "Unit 2"
     },
@@ -450,23 +450,23 @@
       "id": "hj-ox-7a-56",
       "word": "greeting",
       "meaning": "问候；招呼",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈɡɹiːtɪŋ/",
+      "example": "A brilliant dawn greeted her eyes as she looked out of the window.",
       "unit": "Unit 2"
     },
     {
       "id": "hj-ox-7a-57",
       "word": "grade",
       "meaning": "年级",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ɡɹeɪd/",
+      "example": "I gave him a good grade for effort.",
       "unit": "Unit 2"
     },
     {
       "id": "hj-ox-7a-58",
       "word": "energy",
       "meaning": "精力；活力",
-      "phonetic": "",
+      "phonetic": "/ˈɛnəd͡ʒi/",
       "example": "",
       "unit": "Unit 2"
     },
@@ -474,7 +474,7 @@
       "id": "hj-ox-7a-59",
       "word": "drama",
       "meaning": "戏；剧",
-      "phonetic": "",
+      "phonetic": "/ˈdɹɑːmə/",
       "example": "",
       "unit": "Unit 2"
     },
@@ -482,15 +482,15 @@
       "id": "hj-ox-7a-60",
       "word": "sincerely",
       "meaning": "真诚地；诚实地",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/sɪnˈsɪəli/",
+      "example": "I sincerely hope they make it home safely.",
       "unit": "Unit 2"
     },
     {
       "id": "hj-ox-7a-61",
       "word": "diary",
       "meaning": "日记；日记簿",
-      "phonetic": "",
+      "phonetic": "/ˈdaɪəɹi/",
       "example": "",
       "unit": "Unit 2"
     },
@@ -499,30 +499,30 @@
       "word": "project",
       "meaning": "课题",
       "phonetic": "",
-      "example": "",
+      "example": "Projects like Pruitt-Igoe were considered irreparably dangerous and demolished.",
       "unit": "Unit 2"
     },
     {
       "id": "hj-ox-7a-63",
       "word": "poster",
       "meaning": "海报",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈpoʊstɚ/",
+      "example": "He has posters of his favorite band, sports teams and holiday resorts up.",
       "unit": "Unit 2"
     },
     {
       "id": "hj-ox-7a-64",
       "word": "realize",
       "meaning": "意识到",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈɹɪə.laɪz/",
+      "example": "The objectives of the project were never fully realized.",
       "unit": "Unit 2"
     },
     {
       "id": "hj-ox-7a-65",
       "word": "luckily",
       "meaning": "幸运地；幸好",
-      "phonetic": "",
+      "phonetic": "/ˈlʌkəli/",
       "example": "",
       "unit": "Unit 2"
     },
@@ -530,15 +530,15 @@
       "id": "hj-ox-7a-66",
       "word": "just",
       "meaning": "恰好",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/d͡ʒʌst/",
+      "example": "It is a just assessment of the facts.",
       "unit": "Unit 2"
     },
     {
       "id": "hj-ox-7a-67",
       "word": "presentation",
       "meaning": "演示",
-      "phonetic": "",
+      "phonetic": "/ˌpɹizənˈteɪʃən/",
       "example": "",
       "unit": "Unit 2"
     },
@@ -546,40 +546,40 @@
       "id": "hj-ox-7a-68",
       "word": "mood",
       "meaning": "情绪；心情",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/muːd/",
+      "example": "I've been in a bad mood since I dumped my boyfriend.",
       "unit": "Unit 2"
     },
     {
       "id": "hj-ox-7a-69",
       "word": "mind",
       "meaning": "介意",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/maɪnd/",
+      "example": "Despite advancing age, his mind was still as sharp as ever.",
       "unit": "Unit 2"
     },
     {
       "id": "hj-ox-7a-70",
       "word": "pack",
       "meaning": "(把……)打包",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/pæk/",
+      "example": "The horses carried the packs across the plain.",
       "unit": "Unit 2"
     },
     {
       "id": "hj-ox-7a-71",
       "word": "celebrate",
       "meaning": "庆祝；庆贺",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈsɛl.ə.bɹeɪt/",
+      "example": "to celebrate the name of the Most High",
       "unit": "Unit 2"
     },
     {
       "id": "hj-ox-7a-72",
       "word": "success",
       "meaning": "成功",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/səkˈsɛs/",
+      "example": "His third attempt to pass the entrance exam was a success.",
       "unit": "Unit 2"
     },
     {
@@ -706,160 +706,160 @@
       "id": "hj-ox-7a-88",
       "word": "wet",
       "meaning": "潮湿的",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/wɛt/",
+      "example": "Don't go out in the wet.",
       "unit": "Unit 3"
     },
     {
       "id": "hj-ox-7a-89",
       "word": "deep",
       "meaning": "深的",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/diːp/",
+      "example": "creatures of the deep",
       "unit": "Unit 3"
     },
     {
       "id": "hj-ox-7a-90",
       "word": "sandy",
       "meaning": "铺满沙子的；含沙的",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈsændi/",
+      "example": "Some plants grow best in sandy soil.",
       "unit": "Unit 3"
     },
     {
       "id": "hj-ox-7a-91",
       "word": "kick",
       "meaning": "踢；踹",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/kɪk/",
+      "example": "A kick to the knee.",
       "unit": "Unit 3"
     },
     {
       "id": "hj-ox-7a-92",
       "word": "town",
       "meaning": "镇；市镇",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/taʊn/",
+      "example": "This town is really dangerous because these youngsters have Beretta handguns.",
       "unit": "Unit 3"
     },
     {
       "id": "hj-ox-7a-93",
       "word": "feature",
       "meaning": "特色；特征",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈfiːtʃə/",
+      "example": "one of the features of the landscape",
       "unit": "Unit 3"
     },
     {
       "id": "hj-ox-7a-94",
       "word": "south",
       "meaning": "南；南方",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/sʌʊθ/",
+      "example": "The moon souths at nine.",
       "unit": "Unit 3"
     },
     {
       "id": "hj-ox-7a-95",
       "word": "clear",
       "meaning": "晴朗的",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/klɪə(ɹ)/",
+      "example": "a room ten feet square in the clear",
       "unit": "Unit 3"
     },
     {
       "id": "hj-ox-7a-96",
       "word": "loudly",
       "meaning": "喧闹地；响亮地",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈlaʊdli/",
+      "example": "He spoke loudly so that his brother could hear him from across the street.",
       "unit": "Unit 3"
     },
     {
       "id": "hj-ox-7a-97",
       "word": "thunder",
       "meaning": "雷",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈθʌndə/",
+      "example": "Thunder is preceded by lightning.",
       "unit": "Unit 3"
     },
     {
       "id": "hj-ox-7a-98",
       "word": "lightning",
       "meaning": "闪电",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈlaɪt.nɪŋ/",
+      "example": "Although we did not see the lightning, we did hear the thunder.",
       "unit": "Unit 3"
     },
     {
       "id": "hj-ox-7a-99",
       "word": "fresh",
       "meaning": "新鲜的",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/fɹɛʃ/",
+      "example": "He followed the fresh hoofprints to find the deer.",
       "unit": "Unit 3"
     },
     {
       "id": "hj-ox-7a-100",
       "word": "gather",
       "meaning": "采集(植物、水果等)",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈɡæðə/",
+      "example": "I've been gathering ideas from the people I work with.",
       "unit": "Unit 3"
     },
     {
       "id": "hj-ox-7a-101",
       "word": "peaceful",
       "meaning": "安静的；平静的",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈpiːsfəl/",
+      "example": "peaceful protest",
       "unit": "Unit 3"
     },
     {
       "id": "hj-ox-7a-102",
       "word": "snake",
       "meaning": "蛇",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈsneɪk/",
+      "example": "The path snaked through the forest.",
       "unit": "Unit 3"
     },
     {
       "id": "hj-ox-7a-103",
       "word": "through",
       "meaning": "自始至终；从头到尾",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/θɹuː/",
+      "example": "Interstate highways form a nationwide system of through roads.",
       "unit": "Unit 3"
     },
     {
       "id": "hj-ox-7a-104",
       "word": "part",
       "meaning": "区域；地区",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/pɑːt/",
+      "example": "to do one’s part",
       "unit": "Unit 3"
     },
     {
       "id": "hj-ox-7a-105",
       "word": "article",
       "meaning": "文章",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈɑːtɪkəl/",
+      "example": "a sales article",
       "unit": "Unit 3"
     },
     {
       "id": "hj-ox-7a-106",
       "word": "reason",
       "meaning": "原因；理由",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈɹiːzən/",
+      "example": "Mankind should develop reason above all other virtues.",
       "unit": "Unit 3"
     },
     {
       "id": "hj-ox-7a-107",
       "word": "alive",
       "meaning": "有生气；有活力",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/əˈlaɪv/",
+      "example": "As long as the plant is alive, he will continue to water it.",
       "unit": "Unit 3"
     },
     {
@@ -874,55 +874,55 @@
       "id": "hj-ox-7a-109",
       "word": "follow",
       "meaning": "按……方式发展",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈfɒləʊ/",
+      "example": "a follow shot",
       "unit": "Unit 3"
     },
     {
       "id": "hj-ox-7a-110",
       "word": "divide",
       "meaning": "(使)分开",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/dɪˈvaɪd/",
+      "example": "Stay on your side of the divide, please.",
       "unit": "Unit 3"
     },
     {
       "id": "hj-ox-7a-111",
       "word": "decide",
       "meaning": "对……作出抉择；决定",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/dɪˈsaɪd/",
+      "example": "Her last-minute goal decided the game.",
       "unit": "Unit 3"
     },
     {
       "id": "hj-ox-7a-112",
       "word": "crop",
       "meaning": "庄稼；作物",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/kɹɒp/",
+      "example": "the farmer had lots of crops to sell at the market",
       "unit": "Unit 3"
     },
     {
       "id": "hj-ox-7a-113",
       "word": "culture",
       "meaning": "文化；文明",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈkʌlt͡ʃə/",
+      "example": "I'm headed to the lab to make sure my cell culture hasn't died.",
       "unit": "Unit 3"
     },
     {
       "id": "hj-ox-7a-114",
       "word": "local",
       "meaning": "地方的；当地的",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈləʊkl̩/",
+      "example": "It's easy to tell the locals from the tourists.",
       "unit": "Unit 3"
     },
     {
       "id": "hj-ox-7a-115",
       "word": "tradition",
       "meaning": "传统",
-      "phonetic": "",
+      "phonetic": "/tɹəˈdɪʃn̩/",
       "example": "",
       "unit": "Unit 3"
     },
@@ -930,8 +930,8 @@
       "id": "hj-ox-7a-116",
       "word": "continue",
       "meaning": "持续；继续存在",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/kənˈtɪnjuː/",
+      "example": "Do you want me to continue to unload these?",
       "unit": "Unit 3"
     },
     {
@@ -1002,31 +1002,31 @@
       "id": "hj-ox-7a-201",
       "word": "system",
       "meaning": "系统",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈsɪstəm/",
+      "example": "There are eight planets in the solar system.",
       "unit": "Unit 4"
     },
     {
       "id": "hj-ox-7a-202",
       "word": "file",
       "meaning": "档案",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/faɪl/",
+      "example": "I'm going to delete these unwanted files to free up some disk space.",
       "unit": "Unit 4"
     },
     {
       "id": "hj-ox-7a-203",
       "word": "amazing",
       "meaning": "令人大为惊奇的",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/əˈmeɪzɪŋ/",
+      "example": "He was amazed when he found that the girl was a robot.",
       "unit": "Unit 4"
     },
     {
       "id": "hj-ox-7a-204",
       "word": "planet",
       "meaning": "行星",
-      "phonetic": "",
+      "phonetic": "/ˈplænət/",
       "example": "",
       "unit": "Unit 4"
     },
@@ -1034,48 +1034,48 @@
       "id": "hj-ox-7a-205",
       "word": "billion",
       "meaning": "十亿",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈbɪljən/",
+      "example": "There were billions of people at the concert.",
       "unit": "Unit 4"
     },
     {
       "id": "hj-ox-7a-206",
       "word": "cover",
       "meaning": "盖；覆盖",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈkʌvə/",
+      "example": "The soldiers took cover behind a ruined building.",
       "unit": "Unit 4"
     },
     {
       "id": "hj-ox-7a-207",
       "word": "area",
       "meaning": "地区；地域",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈɛə̯ɹɪə̯/",
+      "example": "The photo is a little dark in that area.",
       "unit": "Unit 4"
     },
     {
       "id": "hj-ox-7a-208",
       "word": "freezing",
       "meaning": "极冷的",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈfɹiːz.ɪŋ/",
+      "example": "The lake froze solid.",
       "unit": "Unit 4"
     },
     {
       "id": "hj-ox-7a-209",
       "word": "north",
       "meaning": "北；北方",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/nɔːθ/",
+      "example": "Minnesota is in the north of the USA.",
       "unit": "Unit 4"
     },
     {
       "id": "hj-ox-7a-210",
       "word": "pole",
       "meaning": "（行星的）极；地极",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/pɔːl/",
+      "example": "He poled off the serial of the Gulfstream to confirm its identity.",
       "unit": "Unit 4"
     },
     {
@@ -1090,7 +1090,7 @@
       "id": "hj-ox-7a-212",
       "word": "metre",
       "meaning": "米",
-      "phonetic": "",
+      "phonetic": "/ˈmiːtə/",
       "example": "",
       "unit": "Unit 4"
     },
@@ -1098,31 +1098,31 @@
       "id": "hj-ox-7a-213",
       "word": "reach",
       "meaning": "足够达到",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ɹiːt͡ʃ/",
+      "example": "The fruit is beyond my reach.",
       "unit": "Unit 4"
     },
     {
       "id": "hj-ox-7a-214",
       "word": "grain",
       "meaning": "谷粒",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ɡɹeɪn/",
+      "example": "We stored a thousand tons of grain for the winter.",
       "unit": "Unit 4"
     },
     {
       "id": "hj-ox-7a-215",
       "word": "wide",
       "meaning": "宽的；宽阔的",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/wɑed/",
+      "example": "We walked down a wide corridor.",
       "unit": "Unit 4"
     },
     {
       "id": "hj-ox-7a-216",
       "word": "whale",
       "meaning": "鲸",
-      "phonetic": "",
+      "phonetic": "/weɪl/",
       "example": "",
       "unit": "Unit 4"
     },
@@ -1130,31 +1130,31 @@
       "id": "hj-ox-7a-217",
       "word": "butterfly",
       "meaning": "蝴蝶",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈbʌtə(ɹ)flaɪ/",
+      "example": "butterfly tape",
       "unit": "Unit 4"
     },
     {
       "id": "hj-ox-7a-218",
       "word": "provide",
       "meaning": "提供；供应",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/pɹəˈvaɪd/",
+      "example": "It is difficult to provide for my family working on minimum wage.",
       "unit": "Unit 4"
     },
     {
       "id": "hj-ox-7a-219",
       "word": "explore",
       "meaning": "探索",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ɪkˈsplɔː/",
+      "example": "The committee has been exploring alternative solutions to the problem at hand.",
       "unit": "Unit 4"
     },
     {
       "id": "hj-ox-7a-258",
       "word": "disappear",
       "meaning": "消失；不见",
-      "phonetic": "",
+      "phonetic": "/dɪsəˈpiːɹ/",
       "example": "",
       "unit": "Unit 4"
     },
@@ -1162,7 +1162,7 @@
       "id": "hj-ox-7a-259",
       "word": "plastic",
       "meaning": "塑料",
-      "phonetic": "",
+      "phonetic": "/ˈplæstɪk/",
       "example": "",
       "unit": "Unit 4"
     },
@@ -1170,7 +1170,7 @@
       "id": "hj-ox-7a-260",
       "word": "pollution",
       "meaning": "污染",
-      "phonetic": "",
+      "phonetic": "/pəˈl(j)uːʃn̩/",
       "example": "",
       "unit": "Unit 4"
     },
@@ -1178,15 +1178,15 @@
       "id": "hj-ox-7a-261",
       "word": "protect",
       "meaning": "保护",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/pɹəˈtɛkt/",
+      "example": "Condoms are designed to protect against sexually-transmitted diseases.",
       "unit": "Unit 4"
     },
     {
       "id": "hj-ox-7a-262",
       "word": "chemical",
       "meaning": "化学制品；化学品",
-      "phonetic": "",
+      "phonetic": "/ˈkɛmɪkəl/",
       "example": "",
       "unit": "Unit 4"
     },
@@ -1202,24 +1202,24 @@
       "id": "hj-ox-7a-264",
       "word": "burn",
       "meaning": "燃烧；烧",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/bɜːn/",
+      "example": "She had second-degree burns from falling in the bonfire.",
       "unit": "Unit 4"
     },
     {
       "id": "hj-ox-7a-265",
       "word": "oil",
       "meaning": "石油；原油",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ɔɪl/",
+      "example": "I prefer to paint in oil",
       "unit": "Unit 4"
     },
     {
       "id": "hj-ox-7a-266",
       "word": "gas",
       "meaning": "天然气",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ɡæs/",
+      "example": "A lot of gas had escaped from the cylinder.",
       "unit": "Unit 4"
     },
     {
@@ -1234,7 +1234,7 @@
       "id": "hj-ox-7a-268",
       "word": "website",
       "meaning": "网站",
-      "phonetic": "",
+      "phonetic": "/ˈwɛbˌsaɪt/",
       "example": "",
       "unit": "Unit 4"
     },
@@ -1242,24 +1242,24 @@
       "id": "hj-ox-7a-269",
       "word": "emperor",
       "meaning": "皇帝",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈɛmpəɹə/",
+      "example": "The Investiture Controversy was a conflict between the Emperor and the Pope.",
       "unit": "Unit 4"
     },
     {
       "id": "hj-ox-7a-270",
       "word": "hunt",
       "meaning": "打猎",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/hʌnt/",
+      "example": "Her uncle will go out and hunt for deer, now that it is open season.",
       "unit": "Unit 4"
     },
     {
       "id": "hj-ox-7a-271",
       "word": "war",
       "meaning": "战争",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/wɔː/",
+      "example": "The war was largely between Sunni and Shia militants.",
       "unit": "Unit 4"
     },
     {
@@ -1274,7 +1274,7 @@
       "id": "hj-ox-7a-273",
       "word": "solution",
       "meaning": "解决办法",
-      "phonetic": "",
+      "phonetic": "/səˈl(j)uːʃən/",
       "example": "",
       "unit": "Unit 4"
     },
@@ -1282,16 +1282,16 @@
       "id": "hj-ox-7a-274",
       "word": "blow",
       "meaning": "刮；吹",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/bləʊ/",
+      "example": "We're having a bit of a blow this afternoon.",
       "unit": "Unit 4"
     },
     {
       "id": "hj-ox-7a-275",
       "word": "generation",
       "meaning": "（统称）一代人",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˌd͡ʒɛnəˈɹeɪʃən/",
+      "example": "This is the book of the generations of Adam - Genesis 5:1",
       "unit": "Unit 4"
     },
     {
@@ -1394,23 +1394,23 @@
       "id": "hj-ox-7a-221",
       "word": "collect",
       "meaning": "收集；采集",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/kəˈlɛkt/",
+      "example": "Suzanne collected all the papers she had laid out.",
       "unit": "Unit 5"
     },
     {
       "id": "hj-ox-7a-222",
       "word": "leave",
       "meaning": "离开",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/liːv/",
+      "example": "I've been given three weeks' leave by my boss.",
       "unit": "Unit 5"
     },
     {
       "id": "hj-ox-7a-223",
       "word": "kilometre",
       "meaning": "千米；公里",
-      "phonetic": "",
+      "phonetic": "/kɪˈlɒmɪtə/",
       "example": "",
       "unit": "Unit 5"
     },
@@ -1418,71 +1418,71 @@
       "id": "hj-ox-7a-224",
       "word": "weak",
       "meaning": "虚弱的；无力的",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/wiːk/",
+      "example": "The child was too weak to move the boulder.",
       "unit": "Unit 5"
     },
     {
       "id": "hj-ox-7a-225",
       "word": "tie",
       "meaning": "（用线、绳等）拴",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/taɪ/",
+      "example": "It's two outs in the bottom of the ninth, tie score.",
       "unit": "Unit 5"
     },
     {
       "id": "hj-ox-7a-226",
       "word": "low",
       "meaning": "低于通常数量（或水平、价值）的",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ləʊ/",
+      "example": "Economic growth has hit a new low.",
       "unit": "Unit 5"
     },
     {
       "id": "hj-ox-7a-227",
       "word": "weigh",
       "meaning": "有……重；重",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/weɪ/",
+      "example": "He weighed out two kilos of oranges for a client.",
       "unit": "Unit 5"
     },
     {
       "id": "hj-ox-7a-228",
       "word": "breathe",
       "meaning": "呼吸",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/bɹiːð/",
+      "example": "Fish have gills so they can breathe underwater.",
       "unit": "Unit 5"
     },
     {
       "id": "hj-ox-7a-229",
       "word": "facility",
       "meaning": "设施；设备",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/fəˈsɪlɪti/",
+      "example": "The facility she shows in playing the violin is unrivalled.",
       "unit": "Unit 5"
     },
     {
       "id": "hj-ox-7a-230",
       "word": "adventure",
       "meaning": "冒险；冒险经历；奇遇",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ədˈvɛnt͡ʃə/",
+      "example": "A life full of adventures.",
       "unit": "Unit 5"
     },
     {
       "id": "hj-ox-7a-231",
       "word": "pass",
       "meaning": "沿某方向前进；向某方向移动",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/pʰeəs/",
+      "example": "the passes of the Mississippi",
       "unit": "Unit 5"
     },
     {
       "id": "hj-ox-7a-232",
       "word": "experiment",
       "meaning": "实验；试验",
-      "phonetic": "",
+      "phonetic": "/ɛk.ˈspɛ.ɹɪ.mənt/",
       "example": "",
       "unit": "Unit 5"
     },
@@ -1490,32 +1490,32 @@
       "id": "hj-ox-7a-233",
       "word": "prepare",
       "meaning": "使做好准备；把……预备好",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/pɹɪˈpɛə/",
+      "example": "We prepared the spacecraft for takeoff.",
       "unit": "Unit 5"
     },
     {
       "id": "hj-ox-7a-234",
       "word": "dream",
       "meaning": "梦想；理想；做梦；梦见",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/dɹiːm/",
+      "example": "a dream of bliss",
       "unit": "Unit 5"
     },
     {
       "id": "hj-ox-7a-235",
       "word": "chance",
       "meaning": "机会；机遇",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/tʃʰeəns/",
+      "example": "We had the chance to meet the president last week.",
       "unit": "Unit 5"
     },
     {
       "id": "hj-ox-7a-236",
       "word": "send",
       "meaning": "邮寄；发送",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/sɛnd/",
+      "example": "Every day at two o'clock, he sends his secretary out to buy him a coffee.",
       "unit": "Unit 5"
     },
     {
@@ -1530,8 +1530,8 @@
       "id": "hj-ox-7a-238",
       "word": "view",
       "meaning": "景色；风景",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/vjuː/",
+      "example": "a fine view of Lake George",
       "unit": "Unit 5"
     },
     {
@@ -1546,8 +1546,8 @@
       "id": "hj-ox-7a-288",
       "word": "experience",
       "meaning": "经历；阅历",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ɪkˈspɪə.ɹɪəns/",
+      "example": "It was an experience he would not soon forget.",
       "unit": "Unit 5"
     },
     {
@@ -1562,23 +1562,23 @@
       "id": "hj-ox-7a-290",
       "word": "island",
       "meaning": "岛",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈaɪ̯lənd/",
+      "example": "an island of colors on a butterfly's wing",
       "unit": "Unit 5"
     },
     {
       "id": "hj-ox-7a-291",
       "word": "ancient",
       "meaning": "古老的；很老的",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈeɪn.ʃənt/",
+      "example": "an ancient city  an ancient forest",
       "unit": "Unit 5"
     },
     {
       "id": "hj-ox-7a-292",
       "word": "poem",
       "meaning": "诗",
-      "phonetic": "",
+      "phonetic": "/ˈpəʊ̯ɪm/",
       "example": "",
       "unit": "Unit 5"
     },
@@ -1586,72 +1586,72 @@
       "id": "hj-ox-7a-293",
       "word": "express",
       "meaning": "表示；表达；表露",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ɛk.ˈspɹɛs/",
+      "example": "I took the express into town.",
       "unit": "Unit 5"
     },
     {
       "id": "hj-ox-7a-294",
       "word": "determination",
       "meaning": "决心；坚毅；坚定",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/dɪˌtɜːmɪˈneɪʃən/",
+      "example": "Through sheer determination, we managed to escape from the tornado.",
       "unit": "Unit 5"
     },
     {
       "id": "hj-ox-7a-295",
       "word": "universe",
       "meaning": "宇宙",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈjuːnɪˌvɜːs/",
+      "example": "Powerful telescopes look far back into the distant reaches of the Universe.",
       "unit": "Unit 5"
     },
     {
       "id": "hj-ox-7a-296",
       "word": "already",
       "meaning": "已经；早已",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ɔːlˈɹɛdi/",
+      "example": "Are you quitting already?",
       "unit": "Unit 5"
     },
     {
       "id": "hj-ox-7a-297",
       "word": "century",
       "meaning": "世纪",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈsɛn.t͡ʃə.ɹiː/",
+      "example": "That was his tenth professional century.",
       "unit": "Unit 5"
     },
     {
       "id": "hj-ox-7a-298",
       "word": "neighbour",
       "meaning": "邻居",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈneɪbə/",
+      "example": "My neighbour has two noisy cats.",
       "unit": "Unit 5"
     },
     {
       "id": "hj-ox-7a-299",
       "word": "circle",
       "meaning": "环行",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈsɜɹkəl/",
+      "example": "Children, please join hands and form a circle.",
       "unit": "Unit 5"
     },
     {
       "id": "hj-ox-7a-300",
       "word": "surface",
       "meaning": "表面；表层；面",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈsɜːfɪs/",
+      "example": "On the surface, the spy looked like a typical businessman.",
       "unit": "Unit 5"
     },
     {
       "id": "hj-ox-7a-301",
       "word": "release",
       "meaning": "放开；松开；使自由移动",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ɹɪˈliːs/",
+      "example": "The video store advertised that it had all the latest releases.",
       "unit": "Unit 5"
     },
     {
@@ -1666,8 +1666,8 @@
       "id": "hj-ox-7a-303",
       "word": "programme",
       "meaning": "计划；方案",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈpɹəʊɡɹæm/",
+      "example": "Our program for today’s exercise class includes swimming and jogging.",
       "unit": "Unit 5"
     },
     {
@@ -1714,23 +1714,23 @@
       "id": "hj-ox-7a-125",
       "word": "guide",
       "meaning": "指南；手册",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ɡaɪd/",
+      "example": "The guide led us around the museum and explained the exhibits.",
       "unit": "Unit 6"
     },
     {
       "id": "hj-ox-7a-126",
       "word": "east",
       "meaning": "东；东方",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/iːst/",
+      "example": "the east front of a cathedral",
       "unit": "Unit 6"
     },
     {
       "id": "hj-ox-7a-127",
       "word": "west",
       "meaning": "西；西方",
-      "phonetic": "",
+      "phonetic": "/wɛst/",
       "example": "",
       "unit": "Unit 6"
     },
@@ -1738,23 +1738,23 @@
       "id": "hj-ox-7a-128",
       "word": "mix",
       "meaning": "混合；结合",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈmɪks/",
+      "example": "Mix the eggs and milk with the flour until the consistency is smooth.",
       "unit": "Unit 6"
     },
     {
       "id": "hj-ox-7a-129",
       "word": "western",
       "meaning": "西方的；西方国家的",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈwɛstən/",
+      "example": "the western approaches",
       "unit": "Unit 6"
     },
     {
       "id": "hj-ox-7a-130",
       "word": "style",
       "meaning": "风格",
-      "phonetic": "",
+      "phonetic": "/staɪl/",
       "example": "",
       "unit": "Unit 6"
     },
@@ -1762,7 +1762,7 @@
       "id": "hj-ox-7a-131",
       "word": "popular",
       "meaning": "大众喜爱的；广受欢迎的",
-      "phonetic": "",
+      "phonetic": "/ˈpɒpjʊlə/",
       "example": "",
       "unit": "Unit 6"
     },
@@ -1770,144 +1770,144 @@
       "id": "hj-ox-7a-132",
       "word": "site",
       "meaning": "(建筑物、城镇等的)地点",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/saɪt/",
+      "example": "the site of a city or of a house",
       "unit": "Unit 6"
     },
     {
       "id": "hj-ox-7a-133",
       "word": "across",
       "meaning": "在……对面",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/əˈkɹɑs/",
+      "example": "I solved all of the acrosses, but then got stuck on 3 down.",
       "unit": "Unit 6"
     },
     {
       "id": "hj-ox-7a-134",
       "word": "adult",
       "meaning": "成年人",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/əˈdʌlt/",
+      "example": "an adult human, animal, or plant",
       "unit": "Unit 6"
     },
     {
       "id": "hj-ox-7a-135",
       "word": "senior",
       "meaning": "老年人；长者",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈsiːnjə(r)/",
+      "example": "He was four years her senior.",
       "unit": "Unit 6"
     },
     {
       "id": "hj-ox-7a-136",
       "word": "customer",
       "meaning": "顾客",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈkʌstəmə/",
+      "example": "Every person who passes by is a potential customer.",
       "unit": "Unit 6"
     },
     {
       "id": "hj-ox-7a-137",
       "word": "design",
       "meaning": "设计",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/dɪˈzaɪn/",
+      "example": "To be hateful of the truth by design.",
       "unit": "Unit 6"
     },
     {
       "id": "hj-ox-7a-138",
       "word": "else",
       "meaning": "其他的；别的",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ɛls/",
+      "example": "The instructor is busy. Can anyone else help me?",
       "unit": "Unit 6"
     },
     {
       "id": "hj-ox-7a-139",
       "word": "suggestion",
       "meaning": "建议；提议",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/səˈd͡ʒɛstjən/",
+      "example": "I have a small suggestion for fixing this: try lifting the left side up a bit.",
       "unit": "Unit 6"
     },
     {
       "id": "hj-ox-7a-140",
       "word": "tip",
       "meaning": "指点；实用的提示",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/tɪp/",
+      "example": "The shape of the nozzle prevents the use of aftermarket eartips.",
       "unit": "Unit 6"
     },
     {
       "id": "hj-ox-7a-141",
       "word": "historic",
       "meaning": "历史上著名的",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/(h)ɪˈstɒɹɪk/",
+      "example": "A historic opportunity",
       "unit": "Unit 6"
     },
     {
       "id": "hj-ox-7a-142",
       "word": "list",
       "meaning": "名单；目录",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/lɪst/",
+      "example": "to list a door",
       "unit": "Unit 6"
     },
     {
       "id": "hj-ox-7a-143",
       "word": "landscape",
       "meaning": "风景；景色",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈlandskeɪp/",
+      "example": "The software patent landscape has changed considerably in the last years",
       "unit": "Unit 6"
     },
     {
       "id": "hj-ox-7a-144",
       "word": "memory",
       "meaning": "回忆；记忆",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈmɛm(ə)ɹi/",
+      "example": "Memory is a facility common to all animals.",
       "unit": "Unit 6"
     },
     {
       "id": "hj-ox-7a-145",
       "word": "general",
       "meaning": "将军",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈd͡ʒɛnɹəl/",
+      "example": "We have dealt with the generals; now let us turn to the particulars.",
       "unit": "Unit 6"
     },
     {
       "id": "hj-ox-7a-146",
       "word": "sight",
       "meaning": "看见",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/saɪt/",
+      "example": "He is losing his sight and now can barely read.",
       "unit": "Unit 6"
     },
     {
       "id": "hj-ox-7a-147",
       "word": "natural",
       "meaning": "自然的；天然的",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈnætʃəɹəl/",
+      "example": "He's a natural on the saxophone.",
       "unit": "Unit 6"
     },
     {
       "id": "hj-ox-7a-148",
       "word": "almost",
       "meaning": "几乎；差不多",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ɔːl.ˈməʊst/",
+      "example": "Almost all people went there. - Not all but very close to it.",
       "unit": "Unit 6"
     },
     {
       "id": "hj-ox-7a-149",
       "word": "become",
       "meaning": "开始变得；变成",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/bəˈkʊm/",
+      "example": "It hath becomen so that many a man had to sterve.",
       "unit": "Unit 6"
     },
     {
@@ -1922,56 +1922,56 @@
       "id": "hj-ox-7a-151",
       "word": "influence",
       "meaning": "影响",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈɪn.flu.əns/",
+      "example": "I have absolutely no influence over him.",
       "unit": "Unit 6"
     },
     {
       "id": "hj-ox-7a-152",
       "word": "artwork",
       "meaning": "艺术作品",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈɑːtˌwɜːk/",
+      "example": "The text has been reviewed, but the photographer hasn't delivered some of the artwork.",
       "unit": "Unit 6"
     },
     {
       "id": "hj-ox-7a-153",
       "word": "painting",
       "meaning": "绘画",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈpeɪn.tɪŋ/",
+      "example": "to paint a portrait or a landscape",
       "unit": "Unit 6"
     },
     {
       "id": "hj-ox-7a-154",
       "word": "scene",
       "meaning": "场面；情景",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/siːn/",
+      "example": "the scene of the crime",
       "unit": "Unit 6"
     },
     {
       "id": "hj-ox-7a-155",
       "word": "wife",
       "meaning": "妻子",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/waɪf/",
+      "example": "A new wife for the gander is introduced into the pen.",
       "unit": "Unit 6"
     },
     {
       "id": "hj-ox-7a-156",
       "word": "stone",
       "meaning": "石头；石料",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/stəʊn/",
+      "example": "a peach stone",
       "unit": "Unit 6"
     },
     {
       "id": "hj-ox-7a-157",
       "word": "reflection",
       "meaning": "映像",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ɹɪˈflɛkʃən/",
+      "example": "The dog barked at his own reflection in the mirror.",
       "unit": "Unit 6"
     },
     {
@@ -2026,7 +2026,7 @@
       "id": "hj-ox-7a-164",
       "word": "literature",
       "meaning": "文学；文学作品",
-      "phonetic": "",
+      "phonetic": "/ˈlɪ.tə.ɹɪ.tʃə(ɹ)/",
       "example": "",
       "unit": "Unit 7"
     },
@@ -2034,47 +2034,47 @@
       "id": "hj-ox-7a-165",
       "word": "act",
       "meaning": "扮演(戏剧、电影中的角色)",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/æk/",
+      "example": "an act of goodwill",
       "unit": "Unit 7"
     },
     {
       "id": "hj-ox-7a-166",
       "word": "appreciate",
       "meaning": "欣赏；赏识",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/əˈpɹiː.si.eɪt/",
+      "example": "I appreciate your efforts",
       "unit": "Unit 7"
     },
     {
       "id": "hj-ox-7a-167",
       "word": "join",
       "meaning": "成为……的一员；参加",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈdʒɔɪn/",
+      "example": "The plumber joined the two ends of the broken pipe.",
       "unit": "Unit 7"
     },
     {
       "id": "hj-ox-7a-168",
       "word": "definitely",
       "meaning": "肯定；没问题",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈdɛf.nɪt.li/",
+      "example": "Joe definitely doesn't know how to drive a tractor.",
       "unit": "Unit 7"
     },
     {
       "id": "hj-ox-7a-169",
       "word": "fair",
       "meaning": "集市",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/feː(ə)/",
+      "example": "When will we learn to distinguish between the fair and the foul?",
       "unit": "Unit 7"
     },
     {
       "id": "hj-ox-7a-170",
       "word": "rocket",
       "meaning": "火箭",
-      "phonetic": "",
+      "phonetic": "/ˈɹɒkɪt/",
       "example": "",
       "unit": "Unit 7"
     },
@@ -2082,79 +2082,79 @@
       "id": "hj-ox-7a-171",
       "word": "launch",
       "meaning": "发射",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/lɔːnt͡ʃ/",
+      "example": "book launch",
       "unit": "Unit 7"
     },
     {
       "id": "hj-ox-7a-172",
       "word": "shout",
       "meaning": "大声说；叫",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ʃaʊt/",
+      "example": "They shouted his name to get his attention.",
       "unit": "Unit 7"
     },
     {
       "id": "hj-ox-7a-173",
       "word": "power",
       "meaning": "力量；能量",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈpaʊ.ə(ɹ)/",
+      "example": "the mechanical powers",
       "unit": "Unit 7"
     },
     {
       "id": "hj-ox-7a-174",
       "word": "moment",
       "meaning": "片刻；瞬间",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈməʊmənt/",
+      "example": "Wait a moment, while I lock the front door.",
       "unit": "Unit 7"
     },
     {
       "id": "hj-ox-7a-175",
       "word": "member",
       "meaning": "成员",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈmɛmbə/",
+      "example": "The I-beams were to become structural members of a pedestrian bridge.",
       "unit": "Unit 7"
     },
     {
       "id": "hj-ox-7a-176",
       "word": "shape",
       "meaning": "形状；外形",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ʃeɪp/",
+      "example": "The used bookshop wouldn't offer much due to the poor shape of the book.",
       "unit": "Unit 7"
     },
     {
       "id": "hj-ox-7a-177",
       "word": "hike",
       "meaning": "去……远足",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/haɪk/",
+      "example": "The tenants were not happy with the rent hike.",
       "unit": "Unit 7"
     },
     {
       "id": "hj-ox-7a-178",
       "word": "recently",
       "meaning": "不久前；最近",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈɹiːsəntli/",
+      "example": "a recently published book",
       "unit": "Unit 7"
     },
     {
       "id": "hj-ox-7a-179",
       "word": "attend",
       "meaning": "出席；参加",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/əˈtɛnd/",
+      "example": "Secretaries attend to correspondence.",
       "unit": "Unit 7"
     },
     {
       "id": "hj-ox-7a-180",
       "word": "charity",
       "meaning": "慈善机构(或组织)",
-      "phonetic": "",
+      "phonetic": "/ˈtʃɛɹəti/",
       "example": "",
       "unit": "Unit 7"
     },
@@ -2162,15 +2162,15 @@
       "id": "hj-ox-7a-181",
       "word": "sale",
       "meaning": "出售；销售",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/seɪl/",
+      "example": "He celebrated after the sale of company.",
       "unit": "Unit 7"
     },
     {
       "id": "hj-ox-7a-182",
       "word": "snack",
       "meaning": "点心；小吃",
-      "phonetic": "",
+      "phonetic": "/snæk/",
       "example": "",
       "unit": "Unit 7"
     },
@@ -2178,23 +2178,23 @@
       "id": "hj-ox-7a-183",
       "word": "decorate",
       "meaning": "装饰；装潢",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈdɛkəɹeɪt/",
+      "example": "We decorated the Christmas tree with tinsel and baubles.",
       "unit": "Unit 7"
     },
     {
       "id": "hj-ox-7a-184",
       "word": "difference",
       "meaning": "差别；差异",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈdɪfəɹən(t)s/",
+      "example": "You need to learn to be more tolerant of difference.",
       "unit": "Unit 7"
     },
     {
       "id": "hj-ox-7a-185",
       "word": "compete",
       "meaning": "参加比赛(或竞赛)",
-      "phonetic": "",
+      "phonetic": "/kəm.ˈpiːt/",
       "example": "",
       "unit": "Unit 7"
     },
@@ -2202,39 +2202,39 @@
       "id": "hj-ox-7a-186",
       "word": "event",
       "meaning": "公开活动；社交场合",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/əˈvɛnt/",
+      "example": "I went to an event in San Francisco last week.",
       "unit": "Unit 7"
     },
     {
       "id": "hj-ox-7a-187",
       "word": "spoon",
       "meaning": "勺；匙",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/spuːn/",
+      "example": "Sarah spooned some apple sauce onto her plate.",
       "unit": "Unit 7"
     },
     {
       "id": "hj-ox-7a-188",
       "word": "annual",
       "meaning": "每年的；一年一次的",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈæn.ju.əl/",
+      "example": "I read the magazine, but I usually don't purchase the annuals.",
       "unit": "Unit 7"
     },
     {
       "id": "hj-ox-7a-189",
       "word": "fantastic",
       "meaning": "极好的；了不起的",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/fænˈtæstɪk/",
+      "example": "He told fantastic stories of dragons and goblins.",
       "unit": "Unit 7"
     },
     {
       "id": "hj-ox-7a-190",
       "word": "dollar",
       "meaning": "元",
-      "phonetic": "",
+      "phonetic": "/ˈdɒlə/",
       "example": "",
       "unit": "Unit 7"
     },
@@ -2242,15 +2242,15 @@
       "id": "hj-ox-7a-191",
       "word": "pie",
       "meaning": "果馅饼",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/paɪ/",
+      "example": "The family had steak and kidney pie for dinner and cherry pie for dessert.",
       "unit": "Unit 7"
     },
     {
       "id": "hj-ox-7a-192",
       "word": "equipment",
       "meaning": "设备；器材",
-      "phonetic": "",
+      "phonetic": "/ɪˈkwɪpmənt/",
       "example": "",
       "unit": "Unit 7"
     },
@@ -2322,63 +2322,63 @@
       "id": "hj-ox-7a-239",
       "word": "ring",
       "meaning": "环状物；圈形的东西",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ɹɪŋ/",
+      "example": "onion rings",
       "unit": "Unit 8"
     },
     {
       "id": "hj-ox-7a-240",
       "word": "collection",
       "meaning": "（常指同类的）收集物",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/kəˈlɛkʃən/",
+      "example": "The asteroid belt consists of a collection of dust, rubble, and minor planets.",
       "unit": "Unit 8"
     },
     {
       "id": "hj-ox-7a-241",
       "word": "own",
       "meaning": "拥有；有",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈəʊn/",
+      "example": "When we move into the new house, the kids will each have their own bedroom.",
       "unit": "Unit 8"
     },
     {
       "id": "hj-ox-7a-242",
       "word": "valuable",
       "meaning": "贵重的",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈvæljuəbl̩/",
+      "example": "valuable gemstones",
       "unit": "Unit 8"
     },
     {
       "id": "hj-ox-7a-243",
       "word": "handle",
       "meaning": "（用手）触；碰",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈhæn.dl/",
+      "example": "The daily handle of a Las Vegas casino is typically millions of dollars.",
       "unit": "Unit 8"
     },
     {
       "id": "hj-ox-7a-244",
       "word": "glove",
       "meaning": "（分手指的）手套",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ɡlʌv/",
+      "example": "I wore gloves to keep my hands warm.",
       "unit": "Unit 8"
     },
     {
       "id": "hj-ox-7a-245",
       "word": "add",
       "meaning": "增加；添加",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/æd/",
+      "example": "to add numbers",
       "unit": "Unit 8"
     },
     {
       "id": "hj-ox-7a-246",
       "word": "envelope",
       "meaning": "信封",
-      "phonetic": "",
+      "phonetic": "/ˈɒn.və.ləʊp/",
       "example": "",
       "unit": "Unit 8"
     },
@@ -2386,15 +2386,15 @@
       "id": "hj-ox-7a-247",
       "word": "absolutely",
       "meaning": "极其",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/æb.səˈl(j)uːt.lɪ/",
+      "example": "Do you want a free cookie with that coffee?\nAbsolutely!",
       "unit": "Unit 8"
     },
     {
       "id": "hj-ox-7a-248",
       "word": "seem",
       "meaning": "好像；似乎",
-      "phonetic": "",
+      "phonetic": "/siːm/",
       "example": "",
       "unit": "Unit 8"
     },
@@ -2402,47 +2402,47 @@
       "id": "hj-ox-7a-249",
       "word": "impossible",
       "meaning": "不可能的",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ɪmˈpɒs.ə.bəl/",
+      "example": "It is difficult, if not impossible, to memorize 20,000 consecutive numbers.",
       "unit": "Unit 8"
     },
     {
       "id": "hj-ox-7a-250",
       "word": "single",
       "meaning": "单个的",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈsɪŋɡəl/",
+      "example": "The Offspring released four singles from their most recent album.",
       "unit": "Unit 8"
     },
     {
       "id": "hj-ox-7a-251",
       "word": "nail",
       "meaning": "钉；钉子",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/neɪl/",
+      "example": "When I'm nervous I bite my nails.",
       "unit": "Unit 8"
     },
     {
       "id": "hj-ox-7a-252",
       "word": "explain",
       "meaning": "解释；说明",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ɛkˈspleɪn/",
+      "example": "To explain a chapter of the Bible.",
       "unit": "Unit 8"
     },
     {
       "id": "hj-ox-7a-253",
       "word": "bit",
       "meaning": "一部分",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/bɪt/",
+      "example": "A horse hates having a bit put in its mouth.",
       "unit": "Unit 8"
     },
     {
       "id": "hj-ox-7a-254",
       "word": "similar",
       "meaning": "相像的；类似的",
-      "phonetic": "",
+      "phonetic": "/ˈsɪmələ/",
       "example": "",
       "unit": "Unit 8"
     },
@@ -2450,16 +2450,16 @@
       "id": "hj-ox-7a-255",
       "word": "coin",
       "meaning": "（一枚）硬币",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/kɔɪn/",
+      "example": "She spent some serious coin on that car!",
       "unit": "Unit 8"
     },
     {
       "id": "hj-ox-7a-256",
       "word": "soft",
       "meaning": "软的",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/sɒft/",
+      "example": "My head sank easily into the soft pillow.",
       "unit": "Unit 8"
     },
     {
@@ -2474,24 +2474,24 @@
       "id": "hj-ox-7a-309",
       "word": "waste",
       "meaning": "白费；糟蹋",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/weɪst/",
+      "example": "The cage was littered with animal waste",
       "unit": "Unit 8"
     },
     {
       "id": "hj-ox-7a-310",
       "word": "item",
       "meaning": "一件商品（或物品）",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈaɪ̯ɾm̩/",
+      "example": "Tweezers are great for manipulating small items.",
       "unit": "Unit 8"
     },
     {
       "id": "hj-ox-7a-311",
       "word": "result",
       "meaning": "后果；结果",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ɹɪˈzʌlt/",
+      "example": "the result of a course of action;  the result of a mathematical operation",
       "unit": "Unit 8"
     },
     {
@@ -2506,31 +2506,31 @@
       "id": "hj-ox-7a-313",
       "word": "bar",
       "meaning": "（长方形）条",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/bɑː/",
+      "example": "The window was protected by steel bars.",
       "unit": "Unit 8"
     },
     {
       "id": "hj-ox-7a-314",
       "word": "include",
       "meaning": "包括；包含",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ɪnˈkluːd/",
+      "example": "I will purchase the vacation package if you will include car rental.",
       "unit": "Unit 8"
     },
     {
       "id": "hj-ox-7a-315",
       "word": "size",
       "meaning": "大小",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/saɪz/",
+      "example": "The size of the building seemed to have increased since I was last there.",
       "unit": "Unit 8"
     },
     {
       "id": "hj-ox-7a-316",
       "word": "pattern",
       "meaning": "图案；花样",
-      "phonetic": "",
+      "phonetic": "/ˈpat(ə)n/",
       "example": "",
       "unit": "Unit 8"
     },
@@ -2538,56 +2538,56 @@
       "id": "hj-ox-7a-317",
       "word": "produce",
       "meaning": "生产；制造",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/pɹəˈdjuːs/",
+      "example": "to produce a side of a triangle",
       "unit": "Unit 8"
     },
     {
       "id": "hj-ox-7a-318",
       "word": "attract",
       "meaning": "吸引；招引",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/əˈtɹækt/",
+      "example": "A magnet attracts iron filings.",
       "unit": "Unit 8"
     },
     {
       "id": "hj-ox-7a-319",
       "word": "insect",
       "meaning": "昆虫",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈɪnsɛkt/",
+      "example": "Our shed has several insect infestions, including ants, yellowjackets, and wasps.",
       "unit": "Unit 8"
     },
     {
       "id": "hj-ox-7a-320",
       "word": "object",
       "meaning": "物体；物品",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈɒb.d͡ʒɛkt/",
+      "example": "Mary Jane had been the object of Peter's affection for years.",
       "unit": "Unit 8"
     },
     {
       "id": "hj-ox-7a-321",
       "word": "flat",
       "meaning": "平滑的",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/flæt/",
+      "example": "She liked to walk in her flats more than in her high heels.",
       "unit": "Unit 8"
     },
     {
       "id": "hj-ox-7a-322",
       "word": "language",
       "meaning": "语言",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈleɪŋɡwɪd͡ʒ/",
+      "example": "Deaf and mute people communicate using languages like ASL.",
       "unit": "Unit 8"
     },
     {
       "id": "hj-ox-7a-323",
       "word": "treasure",
       "meaning": "珍宝；宝物",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ˈtɹɛʒə/",
+      "example": "Oh, this ring is beautiful! I’ll treasure it forever.",
       "unit": "Unit 8"
     },
     {
@@ -2602,8 +2602,8 @@
       "id": "hj-ox-7a-325",
       "word": "real",
       "meaning": "真的",
-      "phonetic": "",
-      "example": "",
+      "phonetic": "/ɹeɪˈɑːl/",
+      "example": "This is real leather.",
       "unit": "Unit 8"
     },
     {
