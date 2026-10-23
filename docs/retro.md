@@ -193,3 +193,10 @@
 - 根因：矮屏 Expanded 剩余高度 < 4×56；默认滚动位裁掉一项
 - 预防：多选项交验必须含宽×矮；空间不够改网格/压缩题干，勿假设 ListView「可滚」等于「首屏齐全」
 
+
+## Round 32（2026-10-23）
+- 计划：自测题池 Chip「全部词 | 只测错词」；尊重单元；四档通用；无错词提示；可选我的「去测错词」
+- 实际：buildQuizPool + QuizScreen FilterChip；Me「去测错词」；有错词四态一次过（74ff88e）；空态首交因 prefs 缓存仍带 6 条错词被打回，显式 sync 后重拍 SnackBar 通过（e637ec7）
+- 卡住：同一次 testWidgets 内 setMockInitialValues 不刷新已打开的 SharedPreferences，空态截图与窄浅几乎同帧
+- 根因：InMemory prefs 实例跨 capture 复用；wrong_ids 未写回清空
+- 预防：多 capture 必须 open 后按意图 sync（clear/markWrong）；空态断言 wrongCount==0 且文案无「· N」后再 toImage
