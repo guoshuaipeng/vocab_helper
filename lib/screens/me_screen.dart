@@ -5,6 +5,7 @@ import 'package:share_plus/share_plus.dart';
 import '../models/word.dart';
 import '../services/progress_export.dart';
 import '../services/progress_store.dart';
+import '../services/unit_progress.dart';
 import '../services/word_speaker.dart';
 import '../services/wordbook_repository.dart';
 
@@ -271,7 +272,53 @@ class _MeScreenState extends State<MeScreen> {
     );
   }
 
-    Future<void> _confirmClearWrong(String bookId) async {
+
+  Future<void> _openUnitProgressSheet() async {
+    final bookId = widget.store.selectedBookId();
+    if (bookId == null || bookId.isEmpty) return;
+
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (ctx) {
+        return _UnitProgressSheet(
+          store: widget.store,
+          repo: widget.repo,
+          bookId: bookId,
+          bookTitle: _book?.title,
+          onSelectUnit: (unit) async {
+            Navigator.pop(ctx);
+            final messenger = ScaffoldMessenger.of(context);
+            if (unit == null) {
+              // 未分单元：现有筛选不支持「仅空 unit」→ 显示全部
+              await widget.store.setUnitFilterForBook(bookId, null);
+              if (!mounted) return;
+              messenger.showSnackBar(
+                const SnackBar(
+                  content: Text('这些词在「全部」里看'),
+                  duration: Duration(milliseconds: 1600),
+                ),
+              );
+            } else {
+              await widget.store.setUnitFilterForBook(bookId, unit);
+              if (!mounted) return;
+              messenger.showSnackBar(
+                SnackBar(
+                  content: Text('已筛选 · $unit'),
+                  duration: const Duration(milliseconds: 1200),
+                ),
+              );
+            }
+            widget.onRefresh();
+            widget.onStartDueReview();
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> _confirmClearWrong(String bookId) async {
     final book = _book;
     final ok = await showDialog<bool>(
       context: context,
@@ -380,6 +427,12 @@ class _MeScreenState extends State<MeScreen> {
                               label: Text(_book == null
                                   ? '先选一本词书'
                                   : '导出本词书进度'),
+                            ),
+                            TextButton.icon(
+                              key: const ValueKey('me_unit_progress'),
+                              onPressed: _book == null ? null : _openUnitProgressSheet,
+                              icon: const Icon(Icons.view_list_outlined),
+                              label: Text(_book == null ? '先选一本词书' : '单元进度'),
                             ),
                             if (_book != null)
                               OutlinedButton.icon(
@@ -1077,3 +1130,184 @@ class _DueReviewSheetState extends State<_DueReviewSheet> {
     );
   }
 }
+
+
+class _UnitProgressSheet extends StatefulWidget {
+  const _UnitProgressSheet({
+    required this.store,
+    required this.repo,
+    required this.bookId,
+    required this.onSelectUnit,
+    this.bookTitle,
+  });
+
+  final ProgressStore store;
+  final WordbookRepository repo;
+  final String bookId;
+  final String? bookTitle;
+  /// null unit = 未分单元 → caller clears filter.
+  final Future<void> Function(String? unit) onSelectUnit;
+
+  @override
+  State<_UnitProgressSheet> createState() => _UnitProgressSheetState();
+}
+
+class _UnitProgressSheetState extends State<_UnitProgressSheet> {
+  bool _loading = true;
+  UnitProgressSummary? _summary;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    try {
+      final book = await widget.repo.loadBook(widget.bookId);
+      final summary = buildUnitProgress(book: book, store: widget.store);
+      if (!mounted) return;
+      setState(() {
+        _summary = summary;
+        _loading = false;
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _summary = const UnitProgressSummary(
+          rows: [],
+          learned: 0,
+          total: 0,
+          wrong: 0,
+          hasAnyUnit: false,
+        );
+        _loading = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final maxH = MediaQuery.sizeOf(context).height * 0.7;
+    final summary = _summary;
+
+    Widget body;
+    if (_loading) {
+      body = const Padding(
+        padding: EdgeInsets.all(32),
+        child: Center(child: CircularProgressIndicator()),
+      );
+    } else if (summary == null || !summary.hasAnyUnit) {
+      body = Padding(
+        padding: const EdgeInsets.fromLTRB(8, 8, 8, 24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              '这本词书还没有按单元划分',
+              key: const ValueKey('unit_progress_empty'),
+              style: Theme.of(context).textTheme.bodyLarge,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('关闭'),
+            ),
+          ],
+        ),
+      );
+    } else {
+      body = ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: maxH - 80),
+        child: ListView.separated(
+          key: const ValueKey('unit_progress_list'),
+          shrinkWrap: true,
+          itemCount: summary.rows.length,
+          separatorBuilder: (_, __) => const Divider(height: 1),
+          itemBuilder: (context, i) {
+            final row = summary.rows[i];
+            return ListTile(
+              key: ValueKey('unit_progress_row_${row.unit}'),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              minVerticalPadding: 12,
+              title: Text(
+                row.unit,
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              ),
+              subtitle: Padding(
+                padding: const EdgeInsets.only(top: 6),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '已学 ${row.learned}/${row.total}  ·  错 ${row.wrong}',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: scheme.onSurfaceVariant,
+                          ),
+                    ),
+                    const SizedBox(height: 6),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(2),
+                      child: LinearProgressIndicator(
+                        value: row.fraction,
+                        minHeight: 3,
+                        backgroundColor: scheme.surfaceContainerHighest,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              trailing: row.isComplete
+                  ? Text(
+                      '满',
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                            color: scheme.primary,
+                          ),
+                    )
+                  : Icon(Icons.chevron_right, color: scheme.onSurfaceVariant),
+              onTap: () => widget.onSelectUnit(row.isUngrouped ? null : row.unit),
+            );
+          },
+        ),
+      );
+    }
+
+    final short = widget.bookTitle;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+      child: SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text('单元进度', style: Theme.of(context).textTheme.titleLarge),
+            if (short != null && short.isNotEmpty) ...[
+              const SizedBox(height: 4),
+              Text(
+                short,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: scheme.onSurfaceVariant,
+                    ),
+              ),
+            ],
+            if (!_loading && summary != null && summary.hasAnyUnit) ...[
+              const SizedBox(height: 8),
+              Text(
+                '已学 ${summary.learned}/${summary.total} · 错词 ${summary.wrong}',
+                key: const ValueKey('unit_progress_summary'),
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: scheme.onSurfaceVariant,
+                    ),
+              ),
+            ],
+            const SizedBox(height: 12),
+            body,
+          ],
+        ),
+      ),
+    );
+  }
+}
+

@@ -235,7 +235,7 @@ class _LearnScreenState extends State<LearnScreen> {
     await widget.store.setUnitFilterForBook(id, unit);
     await _boot();
     if (!mounted) return;
-    final msg = (unit == null || unit.isEmpty) ? '显示全部' : '已筛选 $unit';
+    final msg = (unit == null || unit.isEmpty) ? '显示全部' : '已筛选 · $unit';
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(msg), duration: const Duration(milliseconds: 1200)),
     );
