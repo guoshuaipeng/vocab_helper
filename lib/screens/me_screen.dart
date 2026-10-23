@@ -1108,10 +1108,18 @@ class _WrongBookSheetState extends State<_WrongBookSheet> {
   }
 
   Future<void> _load() async {
+    final prefix = '${widget.bookId}-';
+    final ids = widget.store.wrongIds().where((id) => id.startsWith(prefix)).toList();
+    if (ids.isEmpty) {
+      if (!mounted) return;
+      setState(() {
+        _words = const [];
+        _loading = false;
+      });
+      return;
+    }
     try {
       final book = await widget.repo.loadBook(widget.bookId);
-      final prefix = '${widget.bookId}-';
-      final ids = widget.store.wrongIds().where((id) => id.startsWith(prefix));
       final words = WrongBookList.assemble(book.words, ids);
       if (!mounted) return;
       setState(() {
@@ -1130,8 +1138,8 @@ class _WrongBookSheetState extends State<_WrongBookSheet> {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final maxH = MediaQuery.sizeOf(context).height * 0.7;
-    final listMax = maxH - 180;
+    final screenH = MediaQuery.sizeOf(context).height;
+    final listMax = (screenH * 0.35).clamp(160.0, 280.0);
     final truncated = WrongBookList.truncate(_words, cap: widget.listCap);
     final shown = truncated.shown;
     final more = truncated.more;
@@ -1222,6 +1230,7 @@ class _WrongBookSheetState extends State<_WrongBookSheet> {
       );
     }
 
+    // CTAs above the list so Material drag-handle sheet keeps them on-screen.
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
       child: SafeArea(
@@ -1230,9 +1239,25 @@ class _WrongBookSheetState extends State<_WrongBookSheet> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text('错词本', style: Theme.of(context).textTheme.titleLarge),
-            const SizedBox(height: 12),
-            body,
             if (!_loading && _words.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              FilledButton(
+                key: const ValueKey('wrong_book_review'),
+                onPressed: widget.onReview,
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 14),
+                  child: Text('复习这些错词'),
+                ),
+              ),
+              const SizedBox(height: 8),
+              OutlinedButton(
+                key: const ValueKey('wrong_book_quiz'),
+                onPressed: widget.onQuiz,
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 14),
+                  child: Text('去测错词'),
+                ),
+              ),
               if (hasUnit) ...[
                 const SizedBox(height: 8),
                 Text(
@@ -1243,31 +1268,16 @@ class _WrongBookSheetState extends State<_WrongBookSheet> {
                       ),
                 ),
               ],
-              const SizedBox(height: 12),
-              OutlinedButton(
-                key: const ValueKey('wrong_book_quiz'),
-                onPressed: widget.onQuiz,
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 14),
-                  child: Text('去测错词'),
-                ),
-              ),
-              const SizedBox(height: 8),
-              FilledButton(
-                key: const ValueKey('wrong_book_review'),
-                onPressed: widget.onReview,
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 14),
-                  child: Text('复习这些错词'),
-                ),
-              ),
             ],
+            const SizedBox(height: 12),
+            body,
           ],
         ),
       ),
     );
   }
 }
+
 class _DueReviewSheet extends StatefulWidget {
   const _DueReviewSheet({
     required this.store,

@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vocab_helper/screens/me_screen.dart';
 import 'package:vocab_helper/services/progress_store.dart';
 import 'package:vocab_helper/services/wordbook_repository.dart';
+import 'package:vocab_helper/services/word_speaker.dart';
 import 'package:vocab_helper/theme/app_theme.dart';
 
 Future<void> loadCjkFont() async {
@@ -38,13 +39,13 @@ void main() {
     required String outName,
     required Map<String, Object> prefs,
   }) async {
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
     SharedPreferences.setMockInitialValues(prefs);
     tester.view.physicalSize = size;
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
-    await tester.pumpWidget(const SizedBox.shrink());
-    await tester.pump();
     final store = await ProgressStore.open();
     await tester.pumpWidget(
       MaterialApp(
@@ -67,6 +68,7 @@ void main() {
             onQuizUnit: () {},
             onQuizWrong: () {},
             onStartDueReview: () {},
+            speaker: FakeWordSpeaker()..voiceAvailable = true,
           ),
         ),
       ),
@@ -99,7 +101,6 @@ void main() {
 
   Map<String, Object> emptyPrefs() => {
         'selected_book_id': 'pep-ps-3',
-        'wrong_ids': <String>[],
         'daily_goal': 20,
         'today_count': 0,
         'streak_days': 0,
@@ -109,49 +110,54 @@ void main() {
   testWidgets('capture r39 wrong-book screenshots', (tester) async {
     await pumpMe(
       tester,
-      size: const Size(390, 920),
+      size: const Size(390, 844),
       theme: AppTheme.light(),
       outName: 'r39-entry-narrow-light.png',
       prefs: wrongPrefs(),
     );
-    await tester.ensureVisible(find.byKey(const ValueKey('me_wrong_book_entry')));
+    final entry = find.byKey(const ValueKey('me_wrong_book_entry'));
+    await tester.scrollUntilVisible(entry, 200, scrollable: find.byType(Scrollable).first);
+    await tester.pump(const Duration(milliseconds: 100));
     await saveShot(tester, 'r39-entry-narrow-light.png');
 
     for (final cfg in [
-      (const Size(390, 920), AppTheme.light(), 'r39-sheet-narrow-light.png'),
-      (const Size(390, 920), AppTheme.dark(), 'r39-sheet-narrow-dark.png'),
+      (const Size(390, 844), AppTheme.light(), 'r39-sheet-narrow-light.png'),
+      (const Size(390, 844), AppTheme.dark(), 'r39-sheet-narrow-dark.png'),
       (const Size(1000, 900), AppTheme.light(), 'r39-sheet-wide-light.png'),
       (const Size(1000, 900), AppTheme.dark(), 'r39-sheet-wide-dark.png'),
     ]) {
       await pumpMe(tester, size: cfg.$1, theme: cfg.$2, outName: cfg.$3, prefs: wrongPrefs());
-      await tester.ensureVisible(find.byKey(const ValueKey('me_wrong_book_entry')));
-      await tester.tap(find.byKey(const ValueKey('me_wrong_book_entry')));
+      final e = find.byKey(const ValueKey('me_wrong_book_entry'));
+      await tester.scrollUntilVisible(e, 200, scrollable: find.byType(Scrollable).first);
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.tap(e);
       await tester.pump();
       for (var i = 0; i < 50; i++) {
         await tester.pump(const Duration(milliseconds: 50));
         if (find.byKey(const ValueKey('wrong_book_review')).evaluate().isNotEmpty) break;
       }
-      await tester.pumpAndSettle(const Duration(milliseconds: 100));
-      expect(find.text('错词本'), findsWidgets);
       expect(find.byKey(const ValueKey('wrong_book_review')), findsOneWidget);
+      await tester.ensureVisible(find.byKey(const ValueKey('wrong_book_review')));
+      await tester.pump(const Duration(milliseconds: 100));
       await saveShot(tester, cfg.$3);
     }
 
     await pumpMe(
       tester,
-      size: const Size(390, 920),
+      size: const Size(390, 844),
       theme: AppTheme.light(),
       outName: 'r39-empty-narrow-light.png',
       prefs: emptyPrefs(),
     );
-    await tester.ensureVisible(find.byKey(const ValueKey('me_wrong_book_entry')));
-    await tester.tap(find.byKey(const ValueKey('me_wrong_book_entry')));
+    final e2 = find.byKey(const ValueKey('me_wrong_book_entry'));
+    await tester.scrollUntilVisible(e2, 200, scrollable: find.byType(Scrollable).first);
+    await tester.pump(const Duration(milliseconds: 100));
+    await tester.tap(e2);
     await tester.pump();
     for (var i = 0; i < 40; i++) {
       await tester.pump(const Duration(milliseconds: 50));
       if (find.byKey(const ValueKey('wrong_book_empty')).evaluate().isNotEmpty) break;
     }
-    await tester.pumpAndSettle();
     expect(find.byKey(const ValueKey('wrong_book_empty')), findsOneWidget);
     await saveShot(tester, 'r39-empty-narrow-light.png');
   }, skip: !update, timeout: const Timeout(Duration(minutes: 5)));
