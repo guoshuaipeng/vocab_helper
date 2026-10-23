@@ -112,6 +112,14 @@ class _HomeShellState extends State<HomeShell> {
     });
   }
 
+  void _learnNew() {
+    setState(() {
+      _reviewWrongOnly = false;
+      _reviewWrongUnitScoped = false;
+      _index = 0;
+    });
+  }
+
   Future<void> _openQuiz(QuizMode mode) async {
     await Navigator.of(context).push(
       MaterialPageRoute(
@@ -136,7 +144,10 @@ class _HomeShellState extends State<HomeShell> {
         onNeedSetup: widget.onChangeBook,
         reviewWrongOnly: _reviewWrongOnly,
         reviewWrongUnitScoped: _reviewWrongUnitScoped,
+        onLearnNew: _learnNew,
+        onReviewWrongAll: () => _enterWrongReview(unitScoped: false),
         onStartQuiz: () {
+          _learnNew();
           final id = widget.store.selectedBookId();
           final unit = id == null ? null : widget.store.unitFilterForBook(id);
           _openQuiz((unit != null && unit.isNotEmpty) ? QuizMode.unit : QuizMode.book);

@@ -17,6 +17,8 @@ class LearnScreen extends StatefulWidget {
     this.reviewWrongUnitScoped = false,
     this.speaker,
     this.onStartQuiz,
+    this.onLearnNew,
+    this.onReviewWrongAll,
   });
 
   final ProgressStore store;
@@ -28,6 +30,10 @@ class LearnScreen extends StatefulWidget {
   final bool reviewWrongUnitScoped;
   final WordSpeaker? speaker;
   final VoidCallback? onStartQuiz;
+  /// Exit wrong-review and stay on 认读 (今日任务 · 学新词).
+  final VoidCallback? onLearnNew;
+  /// Enter whole-book wrong flashcards (今日任务 · 复习错词).
+  final VoidCallback? onReviewWrongAll;
 
   @override
   State<LearnScreen> createState() => _LearnScreenState();
@@ -249,12 +255,52 @@ class _LearnScreenState extends State<LearnScreen> {
     final selectedUnit = bookId == null ? null : widget.store.unitFilterForBook(bookId);
     final units = _book?.unitNames() ?? const <String>[];
 
+    final today = widget.store.todayCount();
+    final goal = widget.store.dailyGoal();
+    final streak = widget.store.streakDays();
+    final wrongCount = bookId == null ? 0 : widget.store.wrongCountForBook(bookId);
+    final remain = (goal - today).clamp(0, goal);
+    final learnSub = widget.store.todayGoalMet ? '加练' : '还差 $remain';
+    final wrongSub = wrongCount == 0 ? '暂无错词' : '$wrongCount 词';
+    // 今日任务选中：全书错词复习 → 复习；否则默认学新词（自测走独立路由）
+    final taskSelected = (widget.reviewWrongOnly && !widget.reviewWrongUnitScoped)
+        ? _TodayTask.wrong
+        : _TodayTask.learn;
+
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Column(
         children: [
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              widget.reviewWrongOnly
+                  ? (widget.reviewWrongUnitScoped
+                      ? '错词复习·当前单元 · ${_book?.title ?? ''}'
+                      : '错词复习 · ${_book?.title ?? ''}')
+                  : (_book?.title ?? ''),
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Align(
+            alignment: Alignment.topCenter,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 520),
+              child: _TodayTaskBar(
+                todayLabel: '今日 $today/$goal · 连续 $streak 天',
+                selected: taskSelected,
+                learnSubtitle: learnSub,
+                wrongSubtitle: wrongSub,
+                wrongEnabled: wrongCount > 0,
+                onLearn: () => widget.onLearnNew?.call(),
+                onWrong: wrongCount > 0 ? () => widget.onReviewWrongAll?.call() : null,
+                onQuiz: widget.onStartQuiz,
+              ),
+            ),
+          ),
           if (!widget.reviewWrongOnly && widget.onStartQuiz != null) ...[
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             SegmentedButton<String>(
               segments: const [
                 ButtonSegment(value: 'learn', label: Text('认读'), icon: Icon(Icons.style)),
@@ -271,18 +317,7 @@ class _LearnScreenState extends State<LearnScreen> {
           Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              widget.reviewWrongOnly
-                  ? (widget.reviewWrongUnitScoped
-                      ? '错词复习·当前单元 · ${_book?.title ?? ''}'
-                      : '错词复习 · ${_book?.title ?? ''}')
-                  : (_book?.title ?? ''),
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-          ),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              '剩余 ${q.remaining} · 本轮认识 ${q.knownCount} · 本单元 ${_unitWordCount()} · 今日 ${widget.store.todayCount()}/${widget.store.dailyGoal()}${widget.store.todayGoalMet ? ' · 已达标' : ''}',
+              '剩余 ${q.remaining} · 本轮认识 ${q.knownCount} · 本单元 ${_unitWordCount()}',
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ),
@@ -399,6 +434,177 @@ class _LearnScreenState extends State<LearnScreen> {
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+
+
+enum _TodayTask { learn, wrong, quiz }
+
+class _TodayTaskBar extends StatelessWidget {
+  const _TodayTaskBar({
+    required this.todayLabel,
+    required this.selected,
+    required this.learnSubtitle,
+    required this.wrongSubtitle,
+    required this.wrongEnabled,
+    required this.onLearn,
+    required this.onWrong,
+    required this.onQuiz,
+  });
+
+  final String todayLabel;
+  final _TodayTask selected;
+  final String learnSubtitle;
+  final String wrongSubtitle;
+  final bool wrongEnabled;
+  final VoidCallback? onLearn;
+  final VoidCallback? onWrong;
+  final VoidCallback? onQuiz;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Material(
+      color: scheme.surfaceContainerLow,
+      borderRadius: BorderRadius.circular(16),
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(todayLabel, style: Theme.of(context).textTheme.bodySmall),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Expanded(
+                  child: _TodayTaskButton(
+                    key: const ValueKey('today_task_learn'),
+                    title: '学新词',
+                    subtitle: learnSubtitle,
+                    icon: Icons.menu_book,
+                    selected: selected == _TodayTask.learn,
+                    onTap: onLearn,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Tooltip(
+                    message: wrongEnabled ? '复习本词书全部错词' : '暂无错词，先学新词或自测',
+                    child: _TodayTaskButton(
+                      key: const ValueKey('today_task_wrong'),
+                      title: '复习错词',
+                      subtitle: wrongSubtitle,
+                      icon: Icons.replay,
+                      selected: selected == _TodayTask.wrong,
+                      onTap: onWrong,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: _TodayTaskButton(
+                    key: const ValueKey('today_task_quiz'),
+                    title: '自测',
+                    subtitle: '测一测',
+                    icon: Icons.quiz,
+                    selected: selected == _TodayTask.quiz,
+                    onTap: onQuiz,
+                  ),
+                ),
+              ],
+            ),
+            if (!wrongEnabled) ...[
+              const SizedBox(height: 6),
+              Text(
+                '暂无错词，先学新词或自测',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      fontSize: 12,
+                      color: scheme.onSurfaceVariant,
+                    ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _TodayTaskButton extends StatelessWidget {
+  const _TodayTaskButton({
+    super.key,
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String title;
+  final String subtitle;
+  final IconData icon;
+  final bool selected;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final enabled = onTap != null;
+    final bg = !enabled
+        ? scheme.surface
+        : (selected ? scheme.primaryContainer : scheme.surface);
+    final titleColor = !enabled
+        ? scheme.onSurface.withValues(alpha: 0.38)
+        : (selected ? scheme.onPrimaryContainer : scheme.onSurface);
+    final subColor = !enabled
+        ? scheme.onSurface.withValues(alpha: 0.38)
+        : (selected ? scheme.onPrimaryContainer : scheme.onSurfaceVariant);
+    final borderColor = !enabled
+        ? scheme.outlineVariant.withValues(alpha: 0.4)
+        : (selected ? scheme.primary : scheme.outlineVariant);
+    final borderWidth = selected && enabled ? 2.0 : 1.0;
+
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 150),
+      constraints: const BoxConstraints(minHeight: 64),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: borderColor, width: borderWidth),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(icon, size: 24, color: titleColor),
+                const SizedBox(height: 2),
+                Text(
+                  title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: titleColor),
+                ),
+                Text(
+                  subtitle,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 11, color: subColor),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
