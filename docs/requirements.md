@@ -41,7 +41,7 @@
 ### Round 20 · 轻量间隔复习 1/3/7
 
 **设计稿**：[`docs/design-r20.md`](design-r20.md)（必读后再开发）  
-**状态**：**代码完成 · 待 UI 验收**（handoff：`docs/shots/r20-ui-acceptance.md`）
+**状态**：**已完成**（UI 验收通过，见 docs/shots/r20-ui-acceptance.md）
 
 **用户故事**  
 见 design-r20。
