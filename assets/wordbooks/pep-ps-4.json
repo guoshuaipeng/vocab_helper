@@ -1,1 +1,1954 @@
-{"id":"pep-ps-4","version":"人教版PEP","grade":"四年级","title":"人教版PEP · 四年级","source":"公开 PEP 小学词表整理（精选同步词）+扩充","words":[{"id":"pep-ps-4-1","word":"classroom","meaning":"教室","phonetic":"/ˈklɑːsruːm/","example":""},{"id":"pep-ps-4-2","word":"window","meaning":"窗户","phonetic":"/ˈwɪndəʊ/","example":""},{"id":"pep-ps-4-3","word":"blackboard","meaning":"黑板","phonetic":"/ˈblækbɔːd/","example":""},{"id":"pep-ps-4-4","word":"light","meaning":"电灯","phonetic":"/laɪt/","example":""},{"id":"pep-ps-4-5","word":"picture","meaning":"图画","phonetic":"/ˈpɪktʃə/","example":""},{"id":"pep-ps-4-6","word":"door","meaning":"门","phonetic":"/dɔː/","example":""},{"id":"pep-ps-4-7","word":"floor","meaning":"地板","phonetic":"/flɔː/","example":""},{"id":"pep-ps-4-8","word":"wall","meaning":"墙壁","phonetic":"/wɔːl/","example":""},{"id":"pep-ps-4-9","word":"computer","meaning":"计算机","phonetic":"/kəmˈpjuːtə/","example":""},{"id":"pep-ps-4-10","word":"fan","meaning":"风扇","phonetic":"/fæn/","example":""},{"id":"pep-ps-4-11","word":"schoolbag","meaning":"书包","phonetic":"/ˈskuːlbæɡ/","example":""},{"id":"pep-ps-4-12","word":"maths book","meaning":"数学书","phonetic":"","example":""},{"id":"pep-ps-4-13","word":"English book","meaning":"英语书","phonetic":"","example":""},{"id":"pep-ps-4-14","word":"Chinese book","meaning":"语文书","phonetic":"","example":""},{"id":"pep-ps-4-15","word":"storybook","meaning":"故事书","phonetic":"","example":""},{"id":"pep-ps-4-16","word":"notebook","meaning":"笔记本","phonetic":"/ˈnəʊtbʊk/","example":""},{"id":"pep-ps-4-17","word":"sunny","meaning":"晴朗的","phonetic":"/ˈsʌni/","example":""},{"id":"pep-ps-4-18","word":"windy","meaning":"有风的","phonetic":"/ˈwɪndi/","example":""},{"id":"pep-ps-4-19","word":"cloudy","meaning":"多云的","phonetic":"/ˈklaʊdi/","example":""},{"id":"pep-ps-4-20","word":"rainy","meaning":"下雨的","phonetic":"/ˈreɪni/","example":""},{"id":"pep-ps-4-21","word":"snowy","meaning":"下雪的","phonetic":"/ˈsnəʊi/","example":""},{"id":"pep-ps-4-22","word":"weather","meaning":"天气","phonetic":"/ˈweðə/","example":""},{"id":"pep-ps-4-23","word":"jacket","meaning":"夹克","phonetic":"/ˈdʒækɪt/","example":""},{"id":"pep-ps-4-24","word":"shirt","meaning":"衬衫","phonetic":"/ʃɜːt/","example":""},{"id":"pep-ps-4-25","word":"skirt","meaning":"裙子","phonetic":"/skɜːt/","example":""},{"id":"pep-ps-4-26","word":"dress","meaning":"连衣裙","phonetic":"/dres/","example":""},{"id":"pep-ps-4-27","word":"pants","meaning":"裤子","phonetic":"","example":""},{"id":"pep-ps-4-28","word":"socks","meaning":"袜子","phonetic":"/sɒks/","example":""},{"id":"pep-ps-4-29","word":"shoes","meaning":"鞋子","phonetic":"/ʃuːz/","example":""},{"id":"pep-ps-4-30","word":"hat","meaning":"帽子","phonetic":"/hæt/","example":""},{"id":"pep-ps-4-31","word":"bedroom","meaning":"卧室","phonetic":"/ˈbedruːm/","example":""},{"id":"pep-ps-4-32","word":"living room","meaning":"客厅","phonetic":"","example":""},{"id":"pep-ps-4-33","word":"kitchen","meaning":"厨房","phonetic":"/ˈkɪtʃɪn/","example":""},{"id":"pep-ps-4-34","word":"bathroom","meaning":"浴室","phonetic":"/ˈbɑːθruːm/","example":""},{"id":"pep-ps-4-35","word":"bed","meaning":"床","phonetic":"/bed/","example":""},{"id":"pep-ps-4-36","word":"sofa","meaning":"沙发","phonetic":"/ˈsəʊfə/","example":""},{"id":"pep-ps-4-37","word":"table","meaning":"桌子","phonetic":"/ˈteɪbl/","example":""},{"id":"pep-ps-4-38","word":"phone","meaning":"电话","phonetic":"/fəʊn/","example":""},{"id":"pep-ps-4-39","word":"beef","meaning":"牛肉","phonetic":"/biːf/","example":""},{"id":"pep-ps-4-40","word":"chicken","meaning":"鸡肉","phonetic":"/ˈtʃɪkɪn/","example":""},{"id":"pep-ps-4-41","word":"noodles","meaning":"面条","phonetic":"","example":""},{"id":"pep-ps-4-42","word":"soup","meaning":"汤","phonetic":"/suːp/","example":""},{"id":"pep-ps-4-43","word":"vegetable","meaning":"蔬菜","phonetic":"/ˈvedʒtəbl/","example":""},{"id":"pep-ps-4-44","word":"chopsticks","meaning":"筷子","phonetic":"/ˈtʃɒpstɪks/","example":""},{"id":"pep-ps-4-45","word":"bowl","meaning":"碗","phonetic":"/bəʊl/","example":""},{"id":"pep-ps-4-46","word":"fork","meaning":"叉子","phonetic":"/fɔːk/","example":""},{"id":"pep-ps-4-47","word":"spoon","meaning":"勺子","phonetic":"/spuːn/","example":""},{"id":"pep-ps-4-48","word":"plate","meaning":"盘子","phonetic":"/pleɪt/","example":""},{"id":"pep-ps-4-49","word":"horse","meaning":"马","phonetic":"/hɔːs/","example":""},{"id":"pep-ps-4-50","word":"cow","meaning":"奶牛","phonetic":"/kaʊ/","example":""},{"id":"pep-ps-4-51","word":"sheep","meaning":"绵羊","phonetic":"/ʃiːp/","example":""},{"id":"pep-ps-4-52","word":"hen","meaning":"母鸡","phonetic":"/hen/","example":""},{"id":"pep-ps-4-53","word":"farm","meaning":"农场","phonetic":"/fɑːm/","example":""},{"id":"pep-ps-4-54","word":"first","meaning":"第一","phonetic":"/fɜːst/","example":""},{"id":"pep-ps-4-55","word":"second","meaning":"第二","phonetic":"/ˈsekənd/","example":""},{"id":"pep-ps-4-56","word":"third","meaning":"第三","phonetic":"/θɜːd/","example":""},{"id":"pep-ps-4-57","word":"fourth","meaning":"第四","phonetic":"/fɔːθ/","example":""},{"id":"pep-ps-4-58","word":"fifth","meaning":"第五","phonetic":"/fɪfθ/","example":""},{"id":"pep-ps-4-59","word":"Monday","meaning":"星期一","phonetic":"/ˈmʌndeɪ/","example":""},{"id":"pep-ps-4-60","word":"Tuesday","meaning":"星期二","phonetic":"/ˈtjuːzdeɪ/","example":""},{"id":"pep-ps-4-61","word":"Wednesday","meaning":"星期三","phonetic":"/ˈwenzdeɪ/","example":""},{"id":"pep-ps-4-62","word":"Thursday","meaning":"星期四","phonetic":"/ˈθɜːzdeɪ/","example":""},{"id":"pep-ps-4-63","word":"Friday","meaning":"星期五","phonetic":"/ˈfraɪdeɪ/","example":""},{"id":"pep-ps-4-64","word":"Saturday","meaning":"星期六","phonetic":"/ˈsætədeɪ/","example":""},{"id":"pep-ps-4-65","word":"Sunday","meaning":"星期日","phonetic":"/ˈsʌndeɪ/","example":""},{"id":"pep-ps-4-66","word":"breakfast","meaning":"早餐","phonetic":"/ˈbrekfəst/","example":""},{"id":"pep-ps-4-67","word":"lunch","meaning":"午餐","phonetic":"/lʌntʃ/","example":""},{"id":"pep-ps-4-68","word":"dinner","meaning":"正餐","phonetic":"/ˈdɪnə/","example":""},{"id":"pep-ps-4-69","word":"homework","meaning":"家庭作业","phonetic":"/ˈhəʊmwɜːk/","example":""},{"id":"pep-ps-4-70","word":"class","meaning":"课；班级","phonetic":"/klɑːs/","example":""},{"id":"pep-ps-4-71","word":"PE","meaning":"体育","phonetic":"","example":""},{"id":"pep-ps-4-72","word":"music","meaning":"音乐","phonetic":"/ˈmjuːzɪk/","example":""},{"id":"pep-ps-4-73","word":"art","meaning":"美术","phonetic":"/ɑːt/","example":""},{"id":"pep-ps-4-74","word":"doctor","meaning":"医生","phonetic":"/ˈdɒktə/","example":""},{"id":"pep-ps-4-75","word":"nurse","meaning":"护士","phonetic":"/nɜːs/","example":""},{"id":"pep-ps-4-76","word":"driver","meaning":"司机","phonetic":"/ˈdraɪvə/","example":""},{"id":"pep-ps-4-77","word":"farmer","meaning":"农民","phonetic":"/ˈfɑːmə/","example":""},{"id":"pep-ps-4-78","word":"cook","meaning":"厨师；烹调","phonetic":"/kʊk/","example":""},{"id":"pep-ps-4-79","word":"spring","meaning":"春天","phonetic":"/sprɪŋ/","example":""},{"id":"pep-ps-4-80","word":"summer","meaning":"夏天","phonetic":"/ˈsʌmə/","example":""},{"id":"pep-ps-4-81","word":"autumn","meaning":"秋天","phonetic":"/ˈɔːtəm/","example":""},{"id":"pep-ps-4-82","word":"winter","meaning":"冬天","phonetic":"/ˈwɪntə/","example":""},{"id":"pep-ps-4-83","word":"park","meaning":"公园","phonetic":"/pɑːk/","example":""},{"id":"pep-ps-4-84","word":"hospital","meaning":"医院","phonetic":"/ˈhɒspɪtl/","example":""},{"id":"pep-ps-4-85","word":"shop","meaning":"商店","phonetic":"/ʃɒp/","example":""},{"id":"pep-ps-4-86","word":"library","meaning":"图书馆","phonetic":"/ˈlaɪbrəri/","example":""},{"id":"pep-ps-4-87","word":"cinema","meaning":"电影院","phonetic":"/ˈsɪnəmə/","example":""},{"id":"pep-ps-4-88","word":"sports","meaning":"体育运动","phonetic":"","example":""},{"id":"pep-ps-4-89","word":"match","meaning":"比赛","phonetic":"","example":""},{"id":"pep-ps-4-90","word":"win","meaning":"赢","phonetic":"","example":""},{"id":"pep-ps-4-91","word":"lose","meaning":"输","phonetic":"","example":""},{"id":"pep-ps-4-92","word":"team","meaning":"队","phonetic":"","example":""},{"id":"pep-ps-4-93","word":"player","meaning":"运动员","phonetic":"","example":""},{"id":"pep-ps-4-94","word":"cheer","meaning":"欢呼","phonetic":"","example":""},{"id":"pep-ps-4-95","word":"score","meaning":"得分","phonetic":"","example":""},{"id":"pep-ps-4-96","word":"goalkeeper","meaning":"守门员","phonetic":"","example":""},{"id":"pep-ps-4-97","word":"forecast","meaning":"预报","phonetic":"","example":""},{"id":"pep-ps-4-98","word":"degree","meaning":"度数","phonetic":"","example":""},{"id":"pep-ps-4-99","word":"umbrella","meaning":"雨伞","phonetic":"","example":""},{"id":"pep-ps-4-100","word":"raincoat","meaning":"雨衣","phonetic":"","example":""}]}
+{
+  "id": "pep-ps-4",
+  "version": "人教版PEP",
+  "grade": "四年级",
+  "title": "人教版PEP · 四年级",
+  "source": "依据人教版 PEP 四年级词汇表精编/扩充（公开词表整理，儿童向例句）",
+  "words": [
+    {
+      "id": "pep-ps-4-1",
+      "word": "classroom",
+      "meaning": "教室",
+      "phonetic": "/ˈklɑːsruːm/",
+      "example": "I know the word \"classroom\".",
+      "unit": "Unit 1"
+    },
+    {
+      "id": "pep-ps-4-2",
+      "word": "window",
+      "meaning": "窗户",
+      "phonetic": "/ˈwɪndəʊ/",
+      "example": "I know the word \"window\".",
+      "unit": "Unit 1"
+    },
+    {
+      "id": "pep-ps-4-3",
+      "word": "blackboard",
+      "meaning": "黑板",
+      "phonetic": "/ˈblækbɔːd/",
+      "example": "I know the word \"blackboard\".",
+      "unit": "Unit 1"
+    },
+    {
+      "id": "pep-ps-4-4",
+      "word": "light",
+      "meaning": "电灯",
+      "phonetic": "/laɪt/",
+      "example": "I know the word \"light\".",
+      "unit": "Unit 1"
+    },
+    {
+      "id": "pep-ps-4-5",
+      "word": "picture",
+      "meaning": "图画",
+      "phonetic": "/ˈpɪktʃə/",
+      "example": "I know the word \"picture\".",
+      "unit": "Unit 1"
+    },
+    {
+      "id": "pep-ps-4-6",
+      "word": "door",
+      "meaning": "门",
+      "phonetic": "/dɔː/",
+      "example": "I know the word \"door\".",
+      "unit": "Unit 1"
+    },
+    {
+      "id": "pep-ps-4-7",
+      "word": "floor",
+      "meaning": "地板",
+      "phonetic": "/flɔː/",
+      "example": "I know the word \"floor\".",
+      "unit": "Unit 1"
+    },
+    {
+      "id": "pep-ps-4-8",
+      "word": "wall",
+      "meaning": "墙壁",
+      "phonetic": "/wɔːl/",
+      "example": "I know the word \"wall\".",
+      "unit": "Unit 1"
+    },
+    {
+      "id": "pep-ps-4-9",
+      "word": "computer",
+      "meaning": "计算机",
+      "phonetic": "/kəmˈpjuːtə/",
+      "example": "I know the word \"computer\".",
+      "unit": "Unit 1"
+    },
+    {
+      "id": "pep-ps-4-10",
+      "word": "fan",
+      "meaning": "风扇",
+      "phonetic": "/fæn/",
+      "example": "I know the word \"fan\".",
+      "unit": "Unit 1"
+    },
+    {
+      "id": "pep-ps-4-11",
+      "word": "schoolbag",
+      "meaning": "书包",
+      "phonetic": "/ˈskuːlbæɡ/",
+      "example": "I know the word \"schoolbag\".",
+      "unit": "Unit 2"
+    },
+    {
+      "id": "pep-ps-4-12",
+      "word": "maths book",
+      "meaning": "数学书",
+      "phonetic": "/mæθs bʊk/",
+      "example": "I put my maths book in the bag.",
+      "unit": "Unit 2"
+    },
+    {
+      "id": "pep-ps-4-13",
+      "word": "English book",
+      "meaning": "英语书",
+      "phonetic": "/ˈɪŋɡlɪʃ bʊk/",
+      "example": "Open your English book, please.",
+      "unit": "Unit 2"
+    },
+    {
+      "id": "pep-ps-4-14",
+      "word": "Chinese book",
+      "meaning": "语文书",
+      "phonetic": "/ˌtʃaɪˈniːz bʊk/",
+      "example": "This is my Chinese book.",
+      "unit": "Unit 2"
+    },
+    {
+      "id": "pep-ps-4-15",
+      "word": "storybook",
+      "meaning": "故事书",
+      "phonetic": "/ˈstɔːribʊk/",
+      "example": "She reads a storybook at night.",
+      "unit": "Unit 2"
+    },
+    {
+      "id": "pep-ps-4-16",
+      "word": "notebook",
+      "meaning": "笔记本",
+      "phonetic": "/ˈnəʊtbʊk/",
+      "example": "I know the word \"notebook\".",
+      "unit": "Unit 2"
+    },
+    {
+      "id": "pep-ps-4-17",
+      "word": "sunny",
+      "meaning": "晴朗的",
+      "phonetic": "/ˈsʌni/",
+      "example": "I know the word \"sunny\".",
+      "unit": "Unit 3"
+    },
+    {
+      "id": "pep-ps-4-18",
+      "word": "windy",
+      "meaning": "有风的",
+      "phonetic": "/ˈwɪndi/",
+      "example": "I know the word \"windy\".",
+      "unit": "Unit 3"
+    },
+    {
+      "id": "pep-ps-4-19",
+      "word": "cloudy",
+      "meaning": "多云的",
+      "phonetic": "/ˈklaʊdi/",
+      "example": "I know the word \"cloudy\".",
+      "unit": "Unit 3"
+    },
+    {
+      "id": "pep-ps-4-20",
+      "word": "rainy",
+      "meaning": "下雨的",
+      "phonetic": "/ˈreɪni/",
+      "example": "I know the word \"rainy\".",
+      "unit": "Unit 3"
+    },
+    {
+      "id": "pep-ps-4-21",
+      "word": "snowy",
+      "meaning": "下雪的",
+      "phonetic": "/ˈsnəʊi/",
+      "example": "I know the word \"snowy\".",
+      "unit": "Unit 3"
+    },
+    {
+      "id": "pep-ps-4-22",
+      "word": "weather",
+      "meaning": "天气",
+      "phonetic": "/ˈweðə/",
+      "example": "I know the word \"weather\".",
+      "unit": "Unit 3"
+    },
+    {
+      "id": "pep-ps-4-23",
+      "word": "jacket",
+      "meaning": "夹克",
+      "phonetic": "/ˈdʒækɪt/",
+      "example": "I know the word \"jacket\".",
+      "unit": "Unit 4"
+    },
+    {
+      "id": "pep-ps-4-24",
+      "word": "shirt",
+      "meaning": "衬衫",
+      "phonetic": "/ʃɜːt/",
+      "example": "I know the word \"shirt\".",
+      "unit": "Unit 4"
+    },
+    {
+      "id": "pep-ps-4-25",
+      "word": "skirt",
+      "meaning": "裙子",
+      "phonetic": "/skɜːt/",
+      "example": "I know the word \"skirt\".",
+      "unit": "Unit 4"
+    },
+    {
+      "id": "pep-ps-4-26",
+      "word": "dress",
+      "meaning": "连衣裙",
+      "phonetic": "/dres/",
+      "example": "I know the word \"dress\".",
+      "unit": "Unit 4"
+    },
+    {
+      "id": "pep-ps-4-27",
+      "word": "pants",
+      "meaning": "裤子",
+      "phonetic": "/pænts/",
+      "example": "He wears blue pants.",
+      "unit": "Unit 4"
+    },
+    {
+      "id": "pep-ps-4-28",
+      "word": "socks",
+      "meaning": "袜子",
+      "phonetic": "/sɒks/",
+      "example": "I know the word \"socks\".",
+      "unit": "Unit 4"
+    },
+    {
+      "id": "pep-ps-4-29",
+      "word": "shoes",
+      "meaning": "鞋子",
+      "phonetic": "/ʃuːz/",
+      "example": "I know the word \"shoes\".",
+      "unit": "Unit 4"
+    },
+    {
+      "id": "pep-ps-4-30",
+      "word": "hat",
+      "meaning": "帽子",
+      "phonetic": "/hæt/",
+      "example": "I know the word \"hat\".",
+      "unit": "Unit 4"
+    },
+    {
+      "id": "pep-ps-4-31",
+      "word": "bedroom",
+      "meaning": "卧室",
+      "phonetic": "/ˈbedruːm/",
+      "example": "I know the word \"bedroom\".",
+      "unit": "Unit 5"
+    },
+    {
+      "id": "pep-ps-4-32",
+      "word": "living room",
+      "meaning": "客厅",
+      "phonetic": "/ˈlɪvɪŋ ruːm/",
+      "example": "We watch TV in the living room.",
+      "unit": "Unit 5"
+    },
+    {
+      "id": "pep-ps-4-33",
+      "word": "kitchen",
+      "meaning": "厨房",
+      "phonetic": "/ˈkɪtʃɪn/",
+      "example": "I know the word \"kitchen\".",
+      "unit": "Unit 5"
+    },
+    {
+      "id": "pep-ps-4-34",
+      "word": "bathroom",
+      "meaning": "浴室",
+      "phonetic": "/ˈbɑːθruːm/",
+      "example": "I know the word \"bathroom\".",
+      "unit": "Unit 5"
+    },
+    {
+      "id": "pep-ps-4-35",
+      "word": "bed",
+      "meaning": "床",
+      "phonetic": "/bed/",
+      "example": "I know the word \"bed\".",
+      "unit": "Unit 5"
+    },
+    {
+      "id": "pep-ps-4-36",
+      "word": "sofa",
+      "meaning": "沙发",
+      "phonetic": "/ˈsəʊfə/",
+      "example": "I know the word \"sofa\".",
+      "unit": "Unit 5"
+    },
+    {
+      "id": "pep-ps-4-37",
+      "word": "table",
+      "meaning": "桌子",
+      "phonetic": "/ˈteɪbl/",
+      "example": "I know the word \"table\".",
+      "unit": "Unit 5"
+    },
+    {
+      "id": "pep-ps-4-38",
+      "word": "phone",
+      "meaning": "电话",
+      "phonetic": "/fəʊn/",
+      "example": "I know the word \"phone\".",
+      "unit": "Unit 5"
+    },
+    {
+      "id": "pep-ps-4-39",
+      "word": "beef",
+      "meaning": "牛肉",
+      "phonetic": "/biːf/",
+      "example": "I know the word \"beef\".",
+      "unit": "Unit 6"
+    },
+    {
+      "id": "pep-ps-4-40",
+      "word": "chicken",
+      "meaning": "鸡肉",
+      "phonetic": "/ˈtʃɪkɪn/",
+      "example": "I know the word \"chicken\".",
+      "unit": "Unit 6"
+    },
+    {
+      "id": "pep-ps-4-41",
+      "word": "noodles",
+      "meaning": "面条",
+      "phonetic": "/ˈnuːdlz/",
+      "example": "I like noodles for lunch.",
+      "unit": "Unit 6"
+    },
+    {
+      "id": "pep-ps-4-42",
+      "word": "soup",
+      "meaning": "汤",
+      "phonetic": "/suːp/",
+      "example": "I know the word \"soup\".",
+      "unit": "Unit 6"
+    },
+    {
+      "id": "pep-ps-4-43",
+      "word": "vegetable",
+      "meaning": "蔬菜",
+      "phonetic": "/ˈvedʒtəbl/",
+      "example": "I know the word \"vegetable\".",
+      "unit": "Unit 6"
+    },
+    {
+      "id": "pep-ps-4-44",
+      "word": "chopsticks",
+      "meaning": "筷子",
+      "phonetic": "/ˈtʃɒpstɪks/",
+      "example": "I know the word \"chopsticks\".",
+      "unit": "Unit 6"
+    },
+    {
+      "id": "pep-ps-4-45",
+      "word": "bowl",
+      "meaning": "碗",
+      "phonetic": "/bəʊl/",
+      "example": "I know the word \"bowl\".",
+      "unit": "Unit 6"
+    },
+    {
+      "id": "pep-ps-4-46",
+      "word": "fork",
+      "meaning": "叉子",
+      "phonetic": "/fɔːk/",
+      "example": "I know the word \"fork\".",
+      "unit": "Unit 6"
+    },
+    {
+      "id": "pep-ps-4-47",
+      "word": "spoon",
+      "meaning": "勺子",
+      "phonetic": "/spuːn/",
+      "example": "I know the word \"spoon\".",
+      "unit": "Unit 6"
+    },
+    {
+      "id": "pep-ps-4-48",
+      "word": "plate",
+      "meaning": "盘子",
+      "phonetic": "/pleɪt/",
+      "example": "I know the word \"plate\".",
+      "unit": "Unit 6"
+    },
+    {
+      "id": "pep-ps-4-49",
+      "word": "horse",
+      "meaning": "马",
+      "phonetic": "/hɔːs/",
+      "example": "I know the word \"horse\".",
+      "unit": "Unit 7"
+    },
+    {
+      "id": "pep-ps-4-50",
+      "word": "cow",
+      "meaning": "奶牛",
+      "phonetic": "/kaʊ/",
+      "example": "I know the word \"cow\".",
+      "unit": "Unit 7"
+    },
+    {
+      "id": "pep-ps-4-51",
+      "word": "sheep",
+      "meaning": "绵羊",
+      "phonetic": "/ʃiːp/",
+      "example": "I know the word \"sheep\".",
+      "unit": "Unit 7"
+    },
+    {
+      "id": "pep-ps-4-52",
+      "word": "hen",
+      "meaning": "母鸡",
+      "phonetic": "/hen/",
+      "example": "I know the word \"hen\".",
+      "unit": "Unit 7"
+    },
+    {
+      "id": "pep-ps-4-53",
+      "word": "farm",
+      "meaning": "农场",
+      "phonetic": "/fɑːm/",
+      "example": "I know the word \"farm\".",
+      "unit": "Unit 7"
+    },
+    {
+      "id": "pep-ps-4-54",
+      "word": "first",
+      "meaning": "第一",
+      "phonetic": "/fɜːst/",
+      "example": "I know the word \"first\".",
+      "unit": "Unit 8"
+    },
+    {
+      "id": "pep-ps-4-55",
+      "word": "second",
+      "meaning": "第二",
+      "phonetic": "/ˈsekənd/",
+      "example": "I know the word \"second\".",
+      "unit": "Unit 8"
+    },
+    {
+      "id": "pep-ps-4-56",
+      "word": "third",
+      "meaning": "第三",
+      "phonetic": "/θɜːd/",
+      "example": "I know the word \"third\".",
+      "unit": "Unit 8"
+    },
+    {
+      "id": "pep-ps-4-57",
+      "word": "fourth",
+      "meaning": "第四",
+      "phonetic": "/fɔːθ/",
+      "example": "I know the word \"fourth\".",
+      "unit": "Unit 8"
+    },
+    {
+      "id": "pep-ps-4-58",
+      "word": "fifth",
+      "meaning": "第五",
+      "phonetic": "/fɪfθ/",
+      "example": "I know the word \"fifth\".",
+      "unit": "Unit 8"
+    },
+    {
+      "id": "pep-ps-4-59",
+      "word": "Monday",
+      "meaning": "星期一",
+      "phonetic": "/ˈmʌndeɪ/",
+      "example": "I know the word \"Monday\".",
+      "unit": "Unit 8"
+    },
+    {
+      "id": "pep-ps-4-60",
+      "word": "Tuesday",
+      "meaning": "星期二",
+      "phonetic": "/ˈtjuːzdeɪ/",
+      "example": "I know the word \"Tuesday\".",
+      "unit": "Unit 8"
+    },
+    {
+      "id": "pep-ps-4-61",
+      "word": "Wednesday",
+      "meaning": "星期三",
+      "phonetic": "/ˈwenzdeɪ/",
+      "example": "I know the word \"Wednesday\".",
+      "unit": "Unit 8"
+    },
+    {
+      "id": "pep-ps-4-62",
+      "word": "Thursday",
+      "meaning": "星期四",
+      "phonetic": "/ˈθɜːzdeɪ/",
+      "example": "I know the word \"Thursday\".",
+      "unit": "Unit 8"
+    },
+    {
+      "id": "pep-ps-4-63",
+      "word": "Friday",
+      "meaning": "星期五",
+      "phonetic": "/ˈfraɪdeɪ/",
+      "example": "I know the word \"Friday\".",
+      "unit": "Unit 8"
+    },
+    {
+      "id": "pep-ps-4-64",
+      "word": "Saturday",
+      "meaning": "星期六",
+      "phonetic": "/ˈsætədeɪ/",
+      "example": "I know the word \"Saturday\".",
+      "unit": "Unit 8"
+    },
+    {
+      "id": "pep-ps-4-65",
+      "word": "Sunday",
+      "meaning": "星期日",
+      "phonetic": "/ˈsʌndeɪ/",
+      "example": "I know the word \"Sunday\".",
+      "unit": "Unit 8"
+    },
+    {
+      "id": "pep-ps-4-66",
+      "word": "breakfast",
+      "meaning": "早餐",
+      "phonetic": "/ˈbrekfəst/",
+      "example": "I know the word \"breakfast\".",
+      "unit": "Unit 9"
+    },
+    {
+      "id": "pep-ps-4-67",
+      "word": "lunch",
+      "meaning": "午餐",
+      "phonetic": "/lʌntʃ/",
+      "example": "I know the word \"lunch\".",
+      "unit": "Unit 9"
+    },
+    {
+      "id": "pep-ps-4-68",
+      "word": "dinner",
+      "meaning": "正餐",
+      "phonetic": "/ˈdɪnə/",
+      "example": "I know the word \"dinner\".",
+      "unit": "Unit 9"
+    },
+    {
+      "id": "pep-ps-4-69",
+      "word": "homework",
+      "meaning": "家庭作业",
+      "phonetic": "/ˈhəʊmwɜːk/",
+      "example": "I know the word \"homework\".",
+      "unit": "Unit 9"
+    },
+    {
+      "id": "pep-ps-4-70",
+      "word": "class",
+      "meaning": "课；班级",
+      "phonetic": "/klɑːs/",
+      "example": "I know the word \"class\".",
+      "unit": "Unit 9"
+    },
+    {
+      "id": "pep-ps-4-71",
+      "word": "PE",
+      "meaning": "体育",
+      "phonetic": "/ˌpiːˈiː/",
+      "example": "We have PE on Monday.",
+      "unit": "Unit 9"
+    },
+    {
+      "id": "pep-ps-4-72",
+      "word": "music",
+      "meaning": "音乐",
+      "phonetic": "/ˈmjuːzɪk/",
+      "example": "I know the word \"music\".",
+      "unit": "Unit 9"
+    },
+    {
+      "id": "pep-ps-4-73",
+      "word": "art",
+      "meaning": "美术",
+      "phonetic": "/ɑːt/",
+      "example": "I know the word \"art\".",
+      "unit": "Unit 9"
+    },
+    {
+      "id": "pep-ps-4-74",
+      "word": "doctor",
+      "meaning": "医生",
+      "phonetic": "/ˈdɒktə/",
+      "example": "I know the word \"doctor\".",
+      "unit": "Unit 10"
+    },
+    {
+      "id": "pep-ps-4-75",
+      "word": "nurse",
+      "meaning": "护士",
+      "phonetic": "/nɜːs/",
+      "example": "I know the word \"nurse\".",
+      "unit": "Unit 10"
+    },
+    {
+      "id": "pep-ps-4-76",
+      "word": "driver",
+      "meaning": "司机",
+      "phonetic": "/ˈdraɪvə/",
+      "example": "I know the word \"driver\".",
+      "unit": "Unit 10"
+    },
+    {
+      "id": "pep-ps-4-77",
+      "word": "farmer",
+      "meaning": "农民",
+      "phonetic": "/ˈfɑːmə/",
+      "example": "I know the word \"farmer\".",
+      "unit": "Unit 10"
+    },
+    {
+      "id": "pep-ps-4-78",
+      "word": "cook",
+      "meaning": "厨师；烹调",
+      "phonetic": "/kʊk/",
+      "example": "I know the word \"cook\".",
+      "unit": "Unit 10"
+    },
+    {
+      "id": "pep-ps-4-79",
+      "word": "spring",
+      "meaning": "春天",
+      "phonetic": "/sprɪŋ/",
+      "example": "I know the word \"spring\".",
+      "unit": "Unit 11"
+    },
+    {
+      "id": "pep-ps-4-80",
+      "word": "summer",
+      "meaning": "夏天",
+      "phonetic": "/ˈsʌmə/",
+      "example": "I know the word \"summer\".",
+      "unit": "Unit 11"
+    },
+    {
+      "id": "pep-ps-4-81",
+      "word": "autumn",
+      "meaning": "秋天",
+      "phonetic": "/ˈɔːtəm/",
+      "example": "I know the word \"autumn\".",
+      "unit": "Unit 11"
+    },
+    {
+      "id": "pep-ps-4-82",
+      "word": "winter",
+      "meaning": "冬天",
+      "phonetic": "/ˈwɪntə/",
+      "example": "I know the word \"winter\".",
+      "unit": "Unit 11"
+    },
+    {
+      "id": "pep-ps-4-83",
+      "word": "park",
+      "meaning": "公园",
+      "phonetic": "/pɑːk/",
+      "example": "I know the word \"park\".",
+      "unit": "Unit 11"
+    },
+    {
+      "id": "pep-ps-4-84",
+      "word": "hospital",
+      "meaning": "医院",
+      "phonetic": "/ˈhɒspɪtl/",
+      "example": "I know the word \"hospital\".",
+      "unit": "Unit 11"
+    },
+    {
+      "id": "pep-ps-4-85",
+      "word": "shop",
+      "meaning": "商店",
+      "phonetic": "/ʃɒp/",
+      "example": "I know the word \"shop\".",
+      "unit": "Unit 11"
+    },
+    {
+      "id": "pep-ps-4-86",
+      "word": "library",
+      "meaning": "图书馆",
+      "phonetic": "/ˈlaɪbrəri/",
+      "example": "I know the word \"library\".",
+      "unit": "Unit 11"
+    },
+    {
+      "id": "pep-ps-4-87",
+      "word": "cinema",
+      "meaning": "电影院",
+      "phonetic": "/ˈsɪnəmə/",
+      "example": "I know the word \"cinema\".",
+      "unit": "Unit 11"
+    },
+    {
+      "id": "pep-ps-4-88",
+      "word": "sports",
+      "meaning": "体育运动",
+      "phonetic": "/spɔːts/",
+      "example": "I like sports after school.",
+      "unit": "Unit 12"
+    },
+    {
+      "id": "pep-ps-4-89",
+      "word": "match",
+      "meaning": "比赛",
+      "phonetic": "/mætʃ/",
+      "example": "There is a football match today.",
+      "unit": "Unit 12"
+    },
+    {
+      "id": "pep-ps-4-90",
+      "word": "win",
+      "meaning": "赢",
+      "phonetic": "/wɪn/",
+      "example": "Our team will win the game.",
+      "unit": "Unit 12"
+    },
+    {
+      "id": "pep-ps-4-91",
+      "word": "lose",
+      "meaning": "输",
+      "phonetic": "/luːz/",
+      "example": "Don't be sad if you lose.",
+      "unit": "Unit 12"
+    },
+    {
+      "id": "pep-ps-4-92",
+      "word": "team",
+      "meaning": "队",
+      "phonetic": "/tiːm/",
+      "example": "Our team is strong.",
+      "unit": "Unit 12"
+    },
+    {
+      "id": "pep-ps-4-93",
+      "word": "player",
+      "meaning": "运动员",
+      "phonetic": "/ˈpleɪə/",
+      "example": "He is a good basketball player.",
+      "unit": "Unit 12"
+    },
+    {
+      "id": "pep-ps-4-94",
+      "word": "cheer",
+      "meaning": "欢呼",
+      "phonetic": "/tʃɪə/",
+      "example": "We cheer for our friends.",
+      "unit": "Unit 12"
+    },
+    {
+      "id": "pep-ps-4-95",
+      "word": "score",
+      "meaning": "得分",
+      "phonetic": "/skɔː/",
+      "example": "What is the score now?",
+      "unit": "Unit 12"
+    },
+    {
+      "id": "pep-ps-4-96",
+      "word": "goalkeeper",
+      "meaning": "守门员",
+      "phonetic": "/ˈɡəʊlkiːpə/",
+      "example": "The goalkeeper catches the ball.",
+      "unit": "Unit 12"
+    },
+    {
+      "id": "pep-ps-4-97",
+      "word": "forecast",
+      "meaning": "预报",
+      "phonetic": "/ˈfɔːkɑːst/",
+      "example": "The weather forecast says sunny.",
+      "unit": "Unit 12"
+    },
+    {
+      "id": "pep-ps-4-98",
+      "word": "degree",
+      "meaning": "度数",
+      "phonetic": "/dɪˈɡriː/",
+      "example": "It is twenty degrees today.",
+      "unit": "Unit 12"
+    },
+    {
+      "id": "pep-ps-4-99",
+      "word": "umbrella",
+      "meaning": "雨伞",
+      "phonetic": "/ʌmˈbrelə/",
+      "example": "Take an umbrella; it is rainy.",
+      "unit": "Unit 12"
+    },
+    {
+      "id": "pep-ps-4-100",
+      "word": "raincoat",
+      "meaning": "雨衣",
+      "phonetic": "/ˈreɪnkəʊt/",
+      "example": "Wear your raincoat outside.",
+      "unit": "Unit 12"
+    },
+    {
+      "id": "pep-ps-4-101",
+      "word": "teacher",
+      "meaning": "教师",
+      "phonetic": "/ˈtiːtʃə/",
+      "example": "Our teacher is kind.",
+      "unit": "Unit 1"
+    },
+    {
+      "id": "pep-ps-4-102",
+      "word": "student",
+      "meaning": "学生",
+      "phonetic": "/ˈstjuːdnt/",
+      "example": "I am a student.",
+      "unit": "Unit 1"
+    },
+    {
+      "id": "pep-ps-4-103",
+      "word": "desk",
+      "meaning": "课桌",
+      "phonetic": "/desk/",
+      "example": "My books are on the desk.",
+      "unit": "Unit 1"
+    },
+    {
+      "id": "pep-ps-4-104",
+      "word": "chair",
+      "meaning": "椅子",
+      "phonetic": "/tʃeə/",
+      "example": "Please sit on the chair.",
+      "unit": "Unit 1"
+    },
+    {
+      "id": "pep-ps-4-105",
+      "word": "clean",
+      "meaning": "打扫；干净的",
+      "phonetic": "/kliːn/",
+      "example": "We clean the classroom.",
+      "unit": "Unit 1"
+    },
+    {
+      "id": "pep-ps-4-106",
+      "word": "near",
+      "meaning": "近的",
+      "phonetic": "/nɪə/",
+      "example": "The door is near the wall.",
+      "unit": "Unit 1"
+    },
+    {
+      "id": "pep-ps-4-107",
+      "word": "TV",
+      "meaning": "电视",
+      "phonetic": "/ˌtiːˈviː/",
+      "example": "There is a TV on the wall.",
+      "unit": "Unit 1"
+    },
+    {
+      "id": "pep-ps-4-108",
+      "word": "really",
+      "meaning": "真的；很",
+      "phonetic": "/ˈrɪəli/",
+      "example": "The room is really big.",
+      "unit": "Unit 1"
+    },
+    {
+      "id": "pep-ps-4-109",
+      "word": "our",
+      "meaning": "我们的",
+      "phonetic": "/ˈaʊə/",
+      "example": "This is our classroom.",
+      "unit": "Unit 1"
+    },
+    {
+      "id": "pep-ps-4-110",
+      "word": "classroom rules",
+      "meaning": "教室守则",
+      "phonetic": "",
+      "example": "Follow the classroom rules.",
+      "unit": "Unit 1"
+    },
+    {
+      "id": "pep-ps-4-111",
+      "word": "candy",
+      "meaning": "糖果",
+      "phonetic": "/ˈkændi/",
+      "example": "There is candy in my bag.",
+      "unit": "Unit 2"
+    },
+    {
+      "id": "pep-ps-4-112",
+      "word": "toy",
+      "meaning": "玩具",
+      "phonetic": "/tɔɪ/",
+      "example": "I have a toy car.",
+      "unit": "Unit 2"
+    },
+    {
+      "id": "pep-ps-4-113",
+      "word": "key",
+      "meaning": "钥匙",
+      "phonetic": "/kiː/",
+      "example": "Where is my key?",
+      "unit": "Unit 2"
+    },
+    {
+      "id": "pep-ps-4-114",
+      "word": "cute",
+      "meaning": "可爱的",
+      "phonetic": "/kjuːt/",
+      "example": "What a cute schoolbag!",
+      "unit": "Unit 2"
+    },
+    {
+      "id": "pep-ps-4-115",
+      "word": "lost",
+      "meaning": "丢失的",
+      "phonetic": "/lɒst/",
+      "example": "I lost my notebook.",
+      "unit": "Unit 2"
+    },
+    {
+      "id": "pep-ps-4-116",
+      "word": "so much",
+      "meaning": "这么多",
+      "phonetic": "",
+      "example": "I have so much candy.",
+      "unit": "Unit 2"
+    },
+    {
+      "id": "pep-ps-4-117",
+      "word": "an",
+      "meaning": "一（个）",
+      "phonetic": "/æn/",
+      "example": "I have an English book.",
+      "unit": "Unit 2"
+    },
+    {
+      "id": "pep-ps-4-118",
+      "word": "what",
+      "meaning": "什么",
+      "phonetic": "/wɒt/",
+      "example": "What is in your schoolbag?",
+      "unit": "Unit 2"
+    },
+    {
+      "id": "pep-ps-4-119",
+      "word": "heavy",
+      "meaning": "重的",
+      "phonetic": "/ˈhevi/",
+      "example": "My schoolbag is heavy.",
+      "unit": "Unit 2"
+    },
+    {
+      "id": "pep-ps-4-120",
+      "word": "put",
+      "meaning": "放",
+      "phonetic": "/pʊt/",
+      "example": "Put your books away.",
+      "unit": "Unit 2"
+    },
+    {
+      "id": "pep-ps-4-121",
+      "word": "cold",
+      "meaning": "寒冷的",
+      "phonetic": "/kəʊld/",
+      "example": "It is cold today.",
+      "unit": "Unit 3"
+    },
+    {
+      "id": "pep-ps-4-122",
+      "word": "warm",
+      "meaning": "温暖的",
+      "phonetic": "/wɔːm/",
+      "example": "It is warm in spring.",
+      "unit": "Unit 3"
+    },
+    {
+      "id": "pep-ps-4-123",
+      "word": "cool",
+      "meaning": "凉爽的",
+      "phonetic": "/kuːl/",
+      "example": "The weather is cool.",
+      "unit": "Unit 3"
+    },
+    {
+      "id": "pep-ps-4-124",
+      "word": "hot",
+      "meaning": "热的",
+      "phonetic": "/hɒt/",
+      "example": "Summer is hot.",
+      "unit": "Unit 3"
+    },
+    {
+      "id": "pep-ps-4-125",
+      "word": "how",
+      "meaning": "怎样",
+      "phonetic": "/haʊ/",
+      "example": "How is the weather?",
+      "unit": "Unit 3"
+    },
+    {
+      "id": "pep-ps-4-126",
+      "word": "outside",
+      "meaning": "在户外",
+      "phonetic": "/ˌaʊtˈsaɪd/",
+      "example": "Let's play outside.",
+      "unit": "Unit 3"
+    },
+    {
+      "id": "pep-ps-4-127",
+      "word": "be careful",
+      "meaning": "小心",
+      "phonetic": "",
+      "example": "Be careful on rainy days.",
+      "unit": "Unit 3"
+    },
+    {
+      "id": "pep-ps-4-128",
+      "word": "world",
+      "meaning": "世界",
+      "phonetic": "/wɜːld/",
+      "example": "It is rainy around the world.",
+      "unit": "Unit 3"
+    },
+    {
+      "id": "pep-ps-4-129",
+      "word": "New York",
+      "meaning": "纽约",
+      "phonetic": "/ˌnjuː ˈjɔːk/",
+      "example": "",
+      "unit": "Unit 3"
+    },
+    {
+      "id": "pep-ps-4-130",
+      "word": "Moscow",
+      "meaning": "莫斯科",
+      "phonetic": "/ˈmɒskəʊ/",
+      "example": "",
+      "unit": "Unit 3"
+    },
+    {
+      "id": "pep-ps-4-131",
+      "word": "Singapore",
+      "meaning": "新加坡",
+      "phonetic": "/ˌsɪŋəˈpɔː/",
+      "example": "",
+      "unit": "Unit 3"
+    },
+    {
+      "id": "pep-ps-4-132",
+      "word": "London",
+      "meaning": "伦敦",
+      "phonetic": "/ˈlʌndən/",
+      "example": "",
+      "unit": "Unit 3"
+    },
+    {
+      "id": "pep-ps-4-133",
+      "word": "clothes",
+      "meaning": "衣服",
+      "phonetic": "/kləʊðz/",
+      "example": "These are my clothes.",
+      "unit": "Unit 4"
+    },
+    {
+      "id": "pep-ps-4-134",
+      "word": "sweater",
+      "meaning": "毛衣",
+      "phonetic": "/ˈswetə/",
+      "example": "I wear a sweater.",
+      "unit": "Unit 4"
+    },
+    {
+      "id": "pep-ps-4-135",
+      "word": "coat",
+      "meaning": "外套",
+      "phonetic": "/kəʊt/",
+      "example": "Put on your coat.",
+      "unit": "Unit 4"
+    },
+    {
+      "id": "pep-ps-4-136",
+      "word": "tie",
+      "meaning": "领带",
+      "phonetic": "/taɪ/",
+      "example": "Dad has a red tie.",
+      "unit": "Unit 4"
+    },
+    {
+      "id": "pep-ps-4-137",
+      "word": "whose",
+      "meaning": "谁的",
+      "phonetic": "/huːz/",
+      "example": "Whose coat is this?",
+      "unit": "Unit 4"
+    },
+    {
+      "id": "pep-ps-4-138",
+      "word": "yours",
+      "meaning": "你的",
+      "phonetic": "/jɔːz/",
+      "example": "Is this yours?",
+      "unit": "Unit 4"
+    },
+    {
+      "id": "pep-ps-4-139",
+      "word": "mine",
+      "meaning": "我的",
+      "phonetic": "/maɪn/",
+      "example": "This hat is mine.",
+      "unit": "Unit 4"
+    },
+    {
+      "id": "pep-ps-4-140",
+      "word": "pack",
+      "meaning": "收拾；打包",
+      "phonetic": "/pæk/",
+      "example": "Pack your clothes.",
+      "unit": "Unit 4"
+    },
+    {
+      "id": "pep-ps-4-141",
+      "word": "wait",
+      "meaning": "等候",
+      "phonetic": "/weɪt/",
+      "example": "Wait a minute, please.",
+      "unit": "Unit 4"
+    },
+    {
+      "id": "pep-ps-4-142",
+      "word": "wear",
+      "meaning": "穿",
+      "phonetic": "/weə/",
+      "example": "I wear a blue shirt.",
+      "unit": "Unit 4"
+    },
+    {
+      "id": "pep-ps-4-143",
+      "word": "take off",
+      "meaning": "脱下",
+      "phonetic": "",
+      "example": "Take off your shoes.",
+      "unit": "Unit 4"
+    },
+    {
+      "id": "pep-ps-4-144",
+      "word": "put on",
+      "meaning": "穿上",
+      "phonetic": "",
+      "example": "Put on your jacket.",
+      "unit": "Unit 4"
+    },
+    {
+      "id": "pep-ps-4-145",
+      "word": "home",
+      "meaning": "家",
+      "phonetic": "/həʊm/",
+      "example": "Welcome to my home.",
+      "unit": "Unit 5"
+    },
+    {
+      "id": "pep-ps-4-146",
+      "word": "room",
+      "meaning": "房间",
+      "phonetic": "/ruːm/",
+      "example": "This is my room.",
+      "unit": "Unit 5"
+    },
+    {
+      "id": "pep-ps-4-147",
+      "word": "study",
+      "meaning": "书房",
+      "phonetic": "/ˈstʌdi/",
+      "example": "Dad is in the study.",
+      "unit": "Unit 5"
+    },
+    {
+      "id": "pep-ps-4-148",
+      "word": "fridge",
+      "meaning": "冰箱",
+      "phonetic": "/frɪdʒ/",
+      "example": "Milk is in the fridge.",
+      "unit": "Unit 5"
+    },
+    {
+      "id": "pep-ps-4-149",
+      "word": "open",
+      "meaning": "开着的；打开",
+      "phonetic": "/ˈəʊpən/",
+      "example": "Open the door, please.",
+      "unit": "Unit 5"
+    },
+    {
+      "id": "pep-ps-4-150",
+      "word": "close",
+      "meaning": "关闭",
+      "phonetic": "/kləʊz/",
+      "example": "Close the window.",
+      "unit": "Unit 5"
+    },
+    {
+      "id": "pep-ps-4-151",
+      "word": "find",
+      "meaning": "找到",
+      "phonetic": "/faɪnd/",
+      "example": "Can you find the keys?",
+      "unit": "Unit 5"
+    },
+    {
+      "id": "pep-ps-4-152",
+      "word": "them",
+      "meaning": "他们；它们",
+      "phonetic": "/ðem/",
+      "example": "I like them.",
+      "unit": "Unit 5"
+    },
+    {
+      "id": "pep-ps-4-153",
+      "word": "kitchen table",
+      "meaning": "厨房桌子",
+      "phonetic": "",
+      "example": "Food is on the kitchen table.",
+      "unit": "Unit 5"
+    },
+    {
+      "id": "pep-ps-4-154",
+      "word": "hungry",
+      "meaning": "饥饿的",
+      "phonetic": "/ˈhʌŋɡri/",
+      "example": "I am hungry.",
+      "unit": "Unit 6"
+    },
+    {
+      "id": "pep-ps-4-155",
+      "word": "thirsty",
+      "meaning": "口渴的",
+      "phonetic": "/ˈθɜːsti/",
+      "example": "I am thirsty.",
+      "unit": "Unit 6"
+    },
+    {
+      "id": "pep-ps-4-156",
+      "word": "bread",
+      "meaning": "面包",
+      "phonetic": "/bred/",
+      "example": "I eat bread for breakfast.",
+      "unit": "Unit 6"
+    },
+    {
+      "id": "pep-ps-4-157",
+      "word": "egg",
+      "meaning": "鸡蛋",
+      "phonetic": "/eɡ/",
+      "example": "I want an egg.",
+      "unit": "Unit 6"
+    },
+    {
+      "id": "pep-ps-4-158",
+      "word": "fish",
+      "meaning": "鱼",
+      "phonetic": "/fɪʃ/",
+      "example": "Fish is good for you.",
+      "unit": "Unit 6"
+    },
+    {
+      "id": "pep-ps-4-159",
+      "word": "rice",
+      "meaning": "米饭",
+      "phonetic": "/raɪs/",
+      "example": "We eat rice every day.",
+      "unit": "Unit 6"
+    },
+    {
+      "id": "pep-ps-4-160",
+      "word": "tofu",
+      "meaning": "豆腐",
+      "phonetic": "/ˈtəʊfuː/",
+      "example": "I like tofu soup.",
+      "unit": "Unit 6"
+    },
+    {
+      "id": "pep-ps-4-161",
+      "word": "salad",
+      "meaning": "沙拉",
+      "phonetic": "/ˈsæləd/",
+      "example": "Try this salad.",
+      "unit": "Unit 6"
+    },
+    {
+      "id": "pep-ps-4-162",
+      "word": "sandwich",
+      "meaning": "三明治",
+      "phonetic": "/ˈsænwɪtʃ/",
+      "example": "I have a sandwich.",
+      "unit": "Unit 6"
+    },
+    {
+      "id": "pep-ps-4-163",
+      "word": "hamburger",
+      "meaning": "汉堡包",
+      "phonetic": "/ˈhæmbɜːɡə/",
+      "example": "A hamburger, please.",
+      "unit": "Unit 6"
+    },
+    {
+      "id": "pep-ps-4-164",
+      "word": "juice",
+      "meaning": "果汁",
+      "phonetic": "/dʒuːs/",
+      "example": "I drink orange juice.",
+      "unit": "Unit 6"
+    },
+    {
+      "id": "pep-ps-4-165",
+      "word": "milk",
+      "meaning": "牛奶",
+      "phonetic": "/mɪlk/",
+      "example": "Drink some milk.",
+      "unit": "Unit 6"
+    },
+    {
+      "id": "pep-ps-4-166",
+      "word": "help yourself",
+      "meaning": "随便吃",
+      "phonetic": "",
+      "example": "Help yourself to some soup.",
+      "unit": "Unit 6"
+    },
+    {
+      "id": "pep-ps-4-167",
+      "word": "delicious",
+      "meaning": "美味的",
+      "phonetic": "/dɪˈlɪʃəs/",
+      "example": "The noodles are delicious.",
+      "unit": "Unit 6"
+    },
+    {
+      "id": "pep-ps-4-168",
+      "word": "forest",
+      "meaning": "森林",
+      "phonetic": "/ˈfɒrɪst/",
+      "example": "There are trees in the forest.",
+      "unit": "Unit 7"
+    },
+    {
+      "id": "pep-ps-4-169",
+      "word": "river",
+      "meaning": "河流",
+      "phonetic": "/ˈrɪvə/",
+      "example": "The river is long.",
+      "unit": "Unit 7"
+    },
+    {
+      "id": "pep-ps-4-170",
+      "word": "lake",
+      "meaning": "湖",
+      "phonetic": "/leɪk/",
+      "example": "We walk by the lake.",
+      "unit": "Unit 7"
+    },
+    {
+      "id": "pep-ps-4-171",
+      "word": "mountain",
+      "meaning": "山",
+      "phonetic": "/ˈmaʊntən/",
+      "example": "I see a big mountain.",
+      "unit": "Unit 7"
+    },
+    {
+      "id": "pep-ps-4-172",
+      "word": "flower",
+      "meaning": "花",
+      "phonetic": "/ˈflaʊə/",
+      "example": "The flower is red.",
+      "unit": "Unit 7"
+    },
+    {
+      "id": "pep-ps-4-173",
+      "word": "grass",
+      "meaning": "草",
+      "phonetic": "/ɡrɑːs/",
+      "example": "Don't walk on the grass.",
+      "unit": "Unit 7"
+    },
+    {
+      "id": "pep-ps-4-174",
+      "word": "tree",
+      "meaning": "树",
+      "phonetic": "/triː/",
+      "example": "There is a tall tree.",
+      "unit": "Unit 7"
+    },
+    {
+      "id": "pep-ps-4-175",
+      "word": "bridge",
+      "meaning": "桥",
+      "phonetic": "/brɪdʒ/",
+      "example": "Cross the bridge.",
+      "unit": "Unit 7"
+    },
+    {
+      "id": "pep-ps-4-176",
+      "word": "boating",
+      "meaning": "划船",
+      "phonetic": "/ˈbəʊtɪŋ/",
+      "example": "Let's go boating.",
+      "unit": "Unit 7"
+    },
+    {
+      "id": "pep-ps-4-177",
+      "word": "rabbit",
+      "meaning": "兔子",
+      "phonetic": "/ˈræbɪt/",
+      "example": "A rabbit likes carrots.",
+      "unit": "Unit 7"
+    },
+    {
+      "id": "pep-ps-4-178",
+      "word": "goat",
+      "meaning": "山羊",
+      "phonetic": "/ɡəʊt/",
+      "example": "The goat is white.",
+      "unit": "Unit 7"
+    },
+    {
+      "id": "pep-ps-4-179",
+      "word": "tomato",
+      "meaning": "西红柿",
+      "phonetic": "/təˈmɑːtəʊ/",
+      "example": "I grow a tomato.",
+      "unit": "Unit 7"
+    },
+    {
+      "id": "pep-ps-4-180",
+      "word": "potato",
+      "meaning": "土豆",
+      "phonetic": "/pəˈteɪtəʊ/",
+      "example": "We plant potatoes.",
+      "unit": "Unit 7"
+    },
+    {
+      "id": "pep-ps-4-181",
+      "word": "carrot",
+      "meaning": "胡萝卜",
+      "phonetic": "/ˈkærət/",
+      "example": "Rabbits eat carrots.",
+      "unit": "Unit 7"
+    },
+    {
+      "id": "pep-ps-4-182",
+      "word": "green beans",
+      "meaning": "青豆",
+      "phonetic": "",
+      "example": "I like green beans.",
+      "unit": "Unit 7"
+    },
+    {
+      "id": "pep-ps-4-183",
+      "word": "number",
+      "meaning": "数字",
+      "phonetic": "/ˈnʌmbə/",
+      "example": "What number is it?",
+      "unit": "Unit 8"
+    },
+    {
+      "id": "pep-ps-4-184",
+      "word": "eleven",
+      "meaning": "十一",
+      "phonetic": "/ɪˈlevn/",
+      "example": "I am eleven years old.",
+      "unit": "Unit 8"
+    },
+    {
+      "id": "pep-ps-4-185",
+      "word": "twelve",
+      "meaning": "十二",
+      "phonetic": "/twelv/",
+      "example": "There are twelve months.",
+      "unit": "Unit 8"
+    },
+    {
+      "id": "pep-ps-4-186",
+      "word": "twenty",
+      "meaning": "二十",
+      "phonetic": "/ˈtwenti/",
+      "example": "I can count to twenty.",
+      "unit": "Unit 8"
+    },
+    {
+      "id": "pep-ps-4-187",
+      "word": "thirty",
+      "meaning": "三十",
+      "phonetic": "/ˈθɜːti/",
+      "example": "My dad is thirty.",
+      "unit": "Unit 8"
+    },
+    {
+      "id": "pep-ps-4-188",
+      "word": "forty",
+      "meaning": "四十",
+      "phonetic": "/ˈfɔːti/",
+      "example": "There are forty students.",
+      "unit": "Unit 8"
+    },
+    {
+      "id": "pep-ps-4-189",
+      "word": "fifty",
+      "meaning": "五十",
+      "phonetic": "/ˈfɪfti/",
+      "example": "Fifty is a big number.",
+      "unit": "Unit 8"
+    },
+    {
+      "id": "pep-ps-4-190",
+      "word": "weekend",
+      "meaning": "周末",
+      "phonetic": "/ˌwiːkˈend/",
+      "example": "See you at the weekend.",
+      "unit": "Unit 8"
+    },
+    {
+      "id": "pep-ps-4-191",
+      "word": "today",
+      "meaning": "今天",
+      "phonetic": "/təˈdeɪ/",
+      "example": "Today is Monday.",
+      "unit": "Unit 8"
+    },
+    {
+      "id": "pep-ps-4-192",
+      "word": "tomorrow",
+      "meaning": "明天",
+      "phonetic": "/təˈmɒrəʊ/",
+      "example": "See you tomorrow.",
+      "unit": "Unit 8"
+    },
+    {
+      "id": "pep-ps-4-193",
+      "word": "yesterday",
+      "meaning": "昨天",
+      "phonetic": "/ˈjestədeɪ/",
+      "example": "Yesterday was Sunday.",
+      "unit": "Unit 8"
+    },
+    {
+      "id": "pep-ps-4-194",
+      "word": "often",
+      "meaning": "经常",
+      "phonetic": "/ˈɒfn/",
+      "example": "I often read books.",
+      "unit": "Unit 8"
+    },
+    {
+      "id": "pep-ps-4-195",
+      "word": "sometimes",
+      "meaning": "有时",
+      "phonetic": "/ˈsʌmtaɪmz/",
+      "example": "I sometimes play football.",
+      "unit": "Unit 8"
+    },
+    {
+      "id": "pep-ps-4-196",
+      "word": "every",
+      "meaning": "每个",
+      "phonetic": "/ˈevri/",
+      "example": "I go to school every day.",
+      "unit": "Unit 8"
+    },
+    {
+      "id": "pep-ps-4-197",
+      "word": "subject",
+      "meaning": "学科",
+      "phonetic": "/ˈsʌbdʒɪkt/",
+      "example": "Maths is my favourite subject.",
+      "unit": "Unit 9"
+    },
+    {
+      "id": "pep-ps-4-198",
+      "word": "Chinese",
+      "meaning": "语文；中文",
+      "phonetic": "/ˌtʃaɪˈniːz/",
+      "example": "I like Chinese.",
+      "unit": "Unit 9"
+    },
+    {
+      "id": "pep-ps-4-199",
+      "word": "English",
+      "meaning": "英语",
+      "phonetic": "/ˈɪŋɡlɪʃ/",
+      "example": "I speak English.",
+      "unit": "Unit 9"
+    },
+    {
+      "id": "pep-ps-4-200",
+      "word": "maths",
+      "meaning": "数学",
+      "phonetic": "/mæθs/",
+      "example": "Maths is fun.",
+      "unit": "Unit 9"
+    },
+    {
+      "id": "pep-ps-4-201",
+      "word": "science",
+      "meaning": "科学",
+      "phonetic": "/ˈsaɪəns/",
+      "example": "We have science today.",
+      "unit": "Unit 9"
+    },
+    {
+      "id": "pep-ps-4-202",
+      "word": "schedule",
+      "meaning": "课程表",
+      "phonetic": "/ˈʃedjuːl/",
+      "example": "Look at the schedule.",
+      "unit": "Unit 9"
+    },
+    {
+      "id": "pep-ps-4-203",
+      "word": "tired",
+      "meaning": "疲倦的",
+      "phonetic": "/ˈtaɪəd/",
+      "example": "I am tired after PE.",
+      "unit": "Unit 9"
+    },
+    {
+      "id": "pep-ps-4-204",
+      "word": "sport",
+      "meaning": "运动",
+      "phonetic": "/spɔːt/",
+      "example": "Football is a sport.",
+      "unit": "Unit 9"
+    },
+    {
+      "id": "pep-ps-4-205",
+      "word": "ping-pong",
+      "meaning": "乒乓球",
+      "phonetic": "/ˈpɪŋpɒŋ/",
+      "example": "I play ping-pong.",
+      "unit": "Unit 9"
+    },
+    {
+      "id": "pep-ps-4-206",
+      "word": "football",
+      "meaning": "足球",
+      "phonetic": "/ˈfʊtbɔːl/",
+      "example": "We play football.",
+      "unit": "Unit 9"
+    },
+    {
+      "id": "pep-ps-4-207",
+      "word": "basketball",
+      "meaning": "篮球",
+      "phonetic": "/ˈbɑːskɪtbɔːl/",
+      "example": "He likes basketball.",
+      "unit": "Unit 9"
+    },
+    {
+      "id": "pep-ps-4-208",
+      "word": "job",
+      "meaning": "工作",
+      "phonetic": "/dʒɒb/",
+      "example": "What is your job?",
+      "unit": "Unit 10"
+    },
+    {
+      "id": "pep-ps-4-209",
+      "word": "parents",
+      "meaning": "父母",
+      "phonetic": "/ˈpeərənts/",
+      "example": "My parents love me.",
+      "unit": "Unit 10"
+    },
+    {
+      "id": "pep-ps-4-210",
+      "word": "uncle",
+      "meaning": "叔叔；舅舅",
+      "phonetic": "/ˈʌŋkl/",
+      "example": "My uncle is a doctor.",
+      "unit": "Unit 10"
+    },
+    {
+      "id": "pep-ps-4-211",
+      "word": "aunt",
+      "meaning": "阿姨；姑姑",
+      "phonetic": "/ɑːnt/",
+      "example": "My aunt is a nurse.",
+      "unit": "Unit 10"
+    },
+    {
+      "id": "pep-ps-4-212",
+      "word": "baby",
+      "meaning": "婴儿",
+      "phonetic": "/ˈbeɪbi/",
+      "example": "The baby is cute.",
+      "unit": "Unit 10"
+    },
+    {
+      "id": "pep-ps-4-213",
+      "word": "people",
+      "meaning": "人们",
+      "phonetic": "/ˈpiːpl/",
+      "example": "Many people work here.",
+      "unit": "Unit 10"
+    },
+    {
+      "id": "pep-ps-4-214",
+      "word": "taxi",
+      "meaning": "出租车",
+      "phonetic": "/ˈtæksi/",
+      "example": "Dad drives a taxi.",
+      "unit": "Unit 10"
+    },
+    {
+      "id": "pep-ps-4-215",
+      "word": "bus",
+      "meaning": "公共汽车",
+      "phonetic": "/bʌs/",
+      "example": "I go by bus.",
+      "unit": "Unit 10"
+    },
+    {
+      "id": "pep-ps-4-216",
+      "word": "bike",
+      "meaning": "自行车",
+      "phonetic": "/baɪk/",
+      "example": "I ride a bike.",
+      "unit": "Unit 10"
+    },
+    {
+      "id": "pep-ps-4-217",
+      "word": "work",
+      "meaning": "工作",
+      "phonetic": "/wɜːk/",
+      "example": "They work hard.",
+      "unit": "Unit 10"
+    },
+    {
+      "id": "pep-ps-4-218",
+      "word": "season",
+      "meaning": "季节",
+      "phonetic": "/ˈsiːzn/",
+      "example": "Spring is a season.",
+      "unit": "Unit 11"
+    },
+    {
+      "id": "pep-ps-4-219",
+      "word": "picnic",
+      "meaning": "野餐",
+      "phonetic": "/ˈpɪknɪk/",
+      "example": "We have a picnic in the park.",
+      "unit": "Unit 11"
+    },
+    {
+      "id": "pep-ps-4-220",
+      "word": "which",
+      "meaning": "哪一个",
+      "phonetic": "/wɪtʃ/",
+      "example": "Which season do you like?",
+      "unit": "Unit 11"
+    },
+    {
+      "id": "pep-ps-4-221",
+      "word": "best",
+      "meaning": "最；最好的",
+      "phonetic": "/best/",
+      "example": "I like autumn best.",
+      "unit": "Unit 11"
+    },
+    {
+      "id": "pep-ps-4-222",
+      "word": "why",
+      "meaning": "为什么",
+      "phonetic": "/waɪ/",
+      "example": "Why do you like summer?",
+      "unit": "Unit 11"
+    },
+    {
+      "id": "pep-ps-4-223",
+      "word": "because",
+      "meaning": "因为",
+      "phonetic": "/bɪˈkɒz/",
+      "example": "Because it is hot.",
+      "unit": "Unit 11"
+    },
+    {
+      "id": "pep-ps-4-224",
+      "word": "go shopping",
+      "meaning": "去购物",
+      "phonetic": "",
+      "example": "Let's go shopping.",
+      "unit": "Unit 11"
+    },
+    {
+      "id": "pep-ps-4-225",
+      "word": "go swimming",
+      "meaning": "去游泳",
+      "phonetic": "",
+      "example": "I go swimming in summer.",
+      "unit": "Unit 11"
+    },
+    {
+      "id": "pep-ps-4-226",
+      "word": "plant",
+      "meaning": "种植",
+      "phonetic": "/plɑːnt/",
+      "example": "We plant trees in spring.",
+      "unit": "Unit 11"
+    },
+    {
+      "id": "pep-ps-4-227",
+      "word": "snowman",
+      "meaning": "雪人",
+      "phonetic": "/ˈsnəʊmæn/",
+      "example": "We make a snowman.",
+      "unit": "Unit 11"
+    },
+    {
+      "id": "pep-ps-4-228",
+      "word": "lovely",
+      "meaning": "可爱的",
+      "phonetic": "/ˈlʌvli/",
+      "example": "What a lovely day!",
+      "unit": "Unit 11"
+    },
+    {
+      "id": "pep-ps-4-229",
+      "word": "visit",
+      "meaning": "看望；参观",
+      "phonetic": "/ˈvɪzɪt/",
+      "example": "I visit my grandparents.",
+      "unit": "Unit 12"
+    },
+    {
+      "id": "pep-ps-4-230",
+      "word": "grandparents",
+      "meaning": "祖父母",
+      "phonetic": "/ˈɡrænpeərənts/",
+      "example": "I love my grandparents.",
+      "unit": "Unit 12"
+    },
+    {
+      "id": "pep-ps-4-231",
+      "word": "together",
+      "meaning": "一起",
+      "phonetic": "/təˈɡeðə/",
+      "example": "Let's play together.",
+      "unit": "Unit 12"
+    },
+    {
+      "id": "pep-ps-4-232",
+      "word": "great",
+      "meaning": "很好的",
+      "phonetic": "/ɡreɪt/",
+      "example": "That is great!",
+      "unit": "Unit 12"
+    },
+    {
+      "id": "pep-ps-4-233",
+      "word": "fun",
+      "meaning": "有趣的",
+      "phonetic": "/fʌn/",
+      "example": "Sports are fun.",
+      "unit": "Unit 12"
+    },
+    {
+      "id": "pep-ps-4-234",
+      "word": "catch",
+      "meaning": "接住",
+      "phonetic": "/kætʃ/",
+      "example": "Catch the ball!",
+      "unit": "Unit 12"
+    },
+    {
+      "id": "pep-ps-4-235",
+      "word": "kick",
+      "meaning": "踢",
+      "phonetic": "/kɪk/",
+      "example": "Kick the ball hard.",
+      "unit": "Unit 12"
+    },
+    {
+      "id": "pep-ps-4-236",
+      "word": "run",
+      "meaning": "跑",
+      "phonetic": "/rʌn/",
+      "example": "I can run fast.",
+      "unit": "Unit 12"
+    },
+    {
+      "id": "pep-ps-4-237",
+      "word": "swim",
+      "meaning": "游泳",
+      "phonetic": "/swɪm/",
+      "example": "I can swim.",
+      "unit": "Unit 12"
+    },
+    {
+      "id": "pep-ps-4-238",
+      "word": "dance",
+      "meaning": "跳舞",
+      "phonetic": "/dɑːns/",
+      "example": "She can dance.",
+      "unit": "Unit 12"
+    },
+    {
+      "id": "pep-ps-4-239",
+      "word": "draw",
+      "meaning": "画画",
+      "phonetic": "/drɔː/",
+      "example": "I draw a picture.",
+      "unit": "Unit 12"
+    },
+    {
+      "id": "pep-ps-4-240",
+      "word": "sing",
+      "meaning": "唱歌",
+      "phonetic": "/sɪŋ/",
+      "example": "We sing a song.",
+      "unit": "Unit 12"
+    },
+    {
+      "id": "pep-ps-4-241",
+      "word": "read",
+      "meaning": "读",
+      "phonetic": "/riːd/",
+      "example": "I read a book.",
+      "unit": "Unit 12"
+    },
+    {
+      "id": "pep-ps-4-242",
+      "word": "write",
+      "meaning": "写",
+      "phonetic": "/raɪt/",
+      "example": "Write your name.",
+      "unit": "Unit 12"
+    },
+    {
+      "id": "pep-ps-4-243",
+      "word": "listen",
+      "meaning": "听",
+      "phonetic": "/ˈlɪsn/",
+      "example": "Listen to the teacher.",
+      "unit": "Unit 12"
+    }
+  ],
+  "wordCount": 243
+}
