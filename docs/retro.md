@@ -31,3 +31,6 @@
 - 实际：BooksScreen onTap + store.setSelectedBookId；保留全屏选型入口
 - 卡住：无
 - 预防：高频路径提供列表直达，全屏选型作首次/细筛
+
+- 补充：Windows 需 nuget.exe（已装到 C:\Users\user\tools）才能编 flutter_tts
+
