@@ -6,6 +6,7 @@ class ProgressStore {
   final SharedPreferences _prefs;
 
   static const _kLearned = 'learned_ids';
+  static const _kWrong = 'wrong_ids';
   static const _kTodayCount = 'today_count';
   static const _kTodayDate = 'today_date';
   static const _kStreak = 'streak_days';
@@ -35,11 +36,22 @@ class ProgressStore {
     return (_prefs.getStringList(_kLearned) ?? const <String>[]).toSet();
   }
 
+  Set<String> wrongIds() {
+    return (_prefs.getStringList(_kWrong) ?? const <String>[]).toSet();
+  }
+
   int learnedCount() => learnedIds().length;
+
+  int wrongCount() => wrongIds().length;
 
   int learnedCountForBook(String bookId) {
     final prefix = '$bookId-';
     return learnedIds().where((id) => id.startsWith(prefix)).length;
+  }
+
+  int wrongCountForBook(String bookId) {
+    final prefix = '$bookId-';
+    return wrongIds().where((id) => id.startsWith(prefix)).length;
   }
 
   Future<int> clearLearnedForBook(String bookId) async {
@@ -48,6 +60,15 @@ class ProgressStore {
     final kept = before.where((id) => !id.startsWith(prefix)).toList();
     final removed = before.length - kept.length;
     await _prefs.setStringList(_kLearned, kept);
+    return removed;
+  }
+
+  Future<int> clearWrongForBook(String bookId) async {
+    final prefix = '$bookId-';
+    final before = wrongIds();
+    final kept = before.where((id) => !id.startsWith(prefix)).toList();
+    final removed = before.length - kept.length;
+    await _prefs.setStringList(_kWrong, kept);
     return removed;
   }
 
@@ -70,19 +91,34 @@ class ProgressStore {
 
   Future<void> markLearned(String id) async {
     final ids = learnedIds();
+    if (!ids.contains(id)) {
+      ids.add(id);
+      await _prefs.setStringList(_kLearned, ids.toList());
+
+      final today = _todayKey();
+      if (_prefs.getString(_kTodayDate) != today) {
+        await _prefs.setString(_kTodayDate, today);
+        await _prefs.setInt(_kTodayCount, 1);
+      } else {
+        await _prefs.setInt(_kTodayCount, todayCount() + 1);
+      }
+      await _updateStreak(today);
+    }
+    await removeWrong(id);
+  }
+
+  Future<void> markWrong(String id) async {
+    final ids = wrongIds();
     if (ids.contains(id)) return;
     ids.add(id);
-    await _prefs.setStringList(_kLearned, ids.toList());
+    await _prefs.setStringList(_kWrong, ids.toList());
+  }
 
-    final today = _todayKey();
-    if (_prefs.getString(_kTodayDate) != today) {
-      await _prefs.setString(_kTodayDate, today);
-      await _prefs.setInt(_kTodayCount, 1);
-    } else {
-      await _prefs.setInt(_kTodayCount, todayCount() + 1);
-    }
-
-    await _updateStreak(today);
+  Future<void> removeWrong(String id) async {
+    final ids = wrongIds();
+    if (!ids.contains(id)) return;
+    ids.remove(id);
+    await _prefs.setStringList(_kWrong, ids.toList());
   }
 
   Future<void> touchActive() async {

@@ -100,6 +100,7 @@ class HomeShell extends StatefulWidget {
 
 class _HomeShellState extends State<HomeShell> {
   int _index = 0;
+  bool _reviewWrongOnly = false;
 
   @override
   Widget build(BuildContext context) {
@@ -110,6 +111,7 @@ class _HomeShellState extends State<HomeShell> {
         repo: widget.repo,
         bookId: bookId,
         onNeedSetup: widget.onChangeBook,
+        reviewWrongOnly: _reviewWrongOnly,
       ),
       BooksScreen(
         store: widget.store,
@@ -118,7 +120,7 @@ class _HomeShellState extends State<HomeShell> {
         onChangeBook: widget.onChangeBook,
         onBookSelected: () => setState(() {}),
       ),
-      MeScreen(store: widget.store, repo: widget.repo, onRefresh: () => setState(() {}), onChangeBook: widget.onChangeBook),
+      MeScreen(store: widget.store, repo: widget.repo, onRefresh: () => setState(() {}), onChangeBook: widget.onChangeBook, onReviewWrong: () => setState(() { _reviewWrongOnly = true; _index = 0; }),),
     ];
 
     return Scaffold(
@@ -126,7 +128,7 @@ class _HomeShellState extends State<HomeShell> {
       body: IndexedStack(index: _index, children: pages),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _index,
-        onDestinationSelected: (i) => setState(() => _index = i),
+        onDestinationSelected: (i) => setState(() { if (i != 0) _reviewWrongOnly = false; _index = i; }),
         destinations: const [
           NavigationDestination(icon: Icon(Icons.school_outlined), selectedIcon: Icon(Icons.school), label: '学习'),
           NavigationDestination(icon: Icon(Icons.menu_book_outlined), selectedIcon: Icon(Icons.menu_book), label: '词书'),

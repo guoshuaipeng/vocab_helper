@@ -13,6 +13,7 @@ class LearnScreen extends StatefulWidget {
     required this.repo,
     required this.bookId,
     required this.onNeedSetup,
+    this.reviewWrongOnly = false,
     this.speaker,
   });
 
@@ -20,6 +21,7 @@ class LearnScreen extends StatefulWidget {
   final WordbookRepository repo;
   final String? bookId;
   final VoidCallback onNeedSetup;
+  final bool reviewWrongOnly;
   final WordSpeaker? speaker;
 
   @override
@@ -58,7 +60,7 @@ class _LearnScreenState extends State<LearnScreen> {
   @override
   void didUpdateWidget(covariant LearnScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.bookId != widget.bookId) {
+    if (oldWidget.bookId != widget.bookId || oldWidget.reviewWrongOnly != widget.reviewWrongOnly) {
       _boot();
     }
   }
@@ -85,9 +87,25 @@ class _LearnScreenState extends State<LearnScreen> {
         });
         return;
       }
-      final learned = widget.store.learnedIds();
-      final pending = book.words.where((w) => !learned.contains(w.id)).toList();
-      final list = pending.isEmpty ? List<Word>.from(book.words) : pending;
+      List<Word> list;
+      if (widget.reviewWrongOnly) {
+        final wrong = widget.store.wrongIds();
+        list = book.words.where((w) => wrong.contains(w.id)).toList();
+        if (list.isEmpty) {
+          setState(() {
+            _book = book;
+            _queue = ReviewQueue(list);
+            _flipped = false;
+            _loading = false;
+            _error = '错词本是空的，先在学习里点「不认识」吧';
+          });
+          return;
+        }
+      } else {
+        final learned = widget.store.learnedIds();
+        final pending = book.words.where((w) => !learned.contains(w.id)).toList();
+        list = pending.isEmpty ? List<Word>.from(book.words) : pending;
+      }
       await widget.store.touchActive();
       setState(() {
         _book = book;
@@ -114,9 +132,11 @@ class _LearnScreenState extends State<LearnScreen> {
     });
   }
 
-  void _onUnknown() {
+  Future<void> _onUnknown() async {
     final q = _queue;
-    if (q == null) return;
+    final cur = q?.current;
+    if (q == null || cur == null) return;
+    await widget.store.markWrong(cur.id);
     setState(() {
       q.markUnknown();
       _flipped = false;
@@ -158,7 +178,7 @@ class _LearnScreenState extends State<LearnScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('本轮单词都过完啦！', style: TextStyle(fontSize: 20)),
+            Text(widget.reviewWrongOnly ? '错词本本轮复习完啦！' : '本轮单词都过完啦！', style: const TextStyle(fontSize: 20)),
             const SizedBox(height: 8),
             Text('本轮认识 ${q.knownCount} 个', style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 12),
@@ -174,7 +194,7 @@ class _LearnScreenState extends State<LearnScreen> {
         children: [
           Align(
             alignment: Alignment.centerLeft,
-            child: Text(_book?.title ?? '', style: Theme.of(context).textTheme.titleMedium),
+            child: Text(widget.reviewWrongOnly ? '错词复习 · ' : (_book?.title ?? ''), style: Theme.of(context).textTheme.titleMedium),
           ),
           Align(
             alignment: Alignment.centerLeft,

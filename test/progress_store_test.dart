@@ -41,4 +41,21 @@ void main() {
     expect(store.dailyGoal(), 30);
     expect(store.todayGoalMet, isFalse);
   });
+
+  test('wrong book add remove and clear by book', () async {
+    final store = await ProgressStore.open();
+    await store.markWrong('hj-ps-3-1');
+    await store.markWrong('hj-ps-3-2');
+    await store.markWrong('pep-ps-3-9');
+    expect(store.wrongCountForBook('hj-ps-3'), 2);
+    expect(store.wrongCount(), 3);
+
+    await store.markLearned('hj-ps-3-1');
+    expect(store.wrongIds().contains('hj-ps-3-1'), isFalse);
+    expect(store.wrongCountForBook('hj-ps-3'), 1);
+
+    final cleared = await store.clearWrongForBook('hj-ps-3');
+    expect(cleared, 1);
+    expect(store.wrongIds().contains('pep-ps-3-9'), isTrue);
+  });
 }

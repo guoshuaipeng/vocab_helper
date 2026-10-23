@@ -11,12 +11,14 @@ class MeScreen extends StatefulWidget {
     required this.repo,
     required this.onRefresh,
     required this.onChangeBook,
+    required this.onReviewWrong,
   });
 
   final ProgressStore store;
   final WordbookRepository repo;
   final VoidCallback onRefresh;
   final VoidCallback onChangeBook;
+  final VoidCallback onReviewWrong;
 
   @override
   State<MeScreen> createState() => _MeScreenState();
@@ -202,6 +204,56 @@ class _MeScreenState extends State<MeScreen> {
                   Text(
                     widget.store.todayGoalMet ? '今日目标已完成，棒！' : '再学 ${goal - today} 个就达标',
                     style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('错词本', style: Theme.of(context).textTheme.titleMedium),
+                  const SizedBox(height: 8),
+                  Text(
+                    bookId == null
+                        ? '0'
+                        : '${widget.store.wrongCountForBook(bookId)}',
+                    style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 4),
+                  Text('点「不认识」会加入本词书错词本；点「认识」会移出。', style: Theme.of(context).textTheme.bodySmall),
+                  const SizedBox(height: 12),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      FilledButton.icon(
+                        onPressed: (bookId == null || widget.store.wrongCountForBook(bookId) == 0)
+                            ? null
+                            : widget.onReviewWrong,
+                        icon: const Icon(Icons.replay),
+                        label: const Text('复习错词'),
+                      ),
+                      if (bookId != null)
+                        OutlinedButton(
+                          onPressed: widget.store.wrongCountForBook(bookId) == 0
+                              ? null
+                              : () async {
+                                  final n = await widget.store.clearWrongForBook(bookId);
+                                  widget.onRefresh();
+                                  setState(() {});
+                                  if (!mounted) return;
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text(n == 0 ? '错词本已空' : '已清空 $n 个错词')),
+                                  );
+                                },
+                          child: const Text('清空错词'),
+                        ),
+                    ],
                   ),
                 ],
               ),
