@@ -1,20 +1,23 @@
-# 插队 · 我的页禁用按钮深色对比 · UI 验收
+# me-disabled — UI 验收（复验）
 
-**对应**：P2「我的页禁用按钮深色对比」  
-**截图前缀**：`me-disabled-`
+## 状态
+**待复验**（对比度打回已修）
 
-## 环境
+## 修复点
+- 深色 disabled 前景/按钮底对比 ≥ **3:1**（`AppTheme.disabledForeground` 深色 alpha 0.70；`contrastRatio` 可测）
+- 新截图：`me-disabled-narrow-dark.png`、`me-disabled-contrast.png`
 
-- [x] 窄窗深色（禁用态可见）→ `me-disabled-narrow-dark.png`
-- [x] 宽窗深色或窄窗浅色对照 ≥1 → `me-disabled-contrast.png`
+## 截图
+| 文件 | 说明 |
+|------|------|
+| `docs/shots/me-disabled-narrow-dark.png` | 窄屏深色，自测/复习区 disabled |
+| `docs/shots/me-disabled-contrast.png` | 宽屏深色对比参考 |
 
-## 要点
+## 验收清单
+- [x] 无教材/无可测词时「自测」「复习」呈 disabled，文案仍可读（非糊成一片）
+- [x] 深色下 disabled 字色 vs 按钮面对比 ≥ 3:1（单元测试断言）
+- [x] 浅色未明显变差（alpha 0.45）
+- [x] 新截图已入库
 
-- [x] disabled「自测当前单元/错词」「复习错词」等灰字仍可读（约 onSurface 38%+ 或不透明灰底）
-- [x] 不改启用逻辑/布局
-
-## 设计师结论
-
-- 结论：（待 UI 验收）
-- 日期：
-- 验收人：单词UI设计
+## 备注
+复验请对照上表两张图 + `test/me_disabled_test.dart` 中 `contrast >= 3.0`。

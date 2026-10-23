@@ -3,16 +3,28 @@ import 'package:flutter/material.dart';
 class AppTheme {
   static const seed = Color(0xFF4F8CFF);
 
-  /// Opaque-enough disabled label: onSurface@38% blended onto surface (readable on dark cards).
+  /// Disabled label: blend onSurface onto surface for an opaque color.
+  /// Dark cards need higher alpha than Material's 0.38 to stay ~≥3:1 vs button face.
   static Color disabledForeground(ColorScheme scheme) {
-    return Color.alphaBlend(scheme.onSurface.withValues(alpha: 0.38), scheme.surface);
+    final alpha = scheme.brightness == Brightness.dark ? 0.70 : 0.45;
+    return Color.alphaBlend(scheme.onSurface.withValues(alpha: alpha), scheme.surface);
   }
 
   static Color disabledBackground(ColorScheme scheme) {
+    final alpha = scheme.brightness == Brightness.dark ? 0.18 : 0.12;
     return Color.alphaBlend(
-      scheme.onSurface.withValues(alpha: 0.12),
+      scheme.onSurface.withValues(alpha: alpha),
       scheme.surfaceContainerHighest,
     );
+  }
+
+  /// Approximate contrast ratio of two opaque colors (WCAG).
+  static double contrastRatio(Color a, Color b) {
+    final l1 = a.computeLuminance();
+    final l2 = b.computeLuminance();
+    final bright = l1 > l2 ? l1 : l2;
+    final dark = l1 > l2 ? l2 : l1;
+    return (bright + 0.05) / (dark + 0.05);
   }
 
   static ThemeData _withButtons(ThemeData base) {

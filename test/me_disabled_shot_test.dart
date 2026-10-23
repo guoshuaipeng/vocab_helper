@@ -9,6 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vocab_helper/screens/me_screen.dart';
 import 'package:vocab_helper/services/progress_store.dart';
+import 'package:vocab_helper/services/word_speaker.dart';
 import 'package:vocab_helper/services/wordbook_repository.dart';
 import 'package:vocab_helper/theme/app_theme.dart';
 
@@ -64,6 +65,7 @@ void main() {
               key: ValueKey('me_$outName'),
               store: store,
               repo: WordbookRepository(),
+              speaker: FakeWordSpeaker()..voiceAvailable = true,
               onRefresh: () {},
               onChangeBook: () {},
               onReviewWrong: () {},

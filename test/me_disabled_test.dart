@@ -9,14 +9,13 @@ import 'package:vocab_helper/theme/app_theme.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('dark disabledForeground contrasts with card surface', () {
+  test('dark disabledForeground vs button face contrast >= 3:1', () {
     final theme = AppTheme.dark();
     final scheme = theme.colorScheme;
     final fg = AppTheme.disabledForeground(scheme);
-    final card = scheme.surfaceContainerHighest;
-    final contrast = (fg.computeLuminance() - card.computeLuminance()).abs();
-    expect(contrast, greaterThan(0.04));
-    // styleFrom wires into theme
+    final bg = AppTheme.disabledBackground(scheme);
+    final ratio = AppTheme.contrastRatio(fg, bg);
+    expect(ratio, greaterThanOrEqualTo(3.0));
     expect(theme.filledButtonTheme.style, isNotNull);
   });
 
