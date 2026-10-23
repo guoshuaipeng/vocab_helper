@@ -7,6 +7,7 @@ import '../services/progress_store.dart';
 import '../services/review_queue.dart';
 import '../services/word_speaker.dart';
 import '../widgets/goal_celebrate_banner.dart';
+import '../widgets/friendly_thumb.dart';
 import '../services/wordbook_repository.dart';
 
 class LearnScreen extends StatefulWidget {
@@ -796,7 +797,7 @@ class _LearnScreenState extends State<LearnScreen> {
 
         Widget ctaRow({required bool vertical}) {
           // Large bare thumbs (no pill/circle). 认识: elastic stretch-out + settle.
-          final iconSize = vertical ? 64.0 : 56.0;
+          final iconSize = vertical ? 72.0 : 64.0;
           final unknown = _PressScale(
             child: Material(
               color: Colors.transparent,
@@ -816,10 +817,15 @@ class _LearnScreenState extends State<LearnScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(
-                          Icons.thumb_down_alt_outlined,
-                          size: iconSize,
-                          color: scheme.onSurfaceVariant,
+                        SizedBox(
+                          width: iconSize,
+                          height: iconSize,
+                          child: CustomPaint(
+                            painter: FriendlyThumbPainter(
+                              color: scheme.onSurfaceVariant,
+                              down: true,
+                            ),
+                          ),
                         ),
                         const SizedBox(height: 8),
                         Text(
@@ -837,7 +843,7 @@ class _LearnScreenState extends State<LearnScreen> {
               ),
             ),
           );
-          final known = _ElasticThumbCta(
+          final known = ElasticKnownThumbCta(
             key: const ValueKey('learn_known'),
             enabled: _flashKind == null,
             vertical: vertical,
@@ -913,134 +919,6 @@ class _LearnScreenState extends State<LearnScreen> {
   }
 }
 
-
-/// 认识 CTA: thumb stretches out (squash/stretch) then elastic settle — not a plain scale.
-class _ElasticThumbCta extends StatefulWidget {
-  const _ElasticThumbCta({
-    super.key,
-    required this.enabled,
-    required this.vertical,
-    required this.iconSize,
-    required this.color,
-    required this.label,
-    required this.onAction,
-  });
-
-  final bool enabled;
-  final bool vertical;
-  final double iconSize;
-  final Color color;
-  final String label;
-  final Future<void> Function() onAction;
-
-  @override
-  State<_ElasticThumbCta> createState() => _ElasticThumbCtaState();
-}
-
-class _ElasticThumbCtaState extends State<_ElasticThumbCta>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _c = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 620),
-  );
-  bool _busy = false;
-
-  @override
-  void dispose() {
-    _c.dispose();
-    super.dispose();
-  }
-
-  Future<void> _play() async {
-    if (!widget.enabled || _busy) return;
-    _busy = true;
-    // Fire learning action near peak stretch so card advances while thumb settles.
-    final action = widget.onAction();
-    await _c.forward(from: 0);
-    await action;
-    if (mounted) {
-      _c.value = 0;
-      _busy = false;
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final enabled = widget.enabled && !_busy;
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: enabled ? _play : null,
-        borderRadius: BorderRadius.circular(20),
-        splashColor: widget.color.withValues(alpha: 0.16),
-        highlightColor: widget.color.withValues(alpha: 0.06),
-        child: Opacity(
-          opacity: widget.enabled ? 1 : 0.4,
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              vertical: widget.vertical ? 12 : 8,
-              horizontal: 8,
-            ),
-            child: AnimatedBuilder(
-              animation: _c,
-              builder: (context, _) {
-                // 0..0.38 stretch out; 0.38..1 elastic retract.
-                final tv = _c.value;
-                double stretch; // 0 = rest, 1 = max reach
-                if (tv <= 0.38) {
-                  stretch = Curves.easeOutCubic.transform(tv / 0.38);
-                } else {
-                  final u = ((tv - 0.38) / 0.62).clamp(0.0, 1.0);
-                  // Retract with overshoot feel, then clamp.
-                  stretch = (1 - Curves.easeOutBack.transform(u)).clamp(0.0, 1.2);
-                }
-                final sy = 1.0 + 0.72 * stretch; // elongate
-                final sx = 1.0 - 0.22 * stretch; // squash
-                final lift = -18.0 * stretch;
-                final tilt = -0.12 * stretch; // radians, slight lean
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Transform(
-                      alignment: Alignment.bottomCenter,
-                      transform: Matrix4.identity()
-                        ..setEntry(1, 3, lift) // ty
-                        ..rotateZ(tilt)
-                        ..setEntry(0, 0, sx)
-                        ..setEntry(1, 1, sy),
-                      child: Icon(
-                        Icons.thumb_up_alt,
-                        size: widget.iconSize,
-                        color: widget.color,
-                        shadows: [
-                          Shadow(
-                            color: widget.color.withValues(alpha: 0.28 * stretch),
-                            blurRadius: 10 + 16 * stretch,
-                            offset: Offset(0, 4 * stretch),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      widget.label,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: widget.color,
-                      ),
-                    ),
-                  ],
-                );
-              },
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
 
 /// Press feedback: scale to 0.98 for ~150ms (P2 learn-scale).
 class _PressScale extends StatefulWidget {

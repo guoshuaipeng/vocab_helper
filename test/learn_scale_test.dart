@@ -6,78 +6,98 @@ import 'package:vocab_helper/services/progress_store.dart';
 import 'package:vocab_helper/services/word_speaker.dart';
 import 'package:vocab_helper/services/wordbook_repository.dart';
 import 'package:vocab_helper/theme/app_theme.dart';
+import 'package:vocab_helper/widgets/friendly_thumb.dart';
+
+Future<void> _pumpLearn(WidgetTester tester) async {
+  SharedPreferences.setMockInitialValues({
+    'selected_book_id': 'pep-ps-3',
+    'daily_goal': 20,
+  });
+  tester.view.physicalSize = const Size(390, 920);
+  tester.view.devicePixelRatio = 1.0;
+  addTearDown(tester.view.resetPhysicalSize);
+  addTearDown(tester.view.resetDevicePixelRatio);
+
+  final store = await ProgressStore.open();
+  await tester.pumpWidget(
+    MaterialApp(
+      theme: AppTheme.light(),
+      home: Scaffold(
+        body: LearnScreen(
+          store: store,
+          repo: WordbookRepository(),
+          bookId: 'pep-ps-3',
+          onNeedSetup: () {},
+          speaker: FakeWordSpeaker(),
+        ),
+      ),
+    ),
+  );
+  await tester.runAsync(() async {
+    await Future<void>.delayed(const Duration(milliseconds: 40));
+  });
+  for (var i = 0; i < 80; i++) {
+    await tester.pump(const Duration(milliseconds: 50));
+    if (find.byKey(const ValueKey('learn_known')).evaluate().isNotEmpty) {
+      break;
+    }
+  }
+}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('unknown press scale; known elastic stretch Transform', (tester) async {
-    SharedPreferences.setMockInitialValues({
-      'selected_book_id': 'pep-ps-3',
-      'daily_goal': 20,
-    });
-    tester.view.physicalSize = const Size(390, 920);
-    tester.view.devicePixelRatio = 1.0;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
-
-    final store = await ProgressStore.open();
+  testWidgets('friendly thumb painter golden', (tester) async {
     await tester.pumpWidget(
       MaterialApp(
-        theme: AppTheme.light(),
         home: Scaffold(
-          body: LearnScreen(
-            store: store,
-            repo: WordbookRepository(),
-            bookId: 'pep-ps-3',
-            onNeedSetup: () {},
-            speaker: FakeWordSpeaker(),
+          backgroundColor: Colors.white,
+          body: Center(
+            child: SizedBox(
+              width: 160,
+              height: 160,
+              child: CustomPaint(key: const ValueKey('friendly_thumb_golden'), painter: FriendlyThumbPainter(color: const Color(0xFF2A9D8F))),
+            ),
           ),
         ),
       ),
     );
-    await tester.runAsync(() async {
-      await Future<void>.delayed(const Duration(milliseconds: 40));
-    });
-    for (var i = 0; i < 40; i++) {
-      await tester.pump(const Duration(milliseconds: 50));
-      if (find.byKey(const ValueKey('learn_known')).evaluate().isNotEmpty) break;
-    }
+    await tester.pump();
+    await expectLater(
+      find.byKey(const ValueKey('friendly_thumb_golden')),
+      matchesGoldenFile('goldens/friendly_thumb_up.png'),
+    );
+  });
 
-    expect(find.byKey(const ValueKey('learn_known')), findsOneWidget);
+  testWidgets('known flight marks learned; unknown press scale', (tester) async {
+    await _pumpLearn(tester);
+    expect(find.byKey(const ValueKey('learn_known_thumb_xform')), findsOneWidget);
     expect(find.byKey(const ValueKey('learn_unknown')), findsOneWidget);
 
-    // 不认识: still soft AnimatedScale press.
-    final scales = find.byType(AnimatedScale);
-    expect(scales, findsWidgets);
-    final gUnknown = await tester.startGesture(
+    final store = ((tester.widget(find.byType(LearnScreen)) as LearnScreen).store);
+    final before = store.learnedIds().length;
+
+    await tester.tap(find.byKey(const ValueKey('learn_known')));
+    // Fly out 480 + pause 220 + onAction/flash (~400) + pause 160 + return 480
+    for (var i = 0; i < 40; i++) {
+      await tester.pump(const Duration(milliseconds: 50));
+    }
+    expect(store.learnedIds().length, greaterThan(before));
+
+    // Fresh screen for unknown press
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
+    await _pumpLearn(tester);
+    final g = await tester.startGesture(
       tester.getCenter(find.byKey(const ValueKey('learn_unknown'))),
     );
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 20));
     expect(
-      scales.evaluate().any((e) => (e.widget as AnimatedScale).scale == 0.98),
+      find.byType(AnimatedScale).evaluate().any((e) => (e.widget as AnimatedScale).scale == 0.98),
       isTrue,
-      reason: 'unknown should press-scale to 0.98',
     );
-    await gUnknown.up();
-    await tester.pump();
-
-    // 认识: elastic Transform stretches (sy > 1) mid animation.
-    await tester.tap(find.byKey(const ValueKey('learn_known')));
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 120));
-    final transforms = find.byType(Transform);
-    var stretched = false;
-    for (final e in transforms.evaluate()) {
-      final m = (e.widget as Transform).transform;
-      final sy = m.entry(1, 1);
-      if (sy > 1.05) {
-        stretched = true;
-        break;
-      }
-    }
-    expect(stretched, isTrue, reason: 'known thumb should elongate (sy>1)');
-    await tester.pump(const Duration(milliseconds: 550));
-    await tester.pump(const Duration(milliseconds: 300));
+    await g.cancel();
   });
 }
+
