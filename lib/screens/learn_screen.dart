@@ -110,19 +110,19 @@ class _LearnScreenState extends State<LearnScreen> {
           return;
         }
       } else {
-        final learned = widget.store.learnedIds();
-        final pending = scoped.where((w) => !learned.contains(w.id)).toList();
-        list = pending.isEmpty ? List<Word>.from(scoped) : pending;
         if (scoped.isEmpty) {
           setState(() {
             _book = book;
-            _queue = ReviewQueue(list);
+            _queue = ReviewQueue(const []);
             _flipped = false;
             _loading = false;
             _error = '这个单元暂时没有单词';
           });
           return;
         }
+        final learned = widget.store.learnedIds();
+        final pending = scoped.where((w) => !learned.contains(w.id)).toList();
+        list = pending.isEmpty ? List<Word>.from(scoped) : pending;
       }
       await widget.store.touchActive();
       setState(() {
@@ -161,13 +161,13 @@ class _LearnScreenState extends State<LearnScreen> {
     });
   }
 
-
   Future<void> _pickUnit(String? unit) async {
     final id = widget.bookId;
     if (id == null) return;
     await widget.store.setUnitFilterForBook(id, unit);
     await _boot();
   }
+
   Future<void> _speakCurrent() async {
     final word = _queue?.current;
     if (word == null) return;
@@ -203,7 +203,10 @@ class _LearnScreenState extends State<LearnScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(widget.reviewWrongOnly ? '错词本本轮复习完啦！' : '本轮单词都过完啦！', style: const TextStyle(fontSize: 20)),
+            Text(
+              widget.reviewWrongOnly ? '错词本本轮复习完啦！' : '本轮单词都过完啦！',
+              style: const TextStyle(fontSize: 20),
+            ),
             const SizedBox(height: 8),
             Text('本轮认识 ${q.knownCount} 个', style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 12),
@@ -213,13 +216,20 @@ class _LearnScreenState extends State<LearnScreen> {
       );
     }
 
+    final bookId = widget.bookId;
+    final selectedUnit = bookId == null ? null : widget.store.unitFilterForBook(bookId);
+    final units = _book?.unitNames() ?? const <String>[];
+
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Column(
         children: [
           Align(
             alignment: Alignment.centerLeft,
-            child: Text(widget.reviewWrongOnly ? '错词复习 · ' : (_book?.title ?? ''), style: Theme.of(context).textTheme.titleMedium),
+            child: Text(
+              widget.reviewWrongOnly ? '错词复习 · ${_book?.title ?? ''}' : (_book?.title ?? ''),
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
           ),
           Align(
             alignment: Alignment.centerLeft,
@@ -228,7 +238,37 @@ class _LearnScreenState extends State<LearnScreen> {
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ),
-          const SizedBox(height: 16),
+          if (!widget.reviewWrongOnly && units.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            SizedBox(
+              height: 40,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: FilterChip(
+                      label: const Text('全部'),
+                      selected: selectedUnit == null,
+                      onSelected: (_) => _pickUnit(null),
+                    ),
+                  ),
+                  ...units.map((u) {
+                    final selected = selectedUnit == u;
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: FilterChip(
+                        label: Text(u),
+                        selected: selected,
+                        onSelected: (_) => _pickUnit(selected ? null : u),
+                      ),
+                    );
+                  }),
+                ],
+              ),
+            ),
+          ],
+          const SizedBox(height: 8),
           Expanded(
             child: Card(
               child: Column(
