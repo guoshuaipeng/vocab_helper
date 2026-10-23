@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/word.dart';
+import '../services/cross_book_search.dart';
 import '../services/progress_store.dart';
 import '../services/wordbook_repository.dart';
 
@@ -28,19 +29,34 @@ class _BooksScreenState extends State<BooksScreen> {
   List<WordBookMeta> _catalog = [];
   bool _loading = true;
   final _query = TextEditingController();
-  List<_Hit> _hits = [];
+  List<CrossBookSearchHit> _hits = [];
   bool _searching = false;
+  bool _indexReady = false;
+  int _querySeq = 0;
 
   @override
   void initState() {
     super.initState();
-    widget.repo.loadCatalog().then((c) {
-      setState(() {
-        _catalog = c;
-        _loading = false;
-      });
-    });
+    _bootstrap();
     _query.addListener(_onQuery);
+  }
+
+  Future<void> _bootstrap() async {
+    final c = await widget.repo.loadCatalog();
+    if (!mounted) return;
+    setState(() {
+      _catalog = c;
+      _loading = false;
+    });
+    // Background prebuild — do not block list UI.
+    // ignore: unawaited_futures
+    widget.repo.ensureSearchIndex().then((_) {
+      if (!mounted) return;
+      setState(() => _indexReady = widget.repo.searchIndex.isReady);
+      if (_query.text.trim().isNotEmpty) {
+        _runQuery(_query.text);
+      }
+    });
   }
 
   @override
@@ -50,8 +66,12 @@ class _BooksScreenState extends State<BooksScreen> {
     super.dispose();
   }
 
-  Future<void> _onQuery() async {
-    final q = _query.text.trim().toLowerCase();
+  void _onQuery() {
+    _runQuery(_query.text);
+  }
+
+  Future<void> _runQuery(String raw) async {
+    final q = raw.trim();
     if (q.isEmpty) {
       setState(() {
         _hits = [];
@@ -59,25 +79,28 @@ class _BooksScreenState extends State<BooksScreen> {
       });
       return;
     }
-    setState(() => _searching = true);
-    final hits = <_Hit>[];
-    for (final meta in _catalog) {
-      try {
-        final book = await widget.repo.loadBook(meta.id);
-        for (final w in book.words) {
-          if (w.word.toLowerCase().contains(q) || w.meaning.contains(q)) {
-            hits.add(_Hit(book: book, word: w));
-            if (hits.length >= 40) break;
-          }
-        }
-      } catch (_) {}
-      if (hits.length >= 40) break;
+
+    final seq = ++_querySeq;
+
+    if (!widget.repo.searchIndex.isReady) {
+      setState(() => _searching = true);
+      await widget.repo.ensureSearchIndex();
+      if (!mounted || seq != _querySeq) return;
+      setState(() => _indexReady = widget.repo.searchIndex.isReady);
     }
-    if (!mounted) return;
-    if (_query.text.trim().toLowerCase() != q) return;
+
+    // Index ready: sync query, no per-keystroke full-catalog scan.
+    if (!mounted || seq != _querySeq) return;
+    final hits = widget.repo.search(
+      q,
+      currentBookId: widget.selectedBookId,
+      limit: 40,
+    );
+    if (!mounted || seq != _querySeq) return;
     setState(() {
       _hits = hits;
       _searching = false;
+      _indexReady = true;
     });
   }
 
@@ -111,6 +134,7 @@ class _BooksScreenState extends State<BooksScreen> {
 
     final versions = widget.repo.versionsOf(_catalog);
     final searching = _query.text.trim().isNotEmpty;
+    final scheme = Theme.of(context).colorScheme;
 
     return ListView(
       padding: const EdgeInsets.all(20),
@@ -137,25 +161,36 @@ class _BooksScreenState extends State<BooksScreen> {
         ),
         const SizedBox(height: 8),
         if (searching) ...[
-          if (_searching) const LinearProgressIndicator(),
-          Text(
-            _hits.isEmpty && !_searching ? '没有匹配的单词' : '找到 ${_hits.length} 条（最多显示 40）',
-            style: Theme.of(context).textTheme.bodySmall,
-          ),
+          if (_searching || !_indexReady) ...[
+            const LinearProgressIndicator(),
+            const SizedBox(height: 6),
+            Text(
+              '正在准备搜索…',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ] else ...[
+            Text(
+              _hits.isEmpty ? '没有匹配的单词' : '找到 ${_hits.length} 条（最多显示 40）',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ],
           const SizedBox(height: 8),
-          ..._hits.map((h) => Card(
-                child: ListTile(
-                  title: Text(h.word.word),
-                  subtitle: Text('${h.word.meaning} · ${h.book.title}'),
-                  trailing: h.book.id == widget.selectedBookId
-                      ? const Icon(Icons.check_circle)
-                      : const Icon(Icons.menu_book_outlined),
-                  onTap: () {
-                    final meta = _catalog.firstWhere((m) => m.id == h.book.id);
-                    _selectBook(meta);
-                  },
-                ),
-              )),
+          ..._hits.map((h) {
+            final selected = h.meta.id == widget.selectedBookId;
+            return Card(
+              elevation: 0,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              color: selected ? scheme.primaryContainer.withValues(alpha: 0.45) : null,
+              child: ListTile(
+                title: Text(h.word.word),
+                subtitle: Text('${h.word.meaning} · ${h.meta.title}'),
+                trailing: selected
+                    ? Icon(Icons.check_circle, color: scheme.primary)
+                    : const Icon(Icons.menu_book_outlined),
+                onTap: () => _selectBook(h.meta),
+              ),
+            );
+          }),
         ] else ...[
           Text('也可直接点下面的词书切换', style: Theme.of(context).textTheme.bodySmall),
           const SizedBox(height: 16),
@@ -169,7 +204,9 @@ class _BooksScreenState extends State<BooksScreen> {
                 ...books.map((b) {
                   final selected = b.id == widget.selectedBookId;
                   return Card(
-                    color: selected ? Theme.of(context).colorScheme.primaryContainer : null,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                    color: selected ? scheme.primaryContainer : null,
                     child: ListTile(
                       title: Text(b.title),
                       subtitle: Text('${b.grade} · 共 ${b.wordCount} 词'),
@@ -190,10 +227,4 @@ class _BooksScreenState extends State<BooksScreen> {
       ],
     );
   }
-}
-
-class _Hit {
-  _Hit({required this.book, required this.word});
-  final WordBook book;
-  final Word word;
 }
