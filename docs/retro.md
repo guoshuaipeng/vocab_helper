@@ -156,6 +156,9 @@
 
 ## Round 27 · pep-ps-4 样板扩充（2026-10-23）
 
-- 先扩一本可验样板（≥220 + unit + source 短标）比全库扫更落地。
-- 新词覆盖率用脚本卡 phonetic/example；卡片 sourceLabel 与 JSON source 分层。
+- 计划：一本样板扩到 ≥220 + unit + source 短标；四态 catalog 交验
+- 实际：243 词 Unit1–12；sourceLabel「扩充词表」；UI 目视通过（2026-10-23）
+- 顺利：内容脚本卡覆盖率 + 独立 shot 测，比手点快；不做全库避免膨胀
+- 改进：交验前在 requirements 把「进行中」收口模板备好（完成详情段），少一次文档补丁
+- 规则：样板先于全库；sourceLabel 与 JSON source 分层（已够用，不升 dev-rules）
 
