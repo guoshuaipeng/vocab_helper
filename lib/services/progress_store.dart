@@ -52,6 +52,7 @@ class ProgressStore {
   static const _kAutoSpeak = 'auto_speak';
   static const _kQuizVariant = 'quiz_variant';
   static const _kDayCountPrefix = 'day_count_';
+  static const _kGoalCelebratedYmd = 'goal_celebrated_ymd';
 
   static Future<ProgressStore> open() async {
     final prefs = await SharedPreferences.getInstance();
@@ -322,24 +323,49 @@ class ProgressStore {
     });
   }
 
-  Future<void> markLearned(String id, {DateTime? now}) async {
+  /// yyyy-MM-dd when goal celebrate banner was shown (same-day dedupe).
+  String? goalCelebratedYmd() => _prefs.getString(_kGoalCelebratedYmd);
+
+  /// Rising-edge across [dailyGoal] and not yet celebrated today.
+  Future<bool> _consumeGoalCelebrate({
+    required int before,
+    required int after,
+    DateTime? now,
+  }) async {
+    final goal = dailyGoal();
+    if (goal <= 0) return false;
+    final today = dateKey(now);
+    if (goalCelebratedYmd() == today) return false;
+    if (before < goal && after >= goal) {
+      await _prefs.setString(_kGoalCelebratedYmd, today);
+      return true;
+    }
+    return false;
+  }
+
+  /// Returns true when UI should show the once-per-day goal celebrate banner.
+  Future<bool> markLearned(String id, {DateTime? now}) async {
     final ids = learnedIds();
     final first = !ids.contains(id);
+    final bool celebrate;
     if (first) {
       ids.add(id);
       await _prefs.setStringList(_kLearned, ids.toList());
-      await bumpTodayCount(now: now);
+      celebrate = await bumpTodayCount(now: now);
       final today = dateKey(now);
       await _setReview(id, stage: 0, at: addDaysToDateKey(today, daysForStage(0)));
     } else {
-      await bumpTodayCount(now: now);
+      celebrate = await bumpTodayCount(now: now);
       await advanceReviewAfterKnown(id, now: now);
     }
     await removeWrong(id);
+    return celebrate;
   }
 
   /// Increment today's activity count without marking a word learned (e.g. quiz correct).
-  Future<void> bumpTodayCount({DateTime? now}) async {
+  /// Returns true when UI should show the once-per-day goal celebrate banner.
+  Future<bool> bumpTodayCount({DateTime? now}) async {
+    final before = todayCount(now: now);
     await _archiveIfRolled(now);
     final today = dateKey(now);
     if (_prefs.getString(_kTodayDate) != today) {
@@ -349,6 +375,8 @@ class ProgressStore {
       await _prefs.setInt(_kTodayCount, (_prefs.getInt(_kTodayCount) ?? 0) + 1);
     }
     await _updateStreak(today);
+    final after = todayCount(now: now);
+    return _consumeGoalCelebrate(before: before, after: after, now: now);
   }
 
   Future<void> markWrong(String id, {DateTime? now}) async {

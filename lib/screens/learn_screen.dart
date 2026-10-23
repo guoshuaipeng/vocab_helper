@@ -4,6 +4,7 @@ import '../models/word.dart';
 import '../services/progress_store.dart';
 import '../services/review_queue.dart';
 import '../services/word_speaker.dart';
+import '../widgets/goal_celebrate_banner.dart';
 import '../services/wordbook_repository.dart';
 
 class LearnScreen extends StatefulWidget {
@@ -197,11 +198,18 @@ class _LearnScreenState extends State<LearnScreen> {
     final cur = q?.current;
     if (q == null || cur == null || _flashKind != null) return;
     await _flashThen('known', () async {
-      await widget.store.markLearned(cur.id);
+      final celebrate = await widget.store.markLearned(cur.id);
       setState(() {
         q.markKnown();
         _flipped = false;
       });
+      if (celebrate && mounted) {
+        showGoalCelebratedBanner(
+          context,
+          count: widget.store.todayCount(),
+          goal: widget.store.dailyGoal(),
+        );
+      }
       await _maybeAutoSpeak();
     });
   }

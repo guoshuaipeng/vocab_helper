@@ -460,13 +460,30 @@ class _MeScreenState extends State<MeScreen> {
                     ],
                   ),
                   const SizedBox(height: 8),
-                  Text('$today / $goal', style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
+                  Text(
+                    '$today / $goal',
+                    key: const ValueKey('me_today_goal_count'),
+                    style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                  ),
                   const SizedBox(height: 8),
                   LinearProgressIndicator(value: progress),
                   const SizedBox(height: 8),
-                  Text(
-                    widget.store.todayGoalMet ? '今日目标已完成，棒！' : '再学 ${goal - today} 个就达标',
-                    style: Theme.of(context).textTheme.bodyMedium,
+                  Row(
+                    key: const ValueKey('me_today_goal_status'),
+                    children: [
+                      if (widget.store.todayGoalMet) ...[
+                        Icon(Icons.check_circle, size: 18, color: Theme.of(context).colorScheme.primary),
+                        const SizedBox(width: 6),
+                      ],
+                      Expanded(
+                        child: Text(
+                          widget.store.todayGoalMet
+                              ? '今日已完成 · $today/$goal'
+                              : '再学 ${goal - today} 个就达标',
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 8),
                   Builder(

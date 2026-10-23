@@ -6,6 +6,7 @@ import '../services/quiz_engine.dart';
 import '../services/review_queue.dart';
 import '../services/word_speaker.dart';
 import '../services/wordbook_repository.dart';
+import '../widgets/goal_celebrate_banner.dart';
 
 enum QuizMode {
   /// Whole selected book.
@@ -250,7 +251,14 @@ class _QuizScreenState extends State<QuizScreen> {
     });
     if (ok) {
       await widget.store.removeWrong(q.target.id);
-      await widget.store.bumpTodayCount();
+      final celebrate = await widget.store.bumpTodayCount();
+      if (celebrate && mounted) {
+        showGoalCelebratedBanner(
+          context,
+          count: widget.store.todayCount(),
+          goal: widget.store.dailyGoal(),
+        );
+      }
     } else {
       await widget.store.markWrong(q.target.id);
       if (_effectiveListen) {
@@ -333,7 +341,14 @@ class _QuizScreenState extends State<QuizScreen> {
     });
     if (ok) {
       await widget.store.removeWrong(q.target.id);
-      await widget.store.bumpTodayCount();
+      final celebrate = await widget.store.bumpTodayCount();
+      if (celebrate && mounted) {
+        showGoalCelebratedBanner(
+          context,
+          count: widget.store.todayCount(),
+          goal: widget.store.dailyGoal(),
+        );
+      }
     } else {
       await widget.store.markWrong(q.target.id);
     }
