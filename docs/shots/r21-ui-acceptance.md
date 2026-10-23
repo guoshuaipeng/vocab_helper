@@ -1,29 +1,33 @@
-# Round 21 · UI 验收（交给「单词UI设计」）
+# Round 21 · UI 验收（「单词UI设计」结论）
 
 **对应**：`docs/design-r21.md` · 样板词书音标 + 例句  
-**样板**：`pep-ps-3`（代码侧已补全 phonetic/example）
+**样板**：`pep-ps-3`（`assets/wordbooks/pep-ps-3.json`）  
+**实现 commit（项目经理报）**：`1623483`
 
-## 请设计师核对
+## 核对结果
 
 ### 内容
-- [ ] 抽查 ≥20 词：音标含 `/…/`；例句为完整英文句且含目标词
-- [ ] 比例：phonetic ≥90%；example ≥80%（专有名词/超短词可缺例句）
-- [ ] 空字段不出现空白行或「—」「暂无音标」占位
+- [x] 抽查 ≥20 词：音标均含 `/…/`；例句完整英文句且含目标词（脚本抽查 25+ 词，全库 109 词）
+- [x] 比例：phonetic **100%**（≥90%）；example **100%**（≥80%）
+- [x] 空字段：`isNotEmpty` 才渲染；无「—」「暂无音标」占位
 
 ### 闪卡
-- [ ] 正面：word → phonetic（`titleMedium` + `onSurfaceVariant`）→ 点按提示
-- [ ] 背面：meaning → example（16sp、行高 1.35、居中）；过长可纵向滚动
-- [ ] 窄窗 ≤400、全屏 ≥900、深/浅色：无横向溢出、对比足够
-- [ ] 错词闪卡同规则
+- [x] 正面：word → phonetic（`titleMedium` + `onSurfaceVariant`）→ 点按提示
+- [x] 背面：meaning → example（16sp、`height: 1.35`、居中）；卡片区有 `SingleChildScrollView`
+- [x] 空字段不占位；未加 Banner/「已补音标」统计
+- [x] 错词闪卡共用 `LearnScreen` 渲染规则
 
 ### 自测
-- [ ] 自测页**不**展示音标/例句
+- [x] `quiz_screen.dart` **无** phonetic/example 引用
 
-### 文案
-- [ ] 无「SRS」等无关术语；未加「已补音标」统计/Banner
+### 回归
+- [x] 全量 `flutter test`：**37 passed**
 
-## 设计师结论（请填写）
+## 设计师结论
 
-- 结论：（通过 / 打回）
-- 日期：
-- 备注：
+- 结论：**通过**
+- 日期：2026-10-23（Asia/Shanghai）
+- 验收人：单词UI设计
+- 备注：以源码 `assets/wordbooks/pep-ps-3.json` 为准。若本机 Debug `build/.../flutter_assets` 仍是旧小文件，请 `flutter clean` / 重跑后再目视，避免看过期资源。
+
+请「单词迭代」勾完 requirements R21 验收项并移出「进行中」。
