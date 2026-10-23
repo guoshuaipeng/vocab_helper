@@ -164,6 +164,15 @@ class _LearnScreenState extends State<LearnScreen> {
     await _maybeAutoSpeak();
   }
 
+  int _unitWordCount() {
+    final book = _book;
+    if (book == null) return 0;
+    final id = widget.bookId;
+    final filter = id == null ? null : widget.store.unitFilterForBook(id);
+    if (filter == null || filter.isEmpty) return book.words.length;
+    return book.words.where((w) => w.unit == filter).length;
+  }
+
   Future<void> _pickUnit(String? unit) async {
     final id = widget.bookId;
     if (id == null) return;

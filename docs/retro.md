@@ -90,3 +90,9 @@
 - 实际：BooksScreen 搜索命中切换词书；learn 副标题本单元计数
 - 卡住：跨全库搜索同步加载，已限 40 条
 - 预防：后续可建内存倒排索引
+
+## Round 14（2026-10-23）
+- 计划：建立需求单一来源文件；修复 R13 残留；README 写明
+- 实际：docs/requirements.md；README 必读指引；dev-rules #13；补 _unitWordCount
+- 卡住：无
+- 预防：需求只进 requirements.md，避免聊天与 backlog 双源
