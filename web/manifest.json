@@ -1,11 +1,11 @@
 {
-    "name": "vocab_helper",
-    "short_name": "vocab_helper",
+    "name": "单词小助手",
+    "short_name": "单词小助手",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "中小学生背英语单词",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
