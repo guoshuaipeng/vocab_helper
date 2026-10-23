@@ -3,7 +3,7 @@
 ### Round 28 · 导出本词书已学进度（纯文本）
 
 **设计稿**：[docs/design-r28.md](design-r28.md)（必读后再开发）  
-**状态**：**代码完成 · 待 UI 验收**（`docs/shots/r28-ui-acceptance.md` + `r28-export-*.png`）
+**状态**：**UI 打回**（2026-10-23 · 缺导出预览截图）（`docs/shots/r28-ui-acceptance.md`）
 
 **用户故事**  
 作为家长，想把孩子当前词书的已学/错词进度复制出来发给老师或存档。
@@ -13,7 +13,7 @@
 - [x] 我的页「导出本词书进度」；无书 disabled
 - [x] 生成 UTF-8 纯文本（词书名、已学/总、错词、列表）
 - [x] 预览 + 复制全部；有则系统分享（share_plus）
-- [x] 单测拼装 + 四态截图；**待 UI 验收** `docs/shots/r28-ui-acceptance.md`
+- [ ] 单测拼装已有；**UI 打回**：补预览 sheet 截图（见 `r28-ui-acceptance.md` 改点）
 
 **范围（不做）**
 
@@ -35,7 +35,7 @@
 | R25 | 体验跃迁：学习页呼吸感与反馈 | [design-r25.md](design-r25.md) | **已完成** |
 | R26 | 自测变体「拼写默写」 | [design-r26.md](design-r26.md) | **已完成** |
 | R27 | 词书样板扩充 pep-ps-4 | [design-r27.md](design-r27.md) | **已完成** |
-| R28 | 导出本词书已学进度 | [design-r28.md](design-r28.md) | **代码完成 · 待 UI 验收** |
+| R28 | 导出本词书已学进度 | [design-r28.md](design-r28.md) | **待 UI 验收**（已补预览 sheet 截图 · 2026-10-23） |
 
 ---
 
@@ -271,6 +271,8 @@
 | 2026-10-23 | **UI 预置**：R28 
 28-ui-acceptance.md；剩余 P2 清单 me-quiz-copy / me-disabled / accent-tts |
 | 2026-10-23 | **R28 升进行中**：导出进度纯文本；R27 UI 通过收口 |
+| 2026-10-23 | **R28 UI 打回**：入口可见；缺导出预览 sheet（复制/分享）截图 |
+| 2026-10-23 | **R28 补截图**：预览 sheet 窄/宽×浅/深 + 复制 SnackBar；状态改回待 UI 验收 |
 | 2026-10-23 | 插队：自测结束页对齐 §8 落地；四态截图交验 |
 | 2026-10-23 | 插队：搜索「已经是这本」 SnackBar 落地 |
 | 2026-10-23 | 插队：认识/不认识 scale 0.98 落地 |

@@ -155,57 +155,60 @@ class _MeScreenState extends State<MeScreen> {
             bottom: MediaQuery.viewInsetsOf(ctx).bottom + 20,
           ),
           child: SafeArea(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text('导出进度', style: Theme.of(ctx).textTheme.titleLarge),
-                const SizedBox(height: 12),
-                ConstrainedBox(
-                  constraints: const BoxConstraints(maxHeight: 220),
-                  child: SingleChildScrollView(
-                    child: SelectableText(
-                      previewLines,
-                      style: Theme.of(ctx).textTheme.bodySmall?.copyWith(fontFamily: 'monospace'),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text('导出进度', style: Theme.of(ctx).textTheme.titleLarge),
+                  const SizedBox(height: 12),
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(maxHeight: 180),
+                    child: SingleChildScrollView(
+                      child: SelectableText(
+                        previewLines,
+                        key: const ValueKey('export_preview'),
+                        style: Theme.of(ctx).textTheme.bodySmall,
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        key: const ValueKey('export_share'),
-                        onPressed: () async {
-                          await SharePlus.instance.share(ShareParams(text: text, subject: '单词小助手 · 进度导出'));
-                        },
-                        child: const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 12),
-                          child: Text('分享'),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          key: const ValueKey('export_share'),
+                          onPressed: () async {
+                            await SharePlus.instance.share(ShareParams(text: text, subject: '单词小助手 · 进度导出'));
+                          },
+                          child: const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 12),
+                            child: Text('分享'),
+                          ),
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: FilledButton(
-                        key: const ValueKey('export_copy'),
-                        onPressed: () async {
-                          await Clipboard.setData(ClipboardData(text: text));
-                          if (ctx.mounted) Navigator.pop(ctx);
-                          if (!mounted) return;
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('已复制到剪贴板')),
-                          );
-                        },
-                        child: const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 12),
-                          child: Text('复制全部'),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: FilledButton(
+                          key: const ValueKey('export_copy'),
+                          onPressed: () async {
+                            await Clipboard.setData(ClipboardData(text: text));
+                            if (ctx.mounted) Navigator.pop(ctx);
+                            if (!mounted) return;
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('已复制到剪贴板')),
+                            );
+                          },
+                          child: const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 12),
+                            child: Text('复制全部'),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         );

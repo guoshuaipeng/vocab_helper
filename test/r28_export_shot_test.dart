@@ -31,12 +31,22 @@ void main() {
     if (update) await loadCjkFont();
   });
 
-  Future<void> capture(
+  void mockClipboard() {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
+      SystemChannels.platform,
+      (call) async {
+        if (call.method == 'Clipboard.setData') return null;
+        if (call.method == 'Clipboard.getData') return <String, dynamic>{'text': ''};
+        return null;
+      },
+    );
+  }
+
+  Future<void> pumpMe(
     WidgetTester tester, {
     required Size size,
     required ThemeData theme,
     required String outName,
-    required bool openSheet,
   }) async {
     SharedPreferences.setMockInitialValues({
       'selected_book_id': 'pep-ps-3',
@@ -45,6 +55,7 @@ void main() {
       'streak_days': 4,
       'daily_goal': 20,
       'today_count': 3,
+      'today_date': ProgressStore.dateKey(DateTime.now()),
     });
     tester.view.physicalSize = size;
     tester.view.devicePixelRatio = 1.0;
@@ -55,25 +66,27 @@ void main() {
     await tester.pump();
 
     final store = await ProgressStore.open();
+    // builder wraps navigator (incl. modal routes) inside RepaintBoundary
     await tester.pumpWidget(
       MaterialApp(
         key: ValueKey('app_$outName'),
         theme: withCjk(theme),
-        home: RepaintBoundary(
+        builder: (context, child) => RepaintBoundary(
           key: const ValueKey('shot_root'),
-          child: Scaffold(
-            body: MeScreen(
-              key: ValueKey('me_$outName'),
-              store: store,
-              repo: WordbookRepository(),
-              onRefresh: () {},
-              onChangeBook: () {},
-              onReviewWrong: () {},
-              onReviewWrongCurrentUnit: () {},
-              onQuizBook: () {},
-              onQuizUnit: () {},
-              onQuizWrong: () {},
-            ),
+          child: child ?? const SizedBox.shrink(),
+        ),
+        home: Scaffold(
+          body: MeScreen(
+            key: ValueKey('me_$outName'),
+            store: store,
+            repo: WordbookRepository(),
+            onRefresh: () {},
+            onChangeBook: () {},
+            onReviewWrong: () {},
+            onReviewWrongCurrentUnit: () {},
+            onQuizBook: () {},
+            onQuizUnit: () {},
+            onQuizWrong: () {},
           ),
         ),
       ),
@@ -84,14 +97,9 @@ void main() {
     expect(find.byKey(const ValueKey('export_progress')), findsOneWidget);
     await tester.ensureVisible(find.byKey(const ValueKey('export_progress')));
     await tester.pump();
+  }
 
-    if (openSheet) {
-      await tester.tap(find.byKey(const ValueKey('export_progress')));
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 500));
-      expect(find.text('导出进度'), findsOneWidget);
-    }
-
+  Future<void> saveShot(WidgetTester tester, String outName) async {
     await tester.runAsync(() async {
       final boundary =
           tester.renderObject(find.byKey(const ValueKey('shot_root'))) as RenderRepaintBoundary;
@@ -103,16 +111,65 @@ void main() {
     });
   }
 
+  Future<void> openExportSheet(WidgetTester tester) async {
+    await tester.tap(find.byKey(const ValueKey('export_progress')));
+    await tester.pump(); // start async load
+    // wait until sheet title appears, then settle animation
+    for (var i = 0; i < 60; i++) {
+      await tester.pump(const Duration(milliseconds: 50));
+      if (find.text('导出进度').evaluate().isNotEmpty) break;
+    }
+    expect(find.text('导出进度'), findsOneWidget);
+    await tester.pumpAndSettle(const Duration(milliseconds: 100));
+    expect(find.byKey(const ValueKey('export_preview')), findsOneWidget);
+    expect(find.text('复制全部'), findsOneWidget);
+    expect(find.text('分享'), findsOneWidget);
+    await tester.ensureVisible(find.byKey(const ValueKey('export_copy')));
+    await tester.pumpAndSettle();
+  }
+
   testWidgets(
     'capture r28 export screenshots',
     (tester) async {
-      await capture(tester, size: const Size(390, 920), theme: AppTheme.light(), outName: 'r28-export-narrow-light.png', openSheet: true);
-      await capture(tester, size: const Size(390, 920), theme: AppTheme.dark(), outName: 'r28-export-narrow-dark.png', openSheet: true);
-      await capture(tester, size: const Size(1000, 920), theme: AppTheme.light(), outName: 'r28-export-wide-light.png', openSheet: true);
-      await capture(tester, size: const Size(1000, 920), theme: AppTheme.dark(), outName: 'r28-export-wide-dark.png', openSheet: true);
-      await capture(tester, size: const Size(390, 920), theme: AppTheme.light(), outName: 'r28-me-button-narrow-light.png', openSheet: false);
+      await pumpMe(
+        tester,
+        size: const Size(390, 920),
+        theme: AppTheme.light(),
+        outName: 'r28-me-button-narrow-light.png',
+      );
+      await saveShot(tester, 'r28-me-button-narrow-light.png');
+
+      for (final cfg in [
+        (const Size(390, 920), AppTheme.light(), 'r28-export-narrow-light.png'),
+        (const Size(390, 920), AppTheme.dark(), 'r28-export-narrow-dark.png'),
+        (const Size(1000, 920), AppTheme.light(), 'r28-export-wide-light.png'),
+        (const Size(1000, 920), AppTheme.dark(), 'r28-export-wide-dark.png'),
+      ]) {
+        await pumpMe(tester, size: cfg.$1, theme: cfg.$2, outName: cfg.$3);
+        await openExportSheet(tester);
+        await saveShot(tester, cfg.$3);
+      }
+
+      mockClipboard();
+      await pumpMe(
+        tester,
+        size: const Size(390, 920),
+        theme: AppTheme.light(),
+        outName: 'r28-export-copy-snackbar.png',
+      );
+      await openExportSheet(tester);
+      await tester.ensureVisible(find.byKey(const ValueKey('export_copy')));
+      await tester.tap(find.byKey(const ValueKey('export_copy')));
+      await tester.pump();
+      for (var i = 0; i < 40; i++) {
+        await tester.pump(const Duration(milliseconds: 50));
+        if (find.text('已复制到剪贴板').evaluate().isNotEmpty) break;
+      }
+      expect(find.text('已复制到剪贴板'), findsOneWidget);
+      await tester.pump(const Duration(milliseconds: 300));
+      await saveShot(tester, 'r28-export-copy-snackbar.png');
     },
     skip: !update,
-    timeout: const Timeout(Duration(minutes: 4)),
+    timeout: const Timeout(Duration(minutes: 5)),
   );
 }
