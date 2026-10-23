@@ -89,7 +89,6 @@ class _BooksScreenState extends State<BooksScreen> {
       setState(() => _indexReady = widget.repo.searchIndex.isReady);
     }
 
-    // Index ready: sync query, no per-keystroke full-catalog scan.
     if (!mounted || seq != _querySeq) return;
     final hits = widget.repo.search(
       q,
@@ -131,13 +130,65 @@ class _BooksScreenState extends State<BooksScreen> {
     );
   }
 
+  List<Widget> _buildBookSections(ColorScheme scheme) {
+    final recommended =
+        _catalog.where((b) => b.id == WordbookRepository.recommendedBookId).toList();
+    final versions = widget.repo.versionsOf(_catalog);
+    final out = <Widget>[];
+    if (recommended.isNotEmpty) {
+      out.add(
+        Text(
+          '推荐跟课',
+          key: const ValueKey('books_recommend_section'),
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+      );
+      out.add(const SizedBox(height: 8));
+      out.add(_bookCard(recommended.first, scheme, forceRecommended: true));
+      out.add(const SizedBox(height: 16));
+    }
+    for (final v in versions) {
+      final books = widget.repo
+          .booksOf(_catalog, v)
+          .where((b) => b.id != WordbookRepository.recommendedBookId)
+          .toList();
+      if (books.isEmpty) continue;
+      out.add(Text(v, style: Theme.of(context).textTheme.titleLarge));
+      out.add(const SizedBox(height: 8));
+      for (final b in books) {
+        out.add(_bookCard(b, scheme));
+      }
+      out.add(const SizedBox(height: 16));
+    }
+    return out;
+  }
+
+  Widget _bookCard(WordBookMeta b, ColorScheme scheme, {bool forceRecommended = false}) {
+    final selected = b.id == widget.selectedBookId;
+    final recommended = forceRecommended || b.id == WordbookRepository.recommendedBookId;
+    final base = b.sourceLabel.isEmpty
+        ? '${b.grade} · 共 ${b.wordCount} 词'
+        : '${b.grade} · 共 ${b.wordCount} 词 · ${b.sourceLabel}';
+    return Card(
+      key: recommended ? const ValueKey('books_recommended') : null,
+      elevation: 0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      color: selected ? scheme.primaryContainer : null,
+      child: ListTile(
+        title: Text(b.title),
+        subtitle: Text(recommended ? '$base · 推荐' : base),
+        trailing: selected ? const Icon(Icons.check_circle) : const Icon(Icons.chevron_right),
+        onTap: () => _selectBook(b),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_loading) {
       return const Center(child: CircularProgressIndicator());
     }
 
-    final versions = widget.repo.versionsOf(_catalog);
     final searching = _query.text.trim().isNotEmpty;
     final scheme = Theme.of(context).colorScheme;
 
@@ -199,36 +250,7 @@ class _BooksScreenState extends State<BooksScreen> {
         ] else ...[
           Text('也可直接点下面的词书切换', style: Theme.of(context).textTheme.bodySmall),
           const SizedBox(height: 16),
-          ...versions.map((v) {
-            final books = widget.repo.booksOf(_catalog, v);
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(v, style: Theme.of(context).textTheme.titleLarge),
-                const SizedBox(height: 8),
-                ...books.map((b) {
-                  final selected = b.id == widget.selectedBookId;
-                  final recommended = b.id == WordbookRepository.recommendedBookId;
-                  final base = b.sourceLabel.isEmpty
-                      ? '${b.grade} · 共 ${b.wordCount} 词'
-                      : '${b.grade} · 共 ${b.wordCount} 词 · ${b.sourceLabel}';
-                  return Card(
-                    key: recommended ? const ValueKey('books_recommended') : null,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                    color: selected ? scheme.primaryContainer : null,
-                    child: ListTile(
-                      title: Text(b.title),
-                      subtitle: Text(recommended ? '$base · 推荐' : base),
-                      trailing: selected ? const Icon(Icons.check_circle) : const Icon(Icons.chevron_right),
-                      onTap: () => _selectBook(b),
-                    ),
-                  );
-                }),
-                const SizedBox(height: 16),
-              ],
-            );
-          }),
+          ..._buildBookSections(scheme),
           Text(
             '小学（人教/外研/沪教）词表为公开资料精选；初中人教版为开源完整词库。后续可继续补全各版本全书。',
             style: Theme.of(context).textTheme.bodySmall,

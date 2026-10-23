@@ -9,7 +9,7 @@ import 'package:vocab_helper/theme/app_theme.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('books screen marks recommended', (tester) async {
+  testWidgets('books screen pins recommended at top', (tester) async {
     SharedPreferences.setMockInitialValues({
       'selected_book_id': WordbookRepository.recommendedBookId,
     });
@@ -31,10 +31,12 @@ void main() {
       if (find.byType(ListView).evaluate().isNotEmpty) break;
     }
     expect(find.byType(ListView), findsOneWidget);
-    final badge = find.byKey(const ValueKey('books_recommended'));
-    await tester.scrollUntilVisible(badge, 400, scrollable: find.byType(Scrollable).first);
-    await tester.pump(const Duration(milliseconds: 100));
-    expect(badge, findsOneWidget);
+    // R41: no scroll required
+    expect(find.byKey(const ValueKey('books_recommend_section')), findsOneWidget);
+    expect(find.byKey(const ValueKey('books_recommended')), findsOneWidget);
+    expect(find.text('推荐跟课'), findsOneWidget);
     expect(find.textContaining('推荐'), findsWidgets);
+    // Not duplicated under 沪教牛津2024 heading — only one recommended key
+    expect(find.byKey(const ValueKey('books_recommended')), findsOneWidget);
   });
 }
