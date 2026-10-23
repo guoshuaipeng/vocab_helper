@@ -391,234 +391,294 @@ class _LearnScreenState extends State<LearnScreen> {
         : _TodayTask.learn;
     final scheme = Theme.of(context).colorScheme;
 
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              widget.reviewWrongOnly
-                  ? (widget.reviewWrongUnitScoped
-                      ? '错词复习·当前单元 · ${_book?.title ?? ''}'
-                      : '错词复习 · ${_book?.title ?? ''}')
-                  : (_book?.title ?? ''),
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Align(
-            alignment: Alignment.topCenter,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 520),
-              child: _TodayTaskBar(
-                todayLabel: '今日 $today/$goal · 连续 $streak 天',
-                selected: taskSelected,
-                learnSubtitle: learnSub,
-                learnShowDot: learnShowDot,
-                wrongSubtitle: wrongSub,
-                wrongEnabled: wrongCount > 0,
-                onLearn: () => widget.onLearnNew?.call(),
-                onWrong: wrongCount > 0 ? () => widget.onReviewWrongAll?.call() : null,
-                onQuiz: widget.onStartQuiz,
-              ),
-            ),
-          ),
-          if (!widget.reviewWrongOnly && widget.onStartQuiz != null) ...[
-            const SizedBox(height: 12),
-            SegmentedButton<String>(
-              segments: const [
-                ButtonSegment(value: 'learn', label: Text('认读'), icon: Icon(Icons.style)),
-                ButtonSegment(value: 'quiz', label: Text('自测'), icon: Icon(Icons.quiz_outlined)),
-              ],
-              selected: const {'learn'},
-              onSelectionChanged: (s) {
-                if (s.contains('quiz')) {
-                  widget.onStartQuiz?.call();
-                }
-              },
-            ),
-          ],
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              widget.reviewWrongOnly
-                  ? '剩余 ${q.remaining} · 本轮认识 ${q.knownCount} · 本单元 ${_unitWordCount()}'
-                  : '新词 $_queueNewCount · 复习 $_queueDueCount · 剩余 ${q.remaining}',
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-          ),
-          if ((!widget.reviewWrongOnly || widget.reviewWrongUnitScoped) && units.isNotEmpty) ...[
-            const SizedBox(height: 8),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: ActionChip(
+    final media = MediaQuery.of(context);
+    final shortest = media.size.shortestSide;
+    final isLandscape = media.orientation == Orientation.landscape;
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final wide = constraints.maxWidth >= 700 || (isLandscape && constraints.maxWidth >= 600);
+        final contentMax = wide ? (shortest >= 600 ? 960.0 : 900.0) : 520.0;
+        final hPad = wide ? 28.0 : 16.0;
+        final vPad = wide ? 16.0 : 12.0;
+        final wordSize = wide ? 52.0 : 46.0;
+        final meaningSize = wide ? 40.0 : 34.0;
+
+        final titleText = widget.reviewWrongOnly
+            ? (widget.reviewWrongUnitScoped
+                ? '错词复习·当前单元 · ${_book?.title ?? ''}'
+                : '错词复习 · ${_book?.title ?? ''}')
+            : (_book?.title ?? '');
+        final progressLine = widget.reviewWrongOnly
+            ? '剩余 ${q.remaining} · 本轮认识 ${q.knownCount} · 本单元 ${_unitWordCount()}'
+            : '新词 $_queueNewCount · 复习 $_queueDueCount · 剩余 ${q.remaining}';
+
+        final unitChip = ((!widget.reviewWrongOnly || widget.reviewWrongUnitScoped) && units.isNotEmpty)
+            ? ActionChip(
                 key: const ValueKey('unit_picker_button'),
-                avatar: Icon(
-                  Icons.filter_list,
-                  size: 18,
-                  color: scheme.onSurfaceVariant,
-                ),
+                visualDensity: VisualDensity.compact,
+                avatar: Icon(Icons.filter_list, size: 18, color: scheme.onSurfaceVariant),
                 label: Text(
                   selectedUnit == null || selectedUnit.isEmpty
                       ? '全部 · ${units.length} 单元 ▾'
                       : '$selectedUnit ▾',
                 ),
                 onPressed: () => _openUnitPicker(units: units, selectedUnit: selectedUnit),
+              )
+            : null;
+
+        Widget flashCard() {
+          return AnimatedContainer(
+            key: const ValueKey('learn_flash_card'),
+            duration: const Duration(milliseconds: 150),
+            decoration: BoxDecoration(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? scheme.surfaceContainerHighest
+                  : scheme.surface,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: _flashKind == 'known'
+                    ? scheme.primary
+                    : (_flashKind == 'unknown' ? scheme.error : scheme.outlineVariant),
+                width: _flashKind != null ? 2 : 1,
               ),
             ),
-            if (_unitFilterHint != null) ...[
-              const SizedBox(height: 4),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  _unitFilterHint!,
-                  key: const ValueKey('unit_filter_hint'),
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: scheme.onSurfaceVariant,
-                      ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
-          ],
-          const SizedBox(height: 8),
-          Expanded(
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 150),
-              decoration: BoxDecoration(
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? scheme.surfaceContainerHighest
-                    : scheme.surface,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: _flashKind == 'known'
-                      ? scheme.primary
-                      : (_flashKind == 'unknown' ? scheme.error : scheme.outlineVariant),
-                  width: _flashKind != null ? 2 : 1,
-                ),
-              ),
-              child: Column(
-                children: [
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: IconButton(
-                      key: const ValueKey('flashcard_speak'),
-                      tooltip: '朗读',
-                      onPressed: _speaking ? null : _speakCurrent,
-                      icon: Icon(
-                        Icons.volume_up,
-                        color: _speaking ? scheme.primary : scheme.onSurfaceVariant,
-                      ),
+            child: Column(
+              children: [
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: IconButton(
+                    key: const ValueKey('flashcard_speak'),
+                    tooltip: '朗读',
+                    onPressed: _speaking ? null : _speakCurrent,
+                    icon: Icon(
+                      Icons.volume_up,
+                      color: _speaking ? scheme.primary : scheme.onSurfaceVariant,
                     ),
                   ),
-                  Expanded(
-                    child: GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: () => setState(() => _flipped = !_flipped),
-                      child: Center(
-                        child: SingleChildScrollView(
-                          padding: const EdgeInsets.fromLTRB(28, 0, 28, 24),
-                          child: AnimatedSwitcher(
-                            duration: const Duration(milliseconds: 200),
-                            switchInCurve: Curves.easeOut,
-                            switchOutCurve: Curves.easeIn,
-                            transitionBuilder: (child, anim) {
-                              final scale = Tween<double>(begin: 0.98, end: 1).animate(anim);
-                              return FadeTransition(
-                                opacity: anim,
-                                child: ScaleTransition(scale: scale, child: child),
-                              );
-                            },
-                            child: _flipped
-                                ? Column(
-                                    key: const ValueKey('back'),
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(word.meaning, style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
-                                      if ((word.example ?? '').isNotEmpty) ...[
-                                        const SizedBox(height: 16),
-                                        Text(
-                                          word.example!,
-                                          textAlign: TextAlign.center,
-                                          style: const TextStyle(fontSize: 16, height: 1.35),
-                                        ),
-                                      ],
-                                      const SizedBox(height: 12),
-                                      Text('点按卡片可翻回', style: Theme.of(context).textTheme.bodySmall),
-                                    ],
-                                  )
-                                : Column(
-                                    key: const ValueKey('front'),
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(word.word, style: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold)),
-                                      if (widget.store.learnedIds().contains(word.id)) ...[
-                                        const SizedBox(height: 6),
-                                        Text(
-                                          '复习',
-                                          key: const ValueKey('review_tag'),
-                                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                                color: Theme.of(context).colorScheme.primary,
-                                              ),
-                                        ),
-                                      ],
-                                      if ((word.phonetic ?? '').isNotEmpty) ...[
-                                        const SizedBox(height: 8),
-                                        Text(
-                                          word.phonetic!,
-                                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                                color: Theme.of(context).colorScheme.onSurfaceVariant,
-                                              ),
-                                        ),
-                                      ],
+                ),
+                Expanded(
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () => setState(() => _flipped = !_flipped),
+                    child: Center(
+                      child: SingleChildScrollView(
+                        padding: EdgeInsets.fromLTRB(wide ? 36 : 24, 0, wide ? 36 : 24, 20),
+                        child: AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 200),
+                          switchInCurve: Curves.easeOut,
+                          switchOutCurve: Curves.easeIn,
+                          transitionBuilder: (child, anim) {
+                            final scale = Tween<double>(begin: 0.98, end: 1).animate(anim);
+                            return FadeTransition(
+                              opacity: anim,
+                              child: ScaleTransition(scale: scale, child: child),
+                            );
+                          },
+                          child: _flipped
+                              ? Column(
+                                  key: const ValueKey('back'),
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      word.meaning,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(fontSize: meaningSize, fontWeight: FontWeight.bold),
+                                    ),
+                                    if ((word.example ?? '').isNotEmpty) ...[
                                       const SizedBox(height: 16),
-                                      Text('点按卡片看中文', style: Theme.of(context).textTheme.bodySmall),
+                                      Text(
+                                        word.example!,
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(fontSize: 16, height: 1.35),
+                                      ),
                                     ],
-                                  ),
-                          ),
+                                    const SizedBox(height: 12),
+                                    Text('点按卡片可翻回', style: Theme.of(context).textTheme.bodySmall),
+                                  ],
+                                )
+                              : Column(
+                                  key: const ValueKey('front'),
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      word.word,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(fontSize: wordSize, fontWeight: FontWeight.bold, height: 1.15),
+                                    ),
+                                    if (widget.store.learnedIds().contains(word.id)) ...[
+                                      const SizedBox(height: 6),
+                                      Text(
+                                        '复习',
+                                        key: const ValueKey('review_tag'),
+                                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                              color: Theme.of(context).colorScheme.primary,
+                                            ),
+                                      ),
+                                    ],
+                                    if ((word.phonetic ?? '').isNotEmpty) ...[
+                                      const SizedBox(height: 10),
+                                      Text(
+                                        word.phonetic!,
+                                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                              color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                            ),
+                                      ),
+                                    ],
+                                    const SizedBox(height: 16),
+                                    Text('点按卡片看中文', style: Theme.of(context).textTheme.bodySmall),
+                                  ],
+                                ),
                         ),
                       ),
                     ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
+        Widget ctaRow({required bool vertical}) {
+          final unknown = _PressScale(
+            child: OutlinedButton(
+              key: const ValueKey('learn_unknown'),
+              onPressed: _flashKind != null ? null : _onUnknown,
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: vertical ? 18 : 14),
+                child: const Text('不认识', style: TextStyle(fontSize: 18)),
+              ),
+            ),
+          );
+          final known = _PressScale(
+            child: FilledButton(
+              key: const ValueKey('learn_known'),
+              onPressed: _flashKind != null ? null : _onKnown,
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: vertical ? 18 : 14),
+                child: const Text('认识', style: TextStyle(fontSize: 18)),
+              ),
+            ),
+          );
+          if (vertical) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(child: unknown),
+                const SizedBox(height: 12),
+                Expanded(child: known),
+              ],
+            );
+          }
+          return Row(
+            children: [
+              Expanded(child: unknown),
+              const SizedBox(width: 12),
+              Expanded(child: known),
+            ],
+          );
+        }
+
+        return Padding(
+          padding: EdgeInsets.fromLTRB(hPad, vPad, hPad, vPad),
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: contentMax),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // Compact chrome: title · today on one line
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          titleText,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                fontWeight: FontWeight.w600,
+                              ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        '今日 $today/$goal · 连续 $streak 天',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: scheme.onSurfaceVariant,
+                            ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  _TodayTaskBar(
+                    compact: true,
+                    todayLabel: '',
+                    selected: taskSelected,
+                    learnSubtitle: learnSub,
+                    learnShowDot: learnShowDot,
+                    wrongSubtitle: wrongSub,
+                    wrongEnabled: wrongCount > 0,
+                    onLearn: () => widget.onLearnNew?.call(),
+                    onWrong: wrongCount > 0 ? () => widget.onReviewWrongAll?.call() : null,
+                    onQuiz: widget.onStartQuiz,
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          progressLine,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ),
+                      if (unitChip != null) ...[
+                        const SizedBox(width: 8),
+                        unitChip,
+                      ],
+                    ],
+                  ),
+                  if (_unitFilterHint != null) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      _unitFilterHint!,
+                      key: const ValueKey('unit_filter_hint'),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: scheme.onSurfaceVariant,
+                          ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                  const SizedBox(height: 10),
+                  Expanded(
+                    child: wide
+                        ? Row(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Expanded(flex: 3, child: flashCard()),
+                              const SizedBox(width: 16),
+                              SizedBox(width: 168, child: ctaRow(vertical: true)),
+                            ],
+                          )
+                        : Column(
+                            children: [
+                              Expanded(child: flashCard()),
+                              const SizedBox(height: 12),
+                              ctaRow(vertical: false),
+                            ],
+                          ),
                   ),
                 ],
               ),
             ),
           ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              Expanded(
-                child: _PressScale(
-                  child: OutlinedButton(
-                    key: const ValueKey('learn_unknown'),
-                    onPressed: _flashKind != null ? null : _onUnknown,
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 14),
-                      child: Text('不认识', style: TextStyle(fontSize: 18)),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _PressScale(
-                  child: FilledButton(
-                    key: const ValueKey('learn_known'),
-                    onPressed: _flashKind != null ? null : _onKnown,
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 14),
-                      child: Text('认识', style: TextStyle(fontSize: 18)),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          )
-        ],
-      ),
+        );
+      },
     );
+
   }
 }
 
@@ -637,6 +697,7 @@ class _TodayTaskBar extends StatelessWidget {
     required this.onLearn,
     required this.onWrong,
     required this.onQuiz,
+    this.compact = false,
   });
 
   final String todayLabel;
@@ -648,10 +709,63 @@ class _TodayTaskBar extends StatelessWidget {
   final VoidCallback? onLearn;
   final VoidCallback? onWrong;
   final VoidCallback? onQuiz;
+  /// Single-row strip for mid-session study (saves vertical space for the card).
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    if (compact) {
+      return Material(
+        color: scheme.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(14),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+          child: Row(
+            children: [
+              Expanded(
+                child: _TodayTaskButton(
+                  key: const ValueKey('today_task_learn'),
+                  title: '学新词',
+                  subtitle: learnSubtitle,
+                  icon: Icons.menu_book,
+                  selected: selected == _TodayTask.learn,
+                  showDot: learnShowDot,
+                  compact: true,
+                  onTap: onLearn,
+                ),
+              ),
+              Expanded(
+                child: Tooltip(
+                  message: wrongEnabled ? '复习本词书全部错词' : '暂无错词，先学新词或自测',
+                  child: _TodayTaskButton(
+                    key: const ValueKey('today_task_wrong'),
+                    title: '复习错词',
+                    subtitle: wrongSubtitle,
+                    icon: Icons.replay,
+                    selected: selected == _TodayTask.wrong,
+                    compact: true,
+                    onTap: onWrong,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: _TodayTaskButton(
+                  key: const ValueKey('today_task_quiz'),
+                  title: '自测',
+                  subtitle: '测一测',
+                  icon: Icons.quiz,
+                  selected: selected == _TodayTask.quiz,
+                  compact: true,
+                  onTap: onQuiz,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     return Material(
       color: scheme.surfaceContainerLow,
       borderRadius: BorderRadius.circular(16),
@@ -660,8 +774,10 @@ class _TodayTaskBar extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(todayLabel, style: Theme.of(context).textTheme.bodySmall),
-            const SizedBox(height: 8),
+            if (todayLabel.isNotEmpty) ...[
+              Text(todayLabel, style: Theme.of(context).textTheme.bodySmall),
+              const SizedBox(height: 8),
+            ],
             Row(
               children: [
                 Expanded(
@@ -702,22 +818,13 @@ class _TodayTaskBar extends StatelessWidget {
                 ),
               ],
             ),
-            if (!wrongEnabled) ...[
-              const SizedBox(height: 6),
-              Text(
-                '暂无错词，先学新词或自测',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      fontSize: 12,
-                      color: scheme.onSurfaceVariant,
-                    ),
-              ),
-            ],
           ],
         ),
       ),
     );
   }
 }
+
 
 class _TodayTaskButton extends StatelessWidget {
   const _TodayTaskButton({
@@ -728,6 +835,7 @@ class _TodayTaskButton extends StatelessWidget {
     required this.selected,
     required this.onTap,
     this.showDot = false,
+    this.compact = false,
   });
 
   final String title;
@@ -736,6 +844,7 @@ class _TodayTaskButton extends StatelessWidget {
   final bool selected;
   final VoidCallback? onTap;
   final bool showDot;
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
@@ -757,7 +866,7 @@ class _TodayTaskButton extends StatelessWidget {
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 150),
-      constraints: const BoxConstraints(minHeight: 56),
+      constraints: BoxConstraints(minHeight: compact ? 40 : 56),
       decoration: BoxDecoration(
         color: bg,
         borderRadius: BorderRadius.circular(16),
@@ -769,56 +878,102 @@ class _TodayTaskButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           onTap: onTap,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    Icon(icon, size: 24, color: titleColor),
-                    if (showDot)
-                      Positioned(
-                        right: -2,
-                        top: -2,
-                        child: Container(
-                          key: const ValueKey('learn_due_dot'),
-                          width: 8,
-                          height: 8,
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.primary,
-                            shape: BoxShape.circle,
-                          ),
+            padding: EdgeInsets.symmetric(horizontal: compact ? 6 : 4, vertical: compact ? 6 : 8),
+            child: compact
+                ? Row(
+                    children: [
+                      Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          Icon(icon, size: 20, color: titleColor),
+                          if (showDot)
+                            Positioned(
+                              right: -2,
+                              top: -2,
+                              child: Container(
+                                key: const ValueKey('learn_due_dot'),
+                                width: 8,
+                                height: 8,
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              title,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: titleColor),
+                            ),
+                            Text(
+                              subtitle,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(fontSize: 10, color: subColor),
+                            ),
+                          ],
                         ),
                       ),
-                  ],
-                ),
-                const SizedBox(height: 2),
-                LayoutBuilder(
-                  builder: (context, c) {
-                    final wide = c.maxWidth >= 100;
-                    return Text(
-                      title,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: wide ? 14 : 13,
-                        fontWeight: FontWeight.w700,
-                        color: titleColor,
+                    ],
+                  )
+                : Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          Icon(icon, size: 24, color: titleColor),
+                          if (showDot)
+                            Positioned(
+                              right: -2,
+                              top: -2,
+                              child: Container(
+                                key: const ValueKey('learn_due_dot'),
+                                width: 8,
+                                height: 8,
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
-                    );
-                  },
-                ),
-                Text(
-                  subtitle,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 11, color: subColor),
-                ),
-              ],
-            ),
+                      const SizedBox(height: 2),
+                      LayoutBuilder(
+                        builder: (context, c) {
+                          final wide = c.maxWidth >= 100;
+                          return Text(
+                            title,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: wide ? 14 : 13,
+                              fontWeight: FontWeight.w700,
+                              color: titleColor,
+                            ),
+                          );
+                        },
+                      ),
+                      Text(
+                        subtitle,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 11, color: subColor),
+                      ),
+                    ],
+                  ),
           ),
         ),
       ),
