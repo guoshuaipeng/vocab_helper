@@ -176,3 +176,12 @@
 - 顺利：列表过滤/排序单测与 UI 测分开；shot 用 MaterialApp.builder 包 overlay（承接 R28 教训）
 - 注意：空列表勿挂转圈（会拖死 pumpAndSettle）；entries 空则短路结束 loading
 - 预防：含 sheet 的交验清单必须含预览/列表态，不只入口数字
+
+
+## Round 30（2026-10-23）
+- 计划：我的页「单元进度」sheet — 按 unit 已学/总/错词；点行复用现有单元筛选进学习
+- 实际：unit_progress 聚合 + MeScreen sheet；SnackBar「已筛选 · {unit}」；五态截图；UI 通过（e9f79be）
+- 顺利：聚合纯函数单测与 UI 测分开；pep-ps-4 自带 Unit 1–12，截图不必造假 unit
+- 注意：loadBook 会 withUnits()，生产词书几乎总有 unit；「全无 unit」空态用合成 WordBook 单测覆盖即可
+- 预防：sheet 截图继续用 MaterialApp.builder + ColoredBox 铺底，避免黑边被当成深色主题（承接 accent-tts 教训）
+
