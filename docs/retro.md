@@ -71,3 +71,9 @@
 - 实际：ProgressStore.ttsAccent；我的 SegmentedButton；朗读前 setAccent
 - 卡住：系统未装对应语音包时听感可能无差别
 - 预防：文案标明依赖系统语音包
+
+## Round 11（2026-10-23）
+- 计划：新词自动朗读开关
+- 实际：autoSpeak 偏好；开局与换词后 _maybeAutoSpeak；默认关
+- 卡住：无
+- 预防：出声类功能默认关闭
