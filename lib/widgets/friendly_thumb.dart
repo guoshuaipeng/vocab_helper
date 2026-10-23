@@ -4,7 +4,7 @@ import 'dart:ui' show lerpDouble;
 
 import 'package:flutter/material.dart';
 
-/// Soft outline thumbs-up (from reference silhouette, tinted).
+/// Solid thumbs-up (reference silhouette filled, tinted).
 class FriendlyThumb extends StatelessWidget {
   const FriendlyThumb({
     super.key,
@@ -138,9 +138,23 @@ class _ElasticKnownThumbCtaState extends State<ElasticKnownThumbCta> {
       _hideLocal = true;
     });
 
-    final origin = box.localToGlobal(box.size.center(Offset.zero));
-    final screen = MediaQuery.sizeOf(context);
-    final dest = Offset(screen.width / 2, screen.height * 0.42);
+    // Map into Overlay local space so the peak lands on the true visual center.
+    final overlayBox = overlayState.context.findRenderObject() as RenderBox?;
+    if (overlayBox == null || !overlayBox.hasSize) {
+      await widget.onAction();
+      if (mounted) {
+        setState(() {
+          _busy = false;
+          _hideLocal = false;
+        });
+      }
+      return;
+    }
+    final originGlobal = box.localToGlobal(box.size.center(Offset.zero));
+    final origin = overlayBox.globalToLocal(originGlobal);
+    final dest = overlayBox.size.center(Offset.zero);
+    final peakSize = (overlayBox.size.shortestSide * 0.42)
+        .clamp(widget.iconSize * 2.8, widget.iconSize * 4.2);
 
     late final OverlayEntry entry;
     final done = Completer<void>();
@@ -150,7 +164,7 @@ class _ElasticKnownThumbCtaState extends State<ElasticKnownThumbCta> {
         start: origin,
         end: dest,
         startSize: widget.iconSize,
-        endSize: widget.iconSize * 2.35,
+        endSize: peakSize,
         onPeak: () => widget.onAction(),
         onDone: () {
           entry.remove();
