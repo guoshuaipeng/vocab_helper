@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'screens/books_screen.dart';
 import 'screens/learn_screen.dart';
 import 'screens/me_screen.dart';
+import 'screens/quiz_screen.dart';
 import 'screens/setup_screen.dart';
 import 'services/progress_store.dart';
 import 'services/wordbook_repository.dart';
@@ -111,6 +112,19 @@ class _HomeShellState extends State<HomeShell> {
     });
   }
 
+  Future<void> _openQuiz(QuizMode mode) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => QuizScreen(
+          store: widget.store,
+          repo: widget.repo,
+          mode: mode,
+        ),
+      ),
+    );
+    if (mounted) setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     final bookId = widget.store.selectedBookId();
@@ -137,11 +151,23 @@ class _HomeShellState extends State<HomeShell> {
         onChangeBook: widget.onChangeBook,
         onReviewWrong: () => _enterWrongReview(unitScoped: false),
         onReviewWrongCurrentUnit: () => _enterWrongReview(unitScoped: true),
+        onQuizUnit: () => _openQuiz(QuizMode.unit),
+        onQuizWrong: () => _openQuiz(QuizMode.wrong),
       ),
     ];
 
     return Scaffold(
-      appBar: AppBar(title: const Text('单词小助手')),
+      appBar: AppBar(
+        title: const Text('单词小助手'),
+        actions: [
+          if (_index == 0)
+            IconButton(
+              tooltip: '自测本单元',
+              onPressed: () => _openQuiz(QuizMode.unit),
+              icon: const Icon(Icons.quiz_outlined),
+            ),
+        ],
+      ),
       body: IndexedStack(index: _index, children: pages),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _index,

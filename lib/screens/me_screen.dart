@@ -13,6 +13,8 @@ class MeScreen extends StatefulWidget {
     required this.onChangeBook,
     required this.onReviewWrong,
     required this.onReviewWrongCurrentUnit,
+    required this.onQuizUnit,
+    required this.onQuizWrong,
   });
 
   final ProgressStore store;
@@ -21,6 +23,8 @@ class MeScreen extends StatefulWidget {
   final VoidCallback onChangeBook;
   final VoidCallback onReviewWrong;
   final VoidCallback onReviewWrongCurrentUnit;
+  final VoidCallback onQuizUnit;
+  final VoidCallback onQuizWrong;
 
   @override
   State<MeScreen> createState() => _MeScreenState();
@@ -250,6 +254,45 @@ class _MeScreenState extends State<MeScreen> {
             ),
           ),
           const SizedBox(height: 12),
+
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('学习自测', style: Theme.of(context).textTheme.titleMedium),
+                  const SizedBox(height: 8),
+                  Text('看中文选英文，四选一。答错进错词本。', style: Theme.of(context).textTheme.bodySmall),
+                  const SizedBox(height: 12),
+                  Builder(
+                    builder: (context) {
+                      final unit = bookId == null ? null : widget.store.unitFilterForBook(bookId);
+                      final hasUnit = unit != null && unit.isNotEmpty;
+                      final hasWrong = bookId != null && widget.store.wrongCountForBook(bookId) > 0;
+                      return Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: [
+                          FilledButton.icon(
+                            onPressed: bookId == null ? null : widget.onQuizUnit,
+                            icon: const Icon(Icons.quiz_outlined),
+                            label: Text(hasUnit ? '自测$unit' : '自测本词书'),
+                          ),
+                          FilledButton.tonalIcon(
+                            onPressed: hasWrong ? widget.onQuizWrong : null,
+                            icon: const Icon(Icons.fact_check_outlined),
+                            label: const Text('自测错词'),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
           Card(
             child: Padding(
               padding: const EdgeInsets.all(16),
@@ -360,3 +403,4 @@ class _StatCard extends StatelessWidget {
     );
   }
 }
+

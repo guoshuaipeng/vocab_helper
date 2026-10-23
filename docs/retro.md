@@ -115,3 +115,8 @@
 - 实际：pep_jh_7a / 7b 写入近似 Unit 标签；source 标明非官方
 - 卡住：无公开权威单元-词对应 JSON
 - 预防：近似划分必须写进 source；有对照表再替换
+## Round 18（2026-10-23）
+- 计划：按 requirements 落地「看中文选英文」自测；勾选 R16 主需求与错词本单元抛光
+- 实际：QuizEngine + QuizScreen；我的双入口 + 学习页 AppBar；错选进错词本、选对移出；design-r18
+- 卡住：无
+- 预防：出题逻辑保持纯函数便于单测；自测答对不 markLearned，避免与闪卡「认识」语义混淆
