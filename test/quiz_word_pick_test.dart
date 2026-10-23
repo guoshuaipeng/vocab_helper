@@ -122,4 +122,47 @@ void main() {
     expect(find.text('听'), findsOneWidget);
     expect(find.text('写'), findsOneWidget);
   });
+
+
+  testWidgets('wide short shows all 4 meaning options on screen', (tester) async {
+    SharedPreferences.setMockInitialValues({'quiz_variant': 'word', 'daily_goal': 5});
+    final store = await ProgressStore.open();
+    tester.view.physicalSize = const Size(900, 700);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    final questions = [
+      QuizQuestion(
+        target: w('a', 'apple', '苹果'),
+        options: [
+          w('a', 'apple', '苹果'),
+          w('b', 'book', '书本'),
+          w('c', 'desk', '桌子'),
+          w('d', 'water', '水'),
+        ],
+        correctIndex: 0,
+      ),
+    ];
+    await tester.pumpWidget(
+      MaterialApp(
+        home: QuizScreen(
+          store: store,
+          repo: WordbookRepository(),
+          mode: QuizMode.book,
+          speaker: FakeWordSpeaker()..voiceAvailable = true,
+          seedQuestions: questions,
+        ),
+      ),
+    );
+    for (var i = 0; i < 30; i++) {
+      await tester.pump(const Duration(milliseconds: 50));
+    }
+    expect(find.text('苹果'), findsOneWidget);
+    expect(find.text('书本'), findsOneWidget);
+    expect(find.text('桌子'), findsOneWidget);
+    expect(find.text('水'), findsOneWidget);
+    // Prefer grid when vertical space is tight.
+    expect(find.byKey(const ValueKey('quiz_options_grid')), findsOneWidget);
+  });
+
 }

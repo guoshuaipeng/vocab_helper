@@ -616,7 +616,10 @@ class _QuizScreenState extends State<QuizScreen> {
                     : (_isWordPick ? 'prompt_word' : 'prompt_meaning'),
               ),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 28),
+                padding: EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: _isWordPick ? 16 : 28,
+                ),
                 child: _effectiveListen
                     ? Column(
                         children: [
@@ -645,19 +648,20 @@ class _QuizScreenState extends State<QuizScreen> {
                       )
                     : _isWordPick
                         ? Column(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
                               Text('选出正确的中文意思', style: Theme.of(context).textTheme.labelLarge),
-                              const SizedBox(height: 12),
+                              const SizedBox(height: 8),
                               Text(
                                 q.target.word,
                                 key: const ValueKey('prompt_word_text'),
                                 textAlign: TextAlign.center,
-                                style: const TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
+                                style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
                               ),
-                              const SizedBox(height: 8),
                               IconButton(
                                 key: const ValueKey('quiz_word_speak'),
                                 tooltip: '朗读',
+                                visualDensity: VisualDensity.compact,
                                 onPressed: () => _speak(q.target.word),
                                 icon: const Icon(Icons.volume_up),
                               ),
@@ -678,59 +682,92 @@ class _QuizScreenState extends State<QuizScreen> {
             ),
             const SizedBox(height: 16),
             Expanded(
-              child: ListView.separated(
-                itemCount: q.options.length,
-                separatorBuilder: (context, index) => const SizedBox(height: 10),
-                itemBuilder: (context, i) {
-                  final opt = q.options[i];
-                  Color? bg;
-                  Color? fg;
-                  BorderSide? side;
-                  if (_answered) {
-                    if (i == q.correctIndex) {
-                      bg = scheme.primaryContainer;
-                      fg = scheme.onPrimaryContainer;
-                      side = BorderSide(color: scheme.primary, width: 2);
-                    } else if (i == _selected) {
-                      bg = scheme.errorContainer;
-                      fg = scheme.onErrorContainer;
-                      side = BorderSide(color: scheme.error, width: 2);
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  Widget optionTile(int i, {required bool compact}) {
+                    final opt = q.options[i];
+                    Color? bg;
+                    Color? fg;
+                    BorderSide? side;
+                    if (_answered) {
+                      if (i == q.correctIndex) {
+                        bg = scheme.primaryContainer;
+                        fg = scheme.onPrimaryContainer;
+                        side = BorderSide(color: scheme.primary, width: 2);
+                      } else if (i == _selected) {
+                        bg = scheme.errorContainer;
+                        fg = scheme.onErrorContainer;
+                        side = BorderSide(color: scheme.error, width: 2);
+                      }
                     }
-                  }
-                  final label = _usesMeaningOptions ? opt.meaning : opt.word;
-                  return SizedBox(
-                    height: 56,
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: OutlinedButton(
-                            style: OutlinedButton.styleFrom(
-                              backgroundColor: bg,
-                              foregroundColor: fg,
-                              side: side,
-                              alignment: Alignment.center,
-                            ),
-                            onPressed: _answered ? null : () => _onSelect(i),
-                            child: Text(
-                              label,
-                              textAlign: TextAlign.center,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: _usesMeaningOptions ? 16 : 20,
-                                fontWeight: FontWeight.w600,
+                    final label = _usesMeaningOptions ? opt.meaning : opt.word;
+                    final row = SizedBox(
+                      height: compact ? 48 : 56,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: OutlinedButton(
+                              style: OutlinedButton.styleFrom(
+                                backgroundColor: bg,
+                                foregroundColor: fg,
+                                side: side,
+                                alignment: Alignment.center,
+                                padding: compact
+                                    ? const EdgeInsets.symmetric(horizontal: 8)
+                                    : null,
+                              ),
+                              onPressed: _answered ? null : () => _onSelect(i),
+                              child: Text(
+                                label,
+                                textAlign: TextAlign.center,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: _usesMeaningOptions ? 16 : 20,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        if (!_usesMeaningOptions)
-                          IconButton(
-                            tooltip: '朗读',
-                            onPressed: () => _speak(opt.word),
-                            icon: const Icon(Icons.volume_up),
-                          ),
-                      ],
-                    ),
+                          if (!_usesMeaningOptions)
+                            IconButton(
+                              tooltip: '朗读',
+                              onPressed: () => _speak(opt.word),
+                              icon: const Icon(Icons.volume_up),
+                            ),
+                        ],
+                      ),
+                    );
+                    return row;
+                  }
+
+                  // Wide/short: 2-col grid so all 4 meanings fit without scrolling off.
+                  final rowH = 56.0;
+                  final need = q.options.length * rowH + (q.options.length - 1) * 10;
+                  final useGrid = _isWordPick &&
+                      constraints.maxWidth >= 300 &&
+                      constraints.maxHeight < need;
+
+                  if (useGrid) {
+                    return GridView.builder(
+                      key: const ValueKey('quiz_options_grid'),
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        mainAxisExtent: 52,
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                      ),
+                      itemCount: q.options.length,
+                      itemBuilder: (context, i) => optionTile(i, compact: true),
+                    );
+                  }
+
+                  return ListView.separated(
+                    key: const ValueKey('quiz_options_list'),
+                    itemCount: q.options.length,
+                    separatorBuilder: (context, index) => const SizedBox(height: 10),
+                    itemBuilder: (context, i) => optionTile(i, compact: false),
                   );
                 },
               ),
