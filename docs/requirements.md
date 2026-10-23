@@ -7,7 +7,7 @@
 
 ## 进行中
 
-（空 · R49 已收口 2026-10-23）
+（空 · R50 已收口 2026-10-23）
 
 ---
 
@@ -47,6 +47,7 @@
 | R47 | 我的页信息层级（B05） | [design-r47.md](design-r47.md) · [prd-r47-mine-hierarchy.md](prd-r47-mine-hierarchy.md) | **已完成** |
 | R48 | 单元 overflow 路径可读（B04） | [design-r48.md](design-r48.md) · [prd-r48-unit-overflow.md](prd-r48-unit-overflow.md) | **已完成** |
 | R49 | 到期复习开练强化（B06） | [design-r49.md](design-r49.md) · [prd-r49-due-review-start.md](prd-r49-due-review-start.md) | **已完成** |
+| R50 | 今日达成视觉统一（B08） | [design-r50.md](design-r50.md) · [prd-r50-goal-celebrate-wow.md](prd-r50-goal-celebrate-wow.md) | **已完成** |
 
 ---
 
@@ -84,6 +85,7 @@
 - [x] **R47** 我的页信息层级（迭代 PRD B05；**UI 自验通过** 2026-10-23 · docs/shots/r47-ui-acceptance.md）
 - [x] **R48** 单元 overflow 路径可读（迭代 PRD B04；**UI 自验通过** 2026-10-23 · docs/shots/r48-ui-acceptance.md）
 - [x] **R49** 到期复习开练强化（迭代 PRD B06；**UI 自验通过** 2026-10-23 · docs/shots/r49-ui-acceptance.md）
+- [x] **R50** 今日达成视觉统一（迭代 PRD B08；**UI 自验通过** 2026-10-23 · docs/shots/r50-ui-acceptance.md）
 
 ## P2（体验）
 
@@ -98,6 +100,16 @@
 
 
 
+
+### Round 50 · 今日达成视觉统一（已完成）
+
+**PRD**：[prd-r50-goal-celebrate-wow.md](prd-r50-goal-celebrate-wow.md) · **设计**：[design-r50.md](design-r50.md) · **RICE** B08（7.5）  
+**状态**：**已完成**（UI 自验 · docs/shots/r50-ui-acceptance.md）
+
+- [x] Overlay 庆祝纸卡（surfaceContainerLow/High · r20 · outlineVariant）
+- [x] 「继续」Filled teal #0D9488；标题完整；上升沿逻辑零改
+- [x] 我的完成态 teal 核对；既有 `goal_celebrate_*` / `me_today_goal_*` keys
+- [x] 截图 r50-banner 浅深 + me-done；git push github master
 ### Round 49 · 到期复习开练强化（已完成）
 
 **PRD**：[prd-r49-due-review-start.md](prd-r49-due-review-start.md) · **设计**：[design-r49.md](design-r49.md) · **RICE** B06（10.5）  
@@ -407,6 +419,7 @@
 
 | 日期 | 说明 |
 |------|------|
+| 2026-10-23 | **R50 UI 自验通过**：今日达成视觉统一（B08）；纸卡庆祝+teal 继续；tip 见 HEAD |
 | 2026-10-23 | **R48 UI 自验通过**：单元 overflow 路径可读（B04）；选择单元置顶 + 顶栏持久单元；tip 见 HEAD |
 | 2026-10-23 | **RICE 迭代 PRD**：叫停未开工 quiz 编码；现状→缺口→RICE→prd-iteration-rice-2026-10-23；R44 设计就绪待开发；dev-rules §16 出需求门禁 |
 | 2026-10-23 | **R43 UI 自验通过**：学习页眼前一亮大改（大词卡+双 CTA+overflow；slide；teal 认识）· r43-ui-acceptance.md |
@@ -516,5 +529,7 @@
 | 2026-10-23 | 插队：搜索「已经是这本」 SnackBar 落地 |
 | 2026-10-23 | 插队：认识/不认识 scale 0.98 落地 |
 | 2026-10-23 | Round 28 导出进度代码落地；四态截图；待 UI 验收 |
+
+
 
 

@@ -8,6 +8,7 @@ import 'package:vocab_helper/services/progress_store.dart';
 import 'package:vocab_helper/services/quiz_engine.dart';
 import 'package:vocab_helper/services/word_speaker.dart';
 import 'package:vocab_helper/services/wordbook_repository.dart';
+import 'package:vocab_helper/widgets/goal_celebrate_banner.dart';
 
 Word w(String id, String word, String meaning) =>
     Word(id: id, word: word, meaning: meaning, unit: 'U1');
@@ -128,6 +129,16 @@ void main() {
     expect(find.byKey(const ValueKey('goal_celebrate_title')), findsOneWidget);
     expect(find.textContaining('今日目标达成'), findsOneWidget);
     expect(find.textContaining('已学 5 / 5'), findsOneWidget);
+    expect(find.byType(FilledButton), findsWidgets);
+    final bannerMat = tester.widget<Material>(
+      find.byKey(const ValueKey('goal_celebrate_banner')),
+    );
+    expect(bannerMat.color, isNot(Theme.of(tester.element(find.byType(QuizScreen))).colorScheme.primaryContainer));
+    final continueBtn = tester.widget<FilledButton>(
+      find.byKey(const ValueKey('goal_celebrate_continue')),
+    );
+    final bg = continueBtn.style?.backgroundColor?.resolve({});
+    expect(bg, celebrateTeal);
     await tester.tap(find.byKey(const ValueKey('goal_celebrate_continue')));
     await tester.pump();
     await tester.pump(const Duration(seconds: 5));
@@ -168,3 +179,4 @@ void main() {
     expect(find.byKey(const ValueKey('me_today_goal_status')), findsOneWidget);
   });
 }
+
