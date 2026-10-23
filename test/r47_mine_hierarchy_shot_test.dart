@@ -27,10 +27,10 @@ Future<void> expandMeMore(WidgetTester tester) async {
   final more = find.byKey(const ValueKey('me_more_section'));
   expect(more, findsOneWidget);
   await tester.ensureVisible(more);
-  final export = find.byKey(const ValueKey('export_progress'));
-  if (export.evaluate().isNotEmpty) {
+  final unit = find.byKey(const ValueKey('me_unit_progress'));
+  if (unit.evaluate().isNotEmpty) {
     try {
-      if (tester.getSize(export).height > 1) return;
+      if (tester.getSize(unit).height > 1) return;
     } catch (_) {}
   }
   await tester.tap(more);
@@ -100,7 +100,7 @@ void main() {
     if (expandMore) {
       await expandMeMore(tester);
       expect(find.text('朗读口音'), findsOneWidget);
-      expect(find.byKey(const ValueKey('export_progress')), findsOneWidget);
+      expect(find.byKey(const ValueKey('me_unit_progress')), findsOneWidget);
       expect(find.byKey(const ValueKey('me_stats_summary')), findsOneWidget);
       await tester.ensureVisible(find.byKey(const ValueKey('me_stats_summary')));
       await tester.pump(const Duration(milliseconds: 100));

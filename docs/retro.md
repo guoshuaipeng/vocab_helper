@@ -1,5 +1,11 @@
 # 复盘
 
+## Round 51 · 导出发现性（2026-10-23）
+- 计划：B10 导出提权到行动下可见行；空态；对齐 R47；截图自验；push
+- 实际：me_export_row + 更多副标去掉导出；sheet 空态+teal 复制；expand_me_more 改探 unit；r51/r47/export 测绿
+- 卡住：空态测曾因 prefs 跨测污染 / sheet 按钮出屏；openStore 重写 prefs + ensureVisible 解决
+- 预防：导出用 selectedBookId 不依赖 _book 异步态；Me 测跨例先 pump shrink + 显式写回 prefs
+- 下一轮：按迭代 RICE 未完成（B07 需纸质 / B09 需 iPhone / B11–B12 环境）——无设备轮次暂无更高可落项
 
 
 ## Round 50 · 今日达成视觉统一（2026-10-23）
@@ -332,4 +338,5 @@
 - 顺利：复用既有 unit_picker / quiet hint；零改引擎
 - 预防：overflow 项序以 key Y 坐标断言，勿用 children 下标；点「认识」后若有 Overlay 动画须 pump 净再 dispose
 - 下一轮：按迭代 RICE 未完成最高（B06 到期复习开练 / B08 今日达成视觉 / 有纸质则 B07）
+
 

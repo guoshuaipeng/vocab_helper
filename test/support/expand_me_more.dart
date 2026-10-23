@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// Expand 「更多设置」 so nested keys (export / unit / accent / stats) are hittable.
+/// Expand 「更多设置」 so nested keys (unit / accent / stats) are hittable.
 /// ListView parks the tile below the fold — use skipOffstage: false to find it.
 Future<void> expandMeMore(WidgetTester tester) async {
   final more = find.byKey(const ValueKey('me_more_section'), skipOffstage: false);
@@ -10,10 +10,11 @@ Future<void> expandMeMore(WidgetTester tester) async {
   }
   expect(more, findsOneWidget);
 
-  final export = find.byKey(const ValueKey('export_progress'), skipOffstage: false);
-  if (export.evaluate().isNotEmpty) {
+  // R51: export moved out of more; use unit progress as expanded probe.
+  final unit = find.byKey(const ValueKey('me_unit_progress'), skipOffstage: false);
+  if (unit.evaluate().isNotEmpty) {
     try {
-      if (tester.getSize(export).height > 1) return;
+      if (tester.getSize(unit).height > 1) return;
     } catch (_) {}
   }
 

@@ -7,7 +7,7 @@
 
 ## 进行中
 
-（空 · R50 已收口 2026-10-23）
+（空 · R51 已收口 2026-10-23）
 
 ---
 
@@ -48,6 +48,7 @@
 | R48 | 单元 overflow 路径可读（B04） | [design-r48.md](design-r48.md) · [prd-r48-unit-overflow.md](prd-r48-unit-overflow.md) | **已完成** |
 | R49 | 到期复习开练强化（B06） | [design-r49.md](design-r49.md) · [prd-r49-due-review-start.md](prd-r49-due-review-start.md) | **已完成** |
 | R50 | 今日达成视觉统一（B08） | [design-r50.md](design-r50.md) · [prd-r50-goal-celebrate-wow.md](prd-r50-goal-celebrate-wow.md) | **已完成** |
+| R51 | 导出发现性（B10） | [design-r51.md](design-r51.md) · [prd-r51-export-discoverability.md](prd-r51-export-discoverability.md) | **已完成** |
 
 ---
 
@@ -86,6 +87,7 @@
 - [x] **R48** 单元 overflow 路径可读（迭代 PRD B04；**UI 自验通过** 2026-10-23 · docs/shots/r48-ui-acceptance.md）
 - [x] **R49** 到期复习开练强化（迭代 PRD B06；**UI 自验通过** 2026-10-23 · docs/shots/r49-ui-acceptance.md）
 - [x] **R50** 今日达成视觉统一（迭代 PRD B08；**UI 自验通过** 2026-10-23 · docs/shots/r50-ui-acceptance.md）
+- [x] **R51** 导出发现性（迭代 PRD B10；**UI 自验通过** 2026-10-23 · docs/shots/r51-ui-acceptance.md）
 
 ## P2（体验）
 
@@ -100,6 +102,18 @@
 
 
 
+
+
+
+### Round 51 · 导出发现性（已完成）
+
+**PRD**：[prd-r51-export-discoverability.md](prd-r51-export-discoverability.md) · **设计**：[design-r51.md](design-r51.md) · **RICE** B10（6.0）  
+**状态**：**已完成**（UI 自验 · docs/shots/r51-ui-acceptance.md）
+
+- [x] 行动下可见「导出进度」纸卡行（无需展开更多）；key xport_progress / me_export_row
+- [x] 更多设置副标「单元 · 口音 · 统计」；折叠内去掉重复导出
+- [x] 空进度 sheet 空态 xport_empty_hint；复制 Filled teal
+- [x] 截图 r51-entry 浅深 + empty/sheet；git push github master
 
 ### Round 50 · 今日达成视觉统一（已完成）
 
@@ -529,6 +543,7 @@
 | 2026-10-23 | 插队：搜索「已经是这本」 SnackBar 落地 |
 | 2026-10-23 | 插队：认识/不认识 scale 0.98 落地 |
 | 2026-10-23 | Round 28 导出进度代码落地；四态截图；待 UI 验收 |
+
 
 
 

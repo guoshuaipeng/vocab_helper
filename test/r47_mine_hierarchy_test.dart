@@ -65,11 +65,12 @@ void main() {
     expect(find.text('自测本词书'), findsOneWidget);
     expect(find.byKey(const ValueKey('me_quiz_wrong_pool')), findsOneWidget);
 
-    // A3: more collapsed until expand
+    // A3: export visible (R51); more still collapsed for accent/unit
     expect(find.byKey(const ValueKey('me_more_section'), skipOffstage: false), findsOneWidget);
-    expect(find.byKey(const ValueKey('export_progress')), findsNothing);
-    await expandMeMore(tester);
     expect(find.byKey(const ValueKey('export_progress')), findsOneWidget);
+    expect(find.byKey(const ValueKey('me_export_row')), findsOneWidget);
+    expect(find.text('朗读口音'), findsNothing);
+    await expandMeMore(tester);
     expect(find.byKey(const ValueKey('me_unit_progress')), findsOneWidget);
     expect(find.text('朗读口音'), findsOneWidget);
     expect(find.byKey(const ValueKey('me_stats_summary'), skipOffstage: false), findsOneWidget);

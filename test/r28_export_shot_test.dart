@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'support/expand_me_more.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vocab_helper/screens/me_screen.dart';
 import 'package:vocab_helper/services/progress_store.dart';
@@ -100,7 +99,6 @@ void main() {
     for (var i = 0; i < 50; i++) {
       await tester.pump(const Duration(milliseconds: 50));
     }
-    await expandMeMore(tester);
     expect(find.byKey(const ValueKey('export_progress')), findsOneWidget);
     await tester.ensureVisible(find.byKey(const ValueKey('export_progress')));
     await tester.pump();
@@ -119,15 +117,15 @@ void main() {
   }
 
   Future<void> openExportSheet(WidgetTester tester) async {
-    await expandMeMore(tester);
+    await tester.ensureVisible(find.byKey(const ValueKey('export_progress')));
     await tester.tap(find.byKey(const ValueKey('export_progress')));
     await tester.pump(); // start async load
     // wait until sheet title appears, then settle animation
     for (var i = 0; i < 60; i++) {
       await tester.pump(const Duration(milliseconds: 50));
-      if (find.text('导出进度').evaluate().isNotEmpty) break;
+      if (find.byKey(const ValueKey('export_preview')).evaluate().isNotEmpty) break;
     }
-    expect(find.text('导出进度'), findsOneWidget);
+    expect(find.text('导出进度'), findsWidgets);
     await tester.pumpAndSettle(const Duration(milliseconds: 100));
     expect(find.byKey(const ValueKey('export_preview')), findsOneWidget);
     expect(find.text('复制全部'), findsOneWidget);
