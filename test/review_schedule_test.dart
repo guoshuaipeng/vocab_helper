@@ -71,7 +71,6 @@ void main() {
     expect(store.dueReviewCountForBook('pep-ps-3', now: DateTime(2026, 10, 23)), 0);
     expect(store.dueReviewCountForBook('pep-ps-3', now: DateTime(2026, 10, 24)), 1);
   });
-}
 
   test('first known after unknown stays 1-day bucket', () async {
     final store = await ProgressStore.open();
@@ -95,3 +94,4 @@ void main() {
     expect(store.reviewStage('b-1'), 3);
     expect(store.reviewAt('b-1'), '2026-10-26');
   });
+}
