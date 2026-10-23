@@ -1,34 +1,37 @@
 ## 协作
 
-单 bot「单词迭代」一人全流程：产品需求 → design-rN → 开发测试 → 自验 UI 截图 → 复盘收口。  
+单 bot「单词迭代」一人全流程：现状/缺口 RICE → prd → design-rN → 开发测试 → 自验 UI 截图 → 复盘收口。  
 不再分派「单词产品设计」「单词UI设计」「单词项目经理」；本文件仍是需求单一来源。
 
 ---
 
 ## 进行中
 
-### Round 43 · 学习页眼前一亮大改
+### Round 44 · 自测页视觉对齐学习页（RICE #1）
 
-**PRD**：[docs/prd-learn-wow.md](prd-learn-wow.md)（ChatPRD `ai-development-brief`）  
-**设计稿**：[docs/design-r43.md](design-r43.md)  
-**状态**：**已完成**（2026-10-23 · UI 自验通过 · docs/shots/r43-ui-acceptance.md）
+**迭代 PRD**：[docs/prd-iteration-rice-2026-10-23.md](prd-iteration-rice-2026-10-23.md)（强制：现状→缺口→RICE→PRD→风险）  
+**设计稿**：[docs/design-r44.md](design-r44.md)  
+**状态**：**设计就绪 · 待开发**（2026-10-23 · 本轮仅文档；**未写 Flutter 功能代码**）
 
 **用户故事**  
-作为跟课认读的孩子，打开「学习」后想一眼只盯着当前单词，用大按钮做认识/不认识，并感到比旧版「眼前一亮」。
+作为刚在学习页「眼前一亮」后去自测的孩子，希望自测仍像同一个 App：大题干纸卡、细进度、青绿主按钮，而不是回到密控件仪表盘。
 
 **范围（做）**
 
-- [x] focused study：大展示词 + 纸质抬升卡 + 细顶进度 + 底双肥胶囊 CTA
-- [x] 次要模式进 overflow/sheet；竖屏顶≤15% / 卡≥55% / CTA≥18%；宽屏卡左 CTA 右
-- [x] 答后 slide（主）+ CTA scale；保留 SRS/自测引擎/书单元入口/中文文案
-- [x] 验收：窄浅深 + 宽；对照 PRD W1–W11
+- [ ] focused quiz chrome：纸卡题干 + 细顶进度 + teal 主 CTA；Segmented/题池降噪但保留
+- [ ] 同轮小抛光：学习页喇叭高对比（R43 shot 空方块）
+- [ ] 保留五档 + QuizEngine + 错词池/再练行为；窄浅深 + 宽截图验收
 
 **范围（不做）**
 
-- 新题型、改 SRS、云同步、付费竞品库、紫靛渐变皮肤
+- 新题型、改 QuizEngine/SRS、付费竞品库、云代理、本分析轮写功能代码
+
+**RICE 后续（已入 P1，未开工）**
+
+- R45 候选：错词本→自测一键闭环（B03）或单元 overflow 可读（B04）
+- R46 候选：我的页信息层级（B05）；纸质到位可插队补沪教 ~7 词（B07）
 
 ---
-
 ## 已排期设计（开发前只读设计稿确认）
 
 | 轮次 | 主题 | 设计稿 | 状态 |
@@ -59,6 +62,9 @@
 | R41 | 词书列表推荐本置顶 | [design-r41.md](design-r41.md) | **已完成** |
 | R42 | 非推荐词书弱提示切换跟课 | [design-r42.md](design-r42.md) · [prd-learn-v2.md](prd-learn-v2.md) | **已完成** |
 | R43 | 学习页眼前一亮大改 | [design-r43.md](design-r43.md) · [prd-learn-wow.md](prd-learn-wow.md) | **已完成** |
+| R44 | 自测页视觉对齐学习页 | [design-r44.md](design-r44.md) · [prd-iteration-rice-2026-10-23.md](prd-iteration-rice-2026-10-23.md) | **设计就绪·待开发** |
+| R45 | 错词本→自测闭环（RICE #3） | 见迭代 PRD B03 | **已排期** |
+| R46 | 我的页信息层级（RICE #5） | 见迭代 PRD B05 | **已排期** |
 
 ---
 
@@ -90,6 +96,9 @@
 - [x] **R41** 词书列表推荐本置顶（见 design-r41；**UI 自验通过** 2026-10-23 · tip `25b00d3`）
 - [x] **R42** 非推荐词书弱提示切换跟课（见 design-r42 / prd-learn-v2；**UI 自验通过** 2026-10-23 · docs/shots/r42-ui-acceptance.md）
 - [x] **R43** 学习页眼前一亮大改（见 design-r43 / prd-learn-wow；**UI 自验通过** 2026-10-23 · docs/shots/r43-ui-acceptance.md）
+- [ ] **R44** 自测页视觉对齐学习页（RICE #1；design-r44；**待开发** · 分析轮已出 PRD）
+- [ ] **R45** 错词本→自测一键闭环（迭代 PRD B03；待 design）
+- [ ] **R46** 我的页信息层级（迭代 PRD B05；待 design）
 
 ## P2（体验）
 
@@ -347,6 +356,7 @@
 
 | 日期 | 说明 |
 |------|------|
+| 2026-10-23 | **RICE 迭代 PRD**：叫停未开工 quiz 编码；现状→缺口→RICE→prd-iteration-rice-2026-10-23；R44 设计就绪待开发；dev-rules §16 出需求门禁 |
 | 2026-10-23 | **R43 UI 自验通过**：学习页眼前一亮大改（大词卡+双 CTA+overflow；slide；teal 认识）· r43-ui-acceptance.md |
 | 2026-10-23 | **R42 UI 自验通过**：非推荐弱提示收口；R43 升可开发（未开工） |
 | 2026-10-23 | **R43 设计就绪（R42 后立刻）**：学习页眼前一亮大改 · prd-learn-wow.md + design-r43.md；不打断 R42 进行中勾选；免费工具 only |
@@ -453,3 +463,5 @@
 | 2026-10-23 | 插队：搜索「已经是这本」 SnackBar 落地 |
 | 2026-10-23 | 插队：认识/不认识 scale 0.98 落地 |
 | 2026-10-23 | Round 28 导出进度代码落地；四态截图；待 UI 验收 |
+
+

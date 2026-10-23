@@ -266,3 +266,17 @@
 - 卡住：SharedPreferences mock 单例 — 同文件多测 \setMockInitialValues\ 不重置 → 拆文件 / 单进程只 mock 一次
 - 预防：依赖 prefs 的 widget 测优先「一文件一测」或 setUpAll 一次 + setSelectedBookId 覆盖；勿中途再 setMockInitialValues
 - 工具：继续跳过付费 Refero/Mobbin
+
+
+## Round 43 · 学习页眼前一亮（2026-10-23）
+- 计划：focused study — 大词卡 + 点按揭晓 + 双肥 CTA + overflow；竖屏分区；slide 答后
+- 实际：feat `5579645` + docs shots `cbd8d79`；teal `#0d9488` 认识；未做 3D flip；测试合并单 testWidgets 避 prefs 污染
+- 注意：截图喇叭易呈空方块（对比弱）→ 记入 R44 B02
+- 预防：大改学习主列时同步规划自测 chrome，避免「学/测两个 App」
+
+## Round 44 · 迭代 RICE 分析（文档轮 · 2026-10-23）
+- 计划（原）：直接做自测视觉对齐编码
+- 实际（枢轴）：用户新规则 — 出需求必须 现状→缺口/缺陷/竞品→RICE→PRD→风险；**叫停功能代码**；交付 `prd-iteration-rice-2026-10-23.md` + `design-r44.md`（#1 仅设计）+ requirements/dev-rules §16
+- Top3 RICE：B01 自测对齐 (85) · B02 喇叭对比 (81，并 R44) · B03 错词闭环 (20→R45)
+- 风险：prefs 单测污染；截图图标 Soft-pass；无纸质不补词；Android/Vision 有设备再插队
+- 预防：无 RICE/PRD 不升「进行中」开发；分析轮与编码轮分 commit
