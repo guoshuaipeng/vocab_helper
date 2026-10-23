@@ -7,32 +7,31 @@
 
 ## 进行中
 
-### Round 44 · 自测页视觉对齐学习页（RICE #1）
+### Round 44 · 推荐词书沪教牛津2024七上补音标
 
-**迭代 PRD**：[docs/prd-iteration-rice-2026-10-23.md](prd-iteration-rice-2026-10-23.md)（强制：现状→缺口→RICE→PRD→风险）  
+**PRD**：[docs/prd-hj-ox-phonetic.md](prd-hj-ox-phonetic.md)（ChatPRD `ai-development-brief` 本地）  
 **设计稿**：[docs/design-r44.md](design-r44.md)  
-**状态**：**设计就绪 · 待开发**（2026-10-23 · 本轮仅文档；**未写 Flutter 功能代码**）
+**状态**：**进行中**（2026-10-23）
 
 **用户故事**  
-作为刚在学习页「眼前一亮」后去自测的孩子，希望自测仍像同一个 App：大题干纸卡、细进度、青绿主按钮，而不是回到密控件仪表盘。
+作为使用默认推荐本跟课的初一学生，希望学习页大词下能看到可靠音标，而不是空转已做好的音标 UI。
 
 **范围（做）**
 
-- [ ] focused quiz chrome：纸卡题干 + 细顶进度 + teal 主 CTA；Segmented/题池降噪但保留
-- [ ] 同轮小抛光：学习页喇叭高对比（R43 shot 空方块）
-- [ ] 保留五档 + QuizEngine + 错词池/再练行为；窄浅深 + 宽截图验收
+- [ ] hj-ox-7a-2024 单字词 phonetic ≥85%（`/…/` 英式优先；短语可空；禁瞎编）
+- [ ] 来源注明 dictionaryapi.dev + 抽查；单测门槛 + guitar/honest 等抽查
+- [ ] 学习页窄浅未揭晓截图可见音标；acceptance；自测不展示（回归）
 
 **范围（不做）**
 
-- 新题型、改 QuizEngine/SRS、付费竞品库、云代理、本分析轮写功能代码
+- 新题型、改 SRS、改 R43 布局、付费 MCP、改其它词书、用户编辑音标、云同步、凑满 337
 
 **RICE 后续（已入 P1，未开工）**
 
-- R45 候选：错词本→自测一键闭环（B03）或单元 overflow 可读（B04）
-- R46 候选：我的页信息层级（B05）；纸质到位可插队补沪教 ~7 词（B07）
+- 原「自测页视觉对齐学习页」顺延为 R45 候选（见 prd-iteration-rice B01）
+- R46 候选：错词本→自测闭环（B03）或单元 overflow 可读（B04）
 
----
-## 已排期设计（开发前只读设计稿确认）
+---## 已排期设计（开发前只读设计稿确认）
 
 | 轮次 | 主题 | 设计稿 | 状态 |
 |------|------|--------|------|
@@ -62,9 +61,10 @@
 | R41 | 词书列表推荐本置顶 | [design-r41.md](design-r41.md) | **已完成** |
 | R42 | 非推荐词书弱提示切换跟课 | [design-r42.md](design-r42.md) · [prd-learn-v2.md](prd-learn-v2.md) | **已完成** |
 | R43 | 学习页眼前一亮大改 | [design-r43.md](design-r43.md) · [prd-learn-wow.md](prd-learn-wow.md) | **已完成** |
-| R44 | 自测页视觉对齐学习页 | [design-r44.md](design-r44.md) · [prd-iteration-rice-2026-10-23.md](prd-iteration-rice-2026-10-23.md) | **设计就绪·待开发** |
-| R45 | 错词本→自测闭环（RICE #3） | 见迭代 PRD B03 | **已排期** |
-| R46 | 我的页信息层级（RICE #5） | 见迭代 PRD B05 | **已排期** |
+| R44 | 推荐本 hj-ox 补音标 | [design-r44.md](design-r44.md) · [prd-hj-ox-phonetic.md](prd-hj-ox-phonetic.md) | **进行中** |
+| R45 | 自测页视觉对齐学习页（原 R44 分析稿） | 见 prd-iteration-rice B01 | **已排期** |
+| R46 | 错词本→自测闭环（RICE #3） | 见迭代 PRD B03 | **已排期** |
+| R47 | 我的页信息层级（RICE #5） | 见迭代 PRD B05 | **已排期** |
 
 ---
 
@@ -96,9 +96,10 @@
 - [x] **R41** 词书列表推荐本置顶（见 design-r41；**UI 自验通过** 2026-10-23 · tip `25b00d3`）
 - [x] **R42** 非推荐词书弱提示切换跟课（见 design-r42 / prd-learn-v2；**UI 自验通过** 2026-10-23 · docs/shots/r42-ui-acceptance.md）
 - [x] **R43** 学习页眼前一亮大改（见 design-r43 / prd-learn-wow；**UI 自验通过** 2026-10-23 · docs/shots/r43-ui-acceptance.md）
-- [ ] **R44** 自测页视觉对齐学习页（RICE #1；design-r44；**待开发** · 分析轮已出 PRD）
-- [ ] **R45** 错词本→自测一键闭环（迭代 PRD B03；待 design）
-- [ ] **R46** 我的页信息层级（迭代 PRD B05；待 design）
+- [ ] **R44** 推荐本 hj-ox 补音标（prd-hj-ox-phonetic；design-r44；**进行中**）
+- [ ] **R45** 自测页视觉对齐学习页（迭代 PRD B01；待开发）
+- [ ] **R46** 错词本→自测一键闭环（迭代 PRD B03；待 design）
+- [ ] **R47** 我的页信息层级（迭代 PRD B05；待 design）
 
 ## P2（体验）
 
