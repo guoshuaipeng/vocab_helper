@@ -162,3 +162,10 @@
 - 改进：交验前在 requirements 把「进行中」收口模板备好（完成详情段），少一次文档补丁
 - 规则：样板先于全库；sourceLabel 与 JSON source 分层（已够用，不升 dev-rules）
 
+
+## Round 28（2026-10-23）
+- 计划：我的页导出本词书已学进度（纯文本预览 + 复制/分享）
+- 实际：ProgressExport + MeScreen bottom sheet；入口「导出本词书进度」；复制 SnackBar；四态预览截图
+- 卡住：首交截图只截到入口（RepaintBoundary 未包 modal overlay）→ UI 打回
+- 根因：shot root 在 Scaffold body 内，sheet 在 navigator overlay 外
+- 预防：含对话框/sheet 的截图用 MaterialApp.builder 包住 navigator；截前 pumpAndSettle；CJK 勿强绑 monospace
