@@ -105,7 +105,12 @@ class _BooksScreenState extends State<BooksScreen> {
   }
 
   Future<void> _selectBook(WordBookMeta b) async {
-    if (b.id == widget.selectedBookId) return;
+    if (b.id == widget.selectedBookId) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('已经是这本')),
+      );
+      return;
+    }
     final ok = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
