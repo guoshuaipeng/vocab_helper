@@ -3,10 +3,13 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 
 import '../models/word.dart';
+import 'cross_book_search.dart';
 
 class WordbookRepository {
   List<WordBookMeta>? _catalog;
   final Map<String, WordBook> _cache = {};
+  final CrossBookSearchIndex searchIndex = CrossBookSearchIndex();
+  Future<void>? _indexBuild;
 
   Future<List<WordBookMeta>> loadCatalog() async {
     if (_catalog != null) return _catalog!;
@@ -16,6 +19,15 @@ class WordbookRepository {
         .map((e) => WordBookMeta.fromJson(e as Map<String, dynamic>))
         .toList();
     return _catalog!;
+  }
+
+  /// Force catalog reload and rebuild search index (R24).
+  Future<List<WordBookMeta>> reloadCatalog() async {
+    _catalog = null;
+    searchIndex.clear();
+    final c = await loadCatalog();
+    await ensureSearchIndex();
+    return c;
   }
 
   Future<WordBook> loadBook(String id) async {
@@ -29,6 +41,42 @@ class WordbookRepository {
     final book = WordBook.fromJson(jsonDecode(raw) as Map<String, dynamic>).withUnits();
     _cache[id] = book;
     return book;
+  }
+
+  /// Start or await background index build after catalog is ready.
+  Future<void> ensureSearchIndex() {
+    if (searchIndex.isReady) return Future.value();
+    return _indexBuild ??= _buildSearchIndex();
+  }
+
+  Future<void> _buildSearchIndex() async {
+    try {
+      final catalog = await loadCatalog();
+      await searchIndex.build(
+        catalog: catalog,
+        loadBook: (meta) async {
+          try {
+            return await loadBook(meta.id);
+          } catch (_) {
+            return null;
+          }
+        },
+      );
+    } finally {
+      _indexBuild = null;
+    }
+  }
+
+  List<CrossBookSearchHit> search(
+    String query, {
+    String? currentBookId,
+    int limit = 40,
+  }) {
+    return searchIndex.query(
+      query,
+      currentBookId: currentBookId,
+      limit: limit,
+    );
   }
 
   List<String> versionsOf(List<WordBookMeta> catalog) {
