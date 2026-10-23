@@ -61,7 +61,7 @@
 | R41 | 词书列表推荐本置顶 | [design-r41.md](design-r41.md) | **已完成** |
 | R42 | 非推荐词书弱提示切换跟课 | [design-r42.md](design-r42.md) · [prd-learn-v2.md](prd-learn-v2.md) | **已完成** |
 | R43 | 学习页眼前一亮大改 | [design-r43.md](design-r43.md) · [prd-learn-wow.md](prd-learn-wow.md) | **已完成** |
-| R44 | 推荐本 hj-ox 补音标 | [design-r44.md](design-r44.md) · [prd-hj-ox-phonetic.md](prd-hj-ox-phonetic.md) | **进行中** |
+| R44 | 推荐本 hj-ox 补音标 | [design-r44.md](design-r44.md) · [prd-hj-ox-phonetic.md](prd-hj-ox-phonetic.md) | **已完成** |
 | R45 | 自测页视觉对齐学习页（原 R44 分析稿） | 见 prd-iteration-rice B01 | **已排期** |
 | R46 | 错词本→自测闭环（RICE #3） | 见迭代 PRD B03 | **已排期** |
 | R47 | 我的页信息层级（RICE #5） | 见迭代 PRD B05 | **已排期** |
@@ -96,7 +96,7 @@
 - [x] **R41** 词书列表推荐本置顶（见 design-r41；**UI 自验通过** 2026-10-23 · tip `25b00d3`）
 - [x] **R42** 非推荐词书弱提示切换跟课（见 design-r42 / prd-learn-v2；**UI 自验通过** 2026-10-23 · docs/shots/r42-ui-acceptance.md）
 - [x] **R43** 学习页眼前一亮大改（见 design-r43 / prd-learn-wow；**UI 自验通过** 2026-10-23 · docs/shots/r43-ui-acceptance.md）
-- [ ] **R44** 推荐本 hj-ox 补音标（prd-hj-ox-phonetic；design-r44；**进行中**）
+- [x] **R44** 推荐本 hj-ox 补音标（prd-hj-ox-phonetic；design-r44；**UI 自验通过** 2026-10-23 · 单字词 phonetic ~92.6%）
 - [ ] **R45** 自测页视觉对齐学习页（迭代 PRD B01；待开发）
 - [ ] **R46** 错词本→自测一键闭环（迭代 PRD B03；待 design）
 - [ ] **R47** 我的页信息层级（迭代 PRD B05；待 design）
@@ -110,6 +110,17 @@
 - [x] R23 我的页「连续打卡」周视图（UI 验收通过 2026-10-23）
 
 ## 已完成轮次（详情）
+
+
+### Round 44 · 推荐本补音标（已完成）
+
+**PRD**：[prd-hj-ox-phonetic.md](prd-hj-ox-phonetic.md) · **设计**：[design-r44.md](design-r44.md)  
+**状态**：**已完成**（UI 自验 · docs/shots/r44-ui-acceptance.md）
+
+- [x] 单字词 phonetic ≥85%（238/257 ≈ 92.6%；短语留空）
+- [x] /…/ IPA；dictionaryapi.dev + 抽查；学习页未揭晓可见音标
+- [x] 自测不展示音标（R21 约定）
+
 
 
 ### Round 36 · 沪教牛津 2024 七上词书（已完成）
