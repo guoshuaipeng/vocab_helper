@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/word.dart';
 import '../services/progress_store.dart';
 import '../services/review_queue.dart';
+import '../services/word_speaker.dart';
 import '../services/wordbook_repository.dart';
 
 class LearnScreen extends StatefulWidget {
@@ -12,12 +13,14 @@ class LearnScreen extends StatefulWidget {
     required this.repo,
     required this.bookId,
     required this.onNeedSetup,
+    this.speaker,
   });
 
   final ProgressStore store;
   final WordbookRepository repo;
   final String? bookId;
   final VoidCallback onNeedSetup;
+  final WordSpeaker? speaker;
 
   @override
   State<LearnScreen> createState() => _LearnScreenState();
@@ -29,11 +32,27 @@ class _LearnScreenState extends State<LearnScreen> {
   bool _flipped = false;
   bool _loading = true;
   String? _error;
+  late final WordSpeaker _speaker;
+  bool _ownsSpeaker = false;
 
   @override
   void initState() {
     super.initState();
+    if (widget.speaker != null) {
+      _speaker = widget.speaker!;
+    } else {
+      _speaker = FlutterWordSpeaker();
+      _ownsSpeaker = true;
+    }
     _boot();
+  }
+
+  @override
+  void dispose() {
+    if (_ownsSpeaker) {
+      _speaker.dispose();
+    }
+    super.dispose();
   }
 
   @override
@@ -104,6 +123,12 @@ class _LearnScreenState extends State<LearnScreen> {
     });
   }
 
+  Future<void> _speakCurrent() async {
+    final word = _queue?.current;
+    if (word == null) return;
+    await _speaker.speak(word.word);
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_loading) {
@@ -159,40 +184,53 @@ class _LearnScreenState extends State<LearnScreen> {
             child: GestureDetector(
               onTap: () => setState(() => _flipped = !_flipped),
               child: Card(
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 200),
-                      child: _flipped
-                          ? Column(
-                              key: const ValueKey('back'),
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(word.meaning, style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
-                                if ((word.example ?? '').isNotEmpty) ...[
-                                  const SizedBox(height: 16),
-                                  Text(word.example!, textAlign: TextAlign.center, style: const TextStyle(fontSize: 16)),
-                                ],
-                                const SizedBox(height: 12),
-                                Text('点按卡片可翻回', style: Theme.of(context).textTheme.bodySmall),
-                              ],
-                            )
-                          : Column(
-                              key: const ValueKey('front'),
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(word.word, style: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold)),
-                                if ((word.phonetic ?? '').isNotEmpty) ...[
-                                  const SizedBox(height: 8),
-                                  Text(word.phonetic!, style: Theme.of(context).textTheme.titleMedium),
-                                ],
-                                const SizedBox(height: 16),
-                                Text('点按卡片看中文', style: Theme.of(context).textTheme.bodySmall),
-                              ],
-                            ),
+                child: Stack(
+                  children: [
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(24),
+                        child: AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 200),
+                          child: _flipped
+                              ? Column(
+                                  key: const ValueKey('back'),
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(word.meaning, style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+                                    if ((word.example ?? '').isNotEmpty) ...[
+                                      const SizedBox(height: 16),
+                                      Text(word.example!, textAlign: TextAlign.center, style: const TextStyle(fontSize: 16)),
+                                    ],
+                                    const SizedBox(height: 12),
+                                    Text('点按卡片可翻回', style: Theme.of(context).textTheme.bodySmall),
+                                  ],
+                                )
+                              : Column(
+                                  key: const ValueKey('front'),
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(word.word, style: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold)),
+                                    if ((word.phonetic ?? '').isNotEmpty) ...[
+                                      const SizedBox(height: 8),
+                                      Text(word.phonetic!, style: Theme.of(context).textTheme.titleMedium),
+                                    ],
+                                    const SizedBox(height: 16),
+                                    Text('点按卡片看中文', style: Theme.of(context).textTheme.bodySmall),
+                                  ],
+                                ),
+                        ),
+                      ),
                     ),
-                  ),
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: IconButton(
+                        tooltip: '朗读',
+                        onPressed: _speakCurrent,
+                        icon: const Icon(Icons.volume_up),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
