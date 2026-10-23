@@ -255,3 +255,7 @@
 - 实际：`_buildBookSections`；空 version 省略；单测无需滚动；窄浅截图
 - 卡住：PowerShell 替换 books_screen 整段易空白符失败 → 整文件重写
 - 预防：大块 UI 重构优先整文件写入；推荐可见性与标签分两轮也可合并
+## 工具约定（2026-10-23）
+
+- 个人免费使用：产品参考 **跳过付费** Refero / Mobbin；PRD 用 ChatPRD 公开模板 `ai-development-brief` + 公开交互模式即可。
+- 单 bot「单词迭代」全流程，无跨 bot 交接。
