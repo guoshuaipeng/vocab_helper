@@ -2,7 +2,7 @@
 
 **模板**：ChatPRD public `ai-development-brief`  
 **产品**：单词小助手（Flutter · vocab_helper）  
-**状态**：已完成 · UI 自验通过  
+**状态**：已收口 · UI 自验通过  
 **对应 backlog**：迭代 PRD [`prd-iteration-rice-2026-10-23.md`](prd-iteration-rice-2026-10-23.md) **B10**（RICE **6.0**，排序 #10；B07/B09/B11–B12 跳过）  
 **设计**：[design-r51.md](design-r51.md)  
 **工具**：免费 ChatPRD 结构 + 公开竞品模式 + Impeccable；**禁用**付费 Refero/Mobbin、云端代理。

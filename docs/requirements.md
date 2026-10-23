@@ -110,9 +110,9 @@
 **PRD**：[prd-r51-export-discoverability.md](prd-r51-export-discoverability.md) · **设计**：[design-r51.md](design-r51.md) · **RICE** B10（6.0）  
 **状态**：**已完成**（UI 自验 · docs/shots/r51-ui-acceptance.md）
 
-- [x] 行动下可见「导出进度」纸卡行（无需展开更多）；key xport_progress / me_export_row
+- [x] 行动下可见「导出进度」纸卡行（无需展开更多）；key export_progress / me_export_row
 - [x] 更多设置副标「单元 · 口音 · 统计」；折叠内去掉重复导出
-- [x] 空进度 sheet 空态 xport_empty_hint；复制 Filled teal
+- [x] 空进度 sheet 空态 export_empty_hint；复制 Filled teal
 - [x] 截图 r51-entry 浅深 + empty/sheet；git push github master
 
 ### Round 50 · 今日达成视觉统一（已完成）
