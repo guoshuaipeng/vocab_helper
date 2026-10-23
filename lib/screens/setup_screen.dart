@@ -132,7 +132,7 @@ class _SetupScreenState extends State<SetupScreen> {
           ],
           const SizedBox(height: 16),
           Text(
-            '人教版初中为开源完整词库；小学人教版/外研版为公开词表精选，后续可继续扩充。',
+            '人教版初中为开源完整词库；小学人教版/外研版/沪教版为公开词表精选（沪教三年级较全），后续可继续扩充。',
             style: Theme.of(context).textTheme.bodySmall,
           ),
         ],

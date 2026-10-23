@@ -36,6 +36,20 @@ class ProgressStore {
 
   int learnedCount() => learnedIds().length;
 
+  int learnedCountForBook(String bookId) {
+    final prefix = '$bookId-';
+    return learnedIds().where((id) => id.startsWith(prefix)).length;
+  }
+
+  Future<int> clearLearnedForBook(String bookId) async {
+    final prefix = '$bookId-';
+    final before = learnedIds();
+    final kept = before.where((id) => !id.startsWith(prefix)).toList();
+    final removed = before.length - kept.length;
+    await _prefs.setStringList(_kLearned, kept);
+    return removed;
+  }
+
   int todayCount() {
     final today = _todayKey();
     if (_prefs.getString(_kTodayDate) != today) return 0;

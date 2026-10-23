@@ -134,6 +134,8 @@ class _LearnScreenState extends State<LearnScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             const Text('本轮单词都过完啦！', style: TextStyle(fontSize: 20)),
+            const SizedBox(height: 8),
+            Text('本轮认识 ${q.knownCount} 个', style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 12),
             FilledButton(onPressed: _boot, child: const Text('再来一轮')),
           ],

@@ -116,7 +116,7 @@ class _HomeShellState extends State<HomeShell> {
         selectedBookId: bookId,
         onChangeBook: widget.onChangeBook,
       ),
-      MeScreen(store: widget.store, onRefresh: () => setState(() {})),
+      MeScreen(store: widget.store, repo: widget.repo, onRefresh: () => setState(() {}), onChangeBook: widget.onChangeBook),
     ];
 
     return Scaffold(

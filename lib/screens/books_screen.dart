@@ -74,7 +74,7 @@ class _BooksScreenState extends State<BooksScreen> {
           );
         }),
         Text(
-          '小学词表为公开资料精选；初中人教版为开源完整词库。后续可继续补全各版本全书。',
+          '小学（人教/外研/沪教）词表为公开资料精选；初中人教版为开源完整词库。后续可继续补全各版本全书。',
           style: Theme.of(context).textTheme.bodySmall,
         ),
       ],
