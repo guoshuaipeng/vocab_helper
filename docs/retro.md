@@ -34,3 +34,9 @@
 
 - 补充：Windows 需 nuget.exe（已装到 C:\Users\user\tools）才能编 flutter_tts
 
+
+## Round 6（2026-10-23）
+- 计划：每日目标设置与进度展示
+- 实际：ProgressStore.dailyGoal；我的进度条；学习页今日进度；夹取 5～200
+- 卡住：无
+- 预防：目标数值做夹取，避免 0 除与离谱输入
