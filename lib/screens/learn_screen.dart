@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../models/word.dart';
@@ -53,6 +55,9 @@ class _LearnScreenState extends State<LearnScreen> {
   bool _speaking = false;
   late final WordSpeaker _speaker;
   bool _ownsSpeaker = false;
+  /// Quiet one-line hint under the unit picker (not a SnackBar).
+  String? _unitFilterHint;
+  Timer? _unitHintTimer;
 
   @override
   void initState() {
@@ -68,6 +73,7 @@ class _LearnScreenState extends State<LearnScreen> {
 
   @override
   void dispose() {
+    _unitHintTimer?.cancel();
     if (_ownsSpeaker) {
       _speaker.dispose();
     }
@@ -244,9 +250,31 @@ class _LearnScreenState extends State<LearnScreen> {
     await _boot();
     if (!mounted) return;
     final msg = (unit == null || unit.isEmpty) ? '显示全部' : '已筛选 · $unit';
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(msg), duration: const Duration(milliseconds: 1200)),
+    _unitHintTimer?.cancel();
+    setState(() => _unitFilterHint = msg);
+    _unitHintTimer = Timer(const Duration(milliseconds: 1400), () {
+      if (!mounted) return;
+      if (_unitFilterHint == msg) setState(() => _unitFilterHint = null);
+    });
+  }
+
+  Future<void> _openUnitPicker({
+    required List<String> units,
+    required String? selectedUnit,
+  }) async {
+    final picked = await showModalBottomSheet<String>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (ctx) {
+        return _UnitPickerSheet(
+          units: units,
+          selectedUnit: selectedUnit,
+        );
+      },
     );
+    if (!mounted || picked == null) return; // dismissed without choice
+    await _pickUnit(picked == _UnitPickerSheet.allSentinel ? null : picked);
   }
 
   Future<void> _maybeAutoSpeak() async {
@@ -422,33 +450,38 @@ class _LearnScreenState extends State<LearnScreen> {
           ),
           if ((!widget.reviewWrongOnly || widget.reviewWrongUnitScoped) && units.isNotEmpty) ...[
             const SizedBox(height: 8),
-            SizedBox(
-              height: 40,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 8),
-                    child: FilterChip(
-                      label: const Text('全部'),
-                      selected: selectedUnit == null,
-                      onSelected: (_) => _pickUnit(null),
-                    ),
-                  ),
-                  ...units.map((u) {
-                    final selected = selectedUnit == u;
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 8),
-                      child: FilterChip(
-                        label: Text(u),
-                        selected: selected,
-                        onSelected: (_) => _pickUnit(selected ? null : u),
-                      ),
-                    );
-                  }),
-                ],
+            Align(
+              alignment: Alignment.centerLeft,
+              child: ActionChip(
+                key: const ValueKey('unit_picker_button'),
+                avatar: Icon(
+                  Icons.filter_list,
+                  size: 18,
+                  color: scheme.onSurfaceVariant,
+                ),
+                label: Text(
+                  selectedUnit == null || selectedUnit.isEmpty
+                      ? '全部 · ${units.length} 单元 ▾'
+                      : '$selectedUnit ▾',
+                ),
+                onPressed: () => _openUnitPicker(units: units, selectedUnit: selectedUnit),
               ),
             ),
+            if (_unitFilterHint != null) ...[
+              const SizedBox(height: 4),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  _unitFilterHint!,
+                  key: const ValueKey('unit_filter_hint'),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: scheme.onSurfaceVariant,
+                      ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
           ],
           const SizedBox(height: 8),
           Expanded(
@@ -818,6 +851,72 @@ class _PressScaleState extends State<_PressScale> {
         duration: const Duration(milliseconds: 150),
         curve: Curves.easeOut,
         child: widget.child,
+      ),
+    );
+  }
+}
+
+
+class _UnitPickerSheet extends StatelessWidget {
+  const _UnitPickerSheet({
+    required this.units,
+    required this.selectedUnit,
+  });
+
+  /// Pop value for「全部」(clears filter). Barrier dismiss returns null.
+  static const allSentinel = '__all__';
+
+  final List<String> units;
+  final String? selectedUnit;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final maxH = MediaQuery.sizeOf(context).height * 0.55;
+    final selected = selectedUnit;
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
+              child: Text('选择单元', style: Theme.of(context).textTheme.titleLarge),
+            ),
+            ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: maxH),
+              child: ListView(
+                key: const ValueKey('unit_picker_list'),
+                shrinkWrap: true,
+                children: [
+                  ListTile(
+                    key: const ValueKey('unit_picker_all'),
+                    title: const Text('全部'),
+                    subtitle: Text('共 ${units.length} 个单元'),
+                    trailing: (selected == null || selected.isEmpty)
+                        ? Icon(Icons.check, color: scheme.primary)
+                        : null,
+                    selected: selected == null || selected.isEmpty,
+                    onTap: () => Navigator.pop(context, allSentinel),
+                  ),
+                  const Divider(height: 1),
+                  ...units.map((u) {
+                    final isSel = selected == u;
+                    return ListTile(
+                      key: ValueKey('unit_picker_row_$u'),
+                      title: Text(u),
+                      trailing: isSel ? Icon(Icons.check, color: scheme.primary) : null,
+                      selected: isSel,
+                      onTap: () => Navigator.pop(context, u),
+                    );
+                  }),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
