@@ -288,3 +288,10 @@
 - Top3 RICE：B01 自测对齐 (85) · B02 喇叭对比 (81，并 R44) · B03 错词闭环 (20→R45)
 - 风险：prefs 单测污染；截图图标 Soft-pass；无纸质不补词；Android/Vision 有设备再插队
 - 预防：无 RICE/PRD 不升「进行中」开发；分析轮与编码轮分 commit
+
+## Round 45 · 自测页视觉对齐学习页（2026-10-23）
+- 计划：B01 RICE 85.3 — 自测 chrome 对齐 R43 学习页（纸卡/细进度/teal）；引擎零改
+- 实际：`quiz_screen` 抽 `_quizPaper` + `_quizTeal`；Card→纸卡；Filled/答对/结束%→teal；Segmented 恒 compact；喇叭 onSurface
+- 测试：quiz 套件绿；word-pick 宽短视口 700→560（compact 腾出高度后仍要 grid）；listen 提示改 textContaining（文案本含「/ 听写」）
+- Soft-pass：截图喇叭字形可能空方块（对比已加强）；未做宽屏双栏
+- 预防：学/测锁色共用常量注释；改 chrome 密度后复查依赖「空间紧」的 grid/list 断言视口高度

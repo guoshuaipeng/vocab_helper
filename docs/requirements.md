@@ -7,7 +7,7 @@
 
 ## 进行中
 
-（空 · R44 已收口 2026-10-23）
+（空 · R45 已收口 2026-10-23）
 
 ---
 
@@ -42,7 +42,7 @@
 | R42 | 非推荐词书弱提示切换跟课 | [design-r42.md](design-r42.md) · [prd-learn-v2.md](prd-learn-v2.md) | **已完成** |
 | R43 | 学习页眼前一亮大改 | [design-r43.md](design-r43.md) · [prd-learn-wow.md](prd-learn-wow.md) | **已完成** |
 | R44 | 推荐本 hj-ox 补音标 | [design-r44.md](design-r44.md) · [prd-hj-ox-phonetic.md](prd-hj-ox-phonetic.md) | **已完成** |
-| R45 | 自测页视觉对齐学习页（原 R44 分析稿） | 见 prd-iteration-rice B01 | **已排期** |
+| R45 | 自测页视觉对齐学习页（B01） | [design-r45.md](design-r45.md) · [prd-r45-quiz-chrome.md](prd-r45-quiz-chrome.md) | **已完成** |
 | R46 | 错词本→自测闭环（RICE #3） | 见迭代 PRD B03 | **已排期** |
 | R47 | 我的页信息层级（RICE #5） | 见迭代 PRD B05 | **已排期** |
 
@@ -77,7 +77,7 @@
 - [x] **R42** 非推荐词书弱提示切换跟课（见 design-r42 / prd-learn-v2；**UI 自验通过** 2026-10-23 · docs/shots/r42-ui-acceptance.md）
 - [x] **R43** 学习页眼前一亮大改（见 design-r43 / prd-learn-wow；**UI 自验通过** 2026-10-23 · docs/shots/r43-ui-acceptance.md）
 - [x] **R44** 推荐本 hj-ox 补音标（prd-hj-ox-phonetic；design-r44；**UI 自验通过** 2026-10-23 · 单字词 phonetic ~92.6%）
-- [ ] **R45** 自测页视觉对齐学习页（迭代 PRD B01；待开发）
+- [x] **R45** 自测页视觉对齐学习页（迭代 PRD B01；**UI 自验通过** 2026-10-23 · docs/shots/r45-ui-acceptance.md）
 - [ ] **R46** 错词本→自测一键闭环（迭代 PRD B03；待 design）
 - [ ] **R47** 我的页信息层级（迭代 PRD B05；待 design）
 
@@ -91,6 +91,19 @@
 
 ## 已完成轮次（详情）
 
+
+
+### Round 45 · 自测页视觉对齐学习页（已完成）
+
+**PRD**：[prd-r45-quiz-chrome.md](prd-r45-quiz-chrome.md) · **设计**：[design-r45.md](design-r45.md) · **RICE** B01（85.3）  
+**状态**：**已完成**（UI 自验 · docs/shots/r45-ui-acceptance.md）
+
+- [x] 题干纸卡（surfaceContainerLow/High · r24 · outlineVariant 0.45）对齐学习页
+- [x] 细进度 minHeight 4；书名/题号 bodySmall + onSurfaceVariant
+- [x] Segmented 窄宽均 compact；Chip/五档能力保留
+- [x] 主 Filled CTA / 答对边 / 结束百分数 → teal `#0D9488`
+- [x] ValueKey 全保留；QuizEngine 行为零改动
+- [x] 截图 r45-narrow-light/dark + end-narrow-light；`git push github master`
 
 ### Round 44 · 推荐本补音标（已完成）
 
@@ -351,6 +364,7 @@
 | 2026-10-23 | **RICE 迭代 PRD**：叫停未开工 quiz 编码；现状→缺口→RICE→prd-iteration-rice-2026-10-23；R44 设计就绪待开发；dev-rules §16 出需求门禁 |
 | 2026-10-23 | **R43 UI 自验通过**：学习页眼前一亮大改（大词卡+双 CTA+overflow；slide；teal 认识）· r43-ui-acceptance.md |
 | 2026-10-23 | **R42 UI 自验通过**：非推荐弱提示收口；R43 升可开发（未开工） |
+| 2026-10-23 | **R45 UI 自验通过**：自测 chrome 对齐学习页（B01）；纸卡+teal CTA；tip 见 HEAD；进行中清空 |
 | 2026-10-23 | **R43 设计就绪（R42 后立刻）**：学习页眼前一亮大改 · prd-learn-wow.md + design-r43.md；不打断 R42 进行中勾选；免费工具 only |
 | 2026-10-23 | **R40 补齐**：pep-ps-3 keep 测 + Setup/Books 四态截图；docs/shots/r40-ui-acceptance.md |
 | 2026-10-23 | **R42 升进行中**：非推荐词书弱提示 + `prd-learn-v2.md`（ChatPRD brief）；跳过付费 Refero/Mobbin；单 bot 全流程 |
