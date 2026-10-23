@@ -399,27 +399,55 @@ class _QuizScreenState extends State<QuizScreen> {
     if (_index >= _questions.length) {
       final total = _correctCount + _wrongCount;
       final rate = total == 0 ? 0 : ((_correctCount * 100) / total).round();
+      final scheme = Theme.of(context).colorScheme;
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('本轮自测完成', style: Theme.of(context).textTheme.headlineSmall),
-              const SizedBox(height: 12),
-              Text('正确 $_correctCount / $total（$rate%）', style: Theme.of(context).textTheme.titleMedium),
-              if (rate < 60) ...[
-                const SizedBox(height: 8),
-                Text('先回认读过一遍再测，记得更牢。', style: Theme.of(context).textTheme.bodyMedium, textAlign: TextAlign.center),
-              ] else if (rate >= 90) ...[
-                const SizedBox(height: 8),
-                Text('很棒，可以换下一单元了。', style: Theme.of(context).textTheme.bodyMedium, textAlign: TextAlign.center),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 520),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  '本轮自测完成',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  '$rate%',
+                  key: const ValueKey('quiz_end_rate'),
+                  style: TextStyle(
+                    fontSize: 36,
+                    fontWeight: FontWeight.w600,
+                    color: scheme.primary,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  '正确 $_correctCount / $total',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                if (rate < 60) ...[
+                  const SizedBox(height: 8),
+                  Text('先回认读过一遍再测，记得更牢。', style: Theme.of(context).textTheme.bodyMedium, textAlign: TextAlign.center),
+                ] else if (rate >= 90) ...[
+                  const SizedBox(height: 8),
+                  Text('很棒，可以换下一单元了。', style: Theme.of(context).textTheme.bodyMedium, textAlign: TextAlign.center),
+                ],
+                const SizedBox(height: 20),
+                FilledButton(
+                  key: const ValueKey('quiz_end_retry'),
+                  onPressed: _prepareAndBoot,
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 14),
+                    child: Text('再测一轮', style: TextStyle(fontSize: 18)),
+                  ),
+                ),
+                if (!widget.embedded)
+                  TextButton(onPressed: () => Navigator.pop(context), child: const Text('返回')),
               ],
-              const SizedBox(height: 16),
-              FilledButton(onPressed: _prepareAndBoot, child: const Text('再测一轮')),
-              if (!widget.embedded)
-                TextButton(onPressed: () => Navigator.pop(context), child: const Text('返回')),
-            ],
+            ),
           ),
         ),
       );
