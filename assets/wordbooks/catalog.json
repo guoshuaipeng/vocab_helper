@@ -1,0 +1,95 @@
+{
+  "books": [
+    {
+      "file": "pep-ps-3.json",
+      "id": "pep-ps-3",
+      "grade": "三年级",
+      "version": "人教版PEP",
+      "title": "人教版PEP · 三年级"
+    },
+    {
+      "file": "pep-ps-4.json",
+      "id": "pep-ps-4",
+      "grade": "四年级",
+      "version": "人教版PEP",
+      "title": "人教版PEP · 四年级"
+    },
+    {
+      "file": "pep-ps-5.json",
+      "id": "pep-ps-5",
+      "grade": "五年级",
+      "version": "人教版PEP",
+      "title": "人教版PEP · 五年级"
+    },
+    {
+      "file": "pep-ps-6.json",
+      "id": "pep-ps-6",
+      "grade": "六年级",
+      "version": "人教版PEP",
+      "title": "人教版PEP · 六年级"
+    },
+    {
+      "file": "wy-ps-3.json",
+      "id": "wy-ps-3",
+      "grade": "三年级",
+      "version": "外研版",
+      "title": "外研版 · 三年级（精选）"
+    },
+    {
+      "file": "wy-ps-4.json",
+      "id": "wy-ps-4",
+      "grade": "四年级",
+      "version": "外研版",
+      "title": "外研版 · 四年级（精选）"
+    },
+    {
+      "file": "wy-ps-5.json",
+      "id": "wy-ps-5",
+      "grade": "五年级",
+      "version": "外研版",
+      "title": "外研版 · 五年级（精选）"
+    },
+    {
+      "file": "wy-ps-6.json",
+      "id": "wy-ps-6",
+      "grade": "六年级",
+      "version": "外研版",
+      "title": "外研版 · 六年级（精选）"
+    },
+    {
+      "file": "pep_jh_7a_app.json",
+      "id": "pep-jh-7a",
+      "grade": "七年级上",
+      "version": "人教版初中",
+      "title": "人教版初中 · 七年级上"
+    },
+    {
+      "file": "pep_jh_7b_app.json",
+      "id": "pep-jh-7b",
+      "grade": "七年级下",
+      "version": "人教版初中",
+      "title": "人教版初中 · 七年级下"
+    },
+    {
+      "file": "pep_jh_8a_app.json",
+      "id": "pep-jh-8a",
+      "grade": "八年级上",
+      "version": "人教版初中",
+      "title": "人教版初中 · 八年级上"
+    },
+    {
+      "file": "pep_jh_8b_app.json",
+      "id": "pep-jh-8b",
+      "grade": "八年级下",
+      "version": "人教版初中",
+      "title": "人教版初中 · 八年级下"
+    },
+    {
+      "file": "pep_jh_9_app.json",
+      "id": "pep-jh-9",
+      "grade": "九年级",
+      "version": "人教版初中",
+      "title": "人教版初中 · 九年级"
+    }
+  ]
+}

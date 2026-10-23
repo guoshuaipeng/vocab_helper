@@ -10,11 +10,20 @@ class ProgressStore {
   static const _kTodayDate = 'today_date';
   static const _kStreak = 'streak_days';
   static const _kLastActive = 'last_active_date';
+  static const _kBookId = 'selected_book_id';
 
   static Future<ProgressStore> open() async {
     final prefs = await SharedPreferences.getInstance();
     return ProgressStore(prefs);
   }
+
+  String? selectedBookId() => _prefs.getString(_kBookId);
+
+  Future<void> setSelectedBookId(String id) async {
+    await _prefs.setString(_kBookId, id);
+  }
+
+  bool get hasSelectedBook => selectedBookId() != null && selectedBookId()!.isNotEmpty;
 
   String _todayKey() {
     final n = DateTime.now();

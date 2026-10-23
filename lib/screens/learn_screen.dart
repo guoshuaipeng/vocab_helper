@@ -1,22 +1,33 @@
 import 'package:flutter/material.dart';
 
-import '../data/seed_words.dart';
+import '../models/word.dart';
 import '../services/progress_store.dart';
 import '../services/review_queue.dart';
-import '../models/word.dart';
+import '../services/wordbook_repository.dart';
 
 class LearnScreen extends StatefulWidget {
-  const LearnScreen({super.key, required this.store});
+  const LearnScreen({
+    super.key,
+    required this.store,
+    required this.repo,
+    required this.bookId,
+    required this.onNeedSetup,
+  });
 
   final ProgressStore store;
+  final WordbookRepository repo;
+  final String? bookId;
+  final VoidCallback onNeedSetup;
 
   @override
   State<LearnScreen> createState() => _LearnScreenState();
 }
 
 class _LearnScreenState extends State<LearnScreen> {
-  late ReviewQueue _queue;
+  ReviewQueue? _queue;
+  WordBook? _book;
   bool _flipped = false;
+  bool _loading = true;
   String? _error;
 
   @override
@@ -25,44 +36,79 @@ class _LearnScreenState extends State<LearnScreen> {
     _boot();
   }
 
-  void _boot() {
+  @override
+  void didUpdateWidget(covariant LearnScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.bookId != widget.bookId) {
+      _boot();
+    }
+  }
+
+  Future<void> _boot() async {
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
     try {
-      if (seedWords.isEmpty) {
-        setState(() => _error = '词库为空，请稍后再试。');
+      final id = widget.bookId;
+      if (id == null || id.isEmpty) {
+        setState(() {
+          _loading = false;
+          _error = '请先选择教材版本和年级';
+        });
+        return;
+      }
+      final book = await widget.repo.loadBook(id);
+      if (book.words.isEmpty) {
+        setState(() {
+          _loading = false;
+          _error = '这本词书还没有单词';
+        });
         return;
       }
       final learned = widget.store.learnedIds();
-      final pending = seedWords.where((w) => !learned.contains(w.id)).toList();
-      final list = pending.isEmpty ? List<Word>.from(seedWords) : pending;
-      _queue = ReviewQueue(list);
-      _flipped = false;
-      _error = null;
-      widget.store.touchActive();
-      setState(() {});
+      final pending = book.words.where((w) => !learned.contains(w.id)).toList();
+      final list = pending.isEmpty ? List<Word>.from(book.words) : pending;
+      await widget.store.touchActive();
+      setState(() {
+        _book = book;
+        _queue = ReviewQueue(list);
+        _flipped = false;
+        _loading = false;
+      });
     } catch (e) {
-      setState(() => _error = '加载失败：$e');
+      setState(() {
+        _loading = false;
+        _error = '加载失败：$e';
+      });
     }
   }
 
   Future<void> _onKnown() async {
-    final cur = _queue.current;
-    if (cur == null) return;
+    final q = _queue;
+    final cur = q?.current;
+    if (q == null || cur == null) return;
     await widget.store.markLearned(cur.id);
     setState(() {
-      _queue.markKnown();
+      q.markKnown();
       _flipped = false;
     });
   }
 
   void _onUnknown() {
+    final q = _queue;
+    if (q == null) return;
     setState(() {
-      _queue.markUnknown();
+      q.markUnknown();
       _flipped = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_loading) {
+      return const Center(child: CircularProgressIndicator());
+    }
     if (_error != null) {
       return Center(
         child: Padding(
@@ -72,14 +118,16 @@ class _LearnScreenState extends State<LearnScreen> {
             children: [
               Text(_error!, textAlign: TextAlign.center),
               const SizedBox(height: 12),
-              FilledButton(onPressed: _boot, child: const Text('重试')),
+              FilledButton(onPressed: widget.onNeedSetup, child: const Text('去选择年级')),
+              TextButton(onPressed: _boot, child: const Text('重试')),
             ],
           ),
         ),
       );
     }
 
-    final word = _queue.current;
+    final q = _queue!;
+    final word = q.current;
     if (word == null) {
       return Center(
         child: Column(
@@ -100,7 +148,7 @@ class _LearnScreenState extends State<LearnScreen> {
           Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              '剩余 ${_queue.remaining} 词 · 本轮认识 ${_queue.knownCount}',
+              '${_book?.title ?? ''} · 剩余 ${q.remaining} · 本轮认识 ${q.knownCount}',
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ),
@@ -120,7 +168,7 @@ class _LearnScreenState extends State<LearnScreen> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(word.meaning, style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
-                                if (word.example != null) ...[
+                                if ((word.example ?? '').isNotEmpty) ...[
                                   const SizedBox(height: 16),
                                   Text(word.example!, textAlign: TextAlign.center, style: const TextStyle(fontSize: 16)),
                                 ],
@@ -133,7 +181,7 @@ class _LearnScreenState extends State<LearnScreen> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(word.word, style: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold)),
-                                if (word.phonetic != null) ...[
+                                if ((word.phonetic ?? '').isNotEmpty) ...[
                                   const SizedBox(height: 8),
                                   Text(word.phonetic!, style: Theme.of(context).textTheme.titleMedium),
                                 ],
