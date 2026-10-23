@@ -795,6 +795,7 @@ class _LearnScreenState extends State<LearnScreen> {
         }
 
         Widget ctaRow({required bool vertical}) {
+          // R43.1: bare thumb glyphs beside label (no circular icon frame); stadium pills.
           final unknown = _PressScale(
             child: OutlinedButton(
               key: const ValueKey('learn_unknown'),
@@ -806,8 +807,27 @@ class _LearnScreenState extends State<LearnScreen> {
               ),
               onPressed: _flashKind != null ? null : _onUnknown,
               child: Padding(
-                padding: EdgeInsets.symmetric(vertical: vertical ? 18 : 14),
-                child: const Text('不认识', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                padding: EdgeInsets.symmetric(vertical: vertical ? 16 : 12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.thumb_down_alt_outlined,
+                      size: 22,
+                      color: scheme.onSurfaceVariant,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      '不认识',
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w600,
+                        color: scheme.onSurface,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           );
@@ -823,8 +843,23 @@ class _LearnScreenState extends State<LearnScreen> {
               ),
               onPressed: _flashKind != null ? null : _onKnown,
               child: Padding(
-                padding: EdgeInsets.symmetric(vertical: vertical ? 18 : 14),
-                child: const Text('认识', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+                padding: EdgeInsets.symmetric(vertical: vertical ? 16 : 12),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.thumb_up_alt, size: 22, color: Colors.white),
+                    SizedBox(width: 8),
+                    Text(
+                      '认识',
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           );
