@@ -72,3 +72,26 @@ void main() {
     expect(store.dueReviewCountForBook('pep-ps-3', now: DateTime(2026, 10, 24)), 1);
   });
 }
+
+  test('first known after unknown stays 1-day bucket', () async {
+    final store = await ProgressStore.open();
+    await store.markWrong('b-1', now: DateTime(2026, 10, 23));
+    await store.markLearned('b-1', now: DateTime(2026, 10, 23));
+    expect(store.reviewStage('b-1'), 0);
+    expect(store.reviewAt('b-1'), '2026-10-24');
+  });
+
+  test('third and fourth known use 7-day buckets', () async {
+    final store = await ProgressStore.open();
+    await store.markLearned('b-1', now: DateTime(2026, 10, 1));
+    await store.markLearned('b-1', now: DateTime(2026, 10, 2)); // stage1 +3
+    await store.markLearned('b-1', now: DateTime(2026, 10, 5)); // stage2 +7
+    expect(store.reviewStage('b-1'), 2);
+    expect(store.reviewAt('b-1'), '2026-10-12');
+    await store.markLearned('b-1', now: DateTime(2026, 10, 12)); // stage3 +7
+    expect(store.reviewStage('b-1'), 3);
+    expect(store.reviewAt('b-1'), '2026-10-19');
+    await store.markLearned('b-1', now: DateTime(2026, 10, 19)); // stay 3 +7
+    expect(store.reviewStage('b-1'), 3);
+    expect(store.reviewAt('b-1'), '2026-10-26');
+  });

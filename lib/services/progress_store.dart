@@ -219,9 +219,14 @@ class ProgressStore {
     if (first) {
       ids.add(id);
       await _prefs.setStringList(_kLearned, ids.toList());
+      await bumpTodayCount();
+      // 首次认识：固定进 1 天桶（即使此前点过「不认识」写过 stage）
+      final today = dateKey(now);
+      await _setReview(id, stage: 0, at: addDaysToDateKey(today, daysForStage(0)));
+    } else {
+      await bumpTodayCount();
+      await advanceReviewAfterKnown(id, now: now);
     }
-    await bumpTodayCount();
-    await advanceReviewAfterKnown(id, now: now);
     await removeWrong(id);
   }
 
