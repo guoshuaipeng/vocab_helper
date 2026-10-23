@@ -30,10 +30,92 @@ class ProgressStore {
 
   bool get hasSelectedBook => selectedBookId() != null && selectedBookId()!.isNotEmpty;
 
-  String _todayKey() {
-    final n = DateTime.now();
+  String _todayKey() => dateKey();
+
+
+  static const _kReviewAtPrefix = 'review_at_';
+  static const _kReviewStagePrefix = 'review_stage_';
+
+  /// Interval days for stage 0/1/2/3 → 1 / 3 / 7 / 7.
+  static int daysForStage(int stage) {
+    const days = [1, 3, 7, 7];
+    final i = stage.clamp(0, 3);
+    return days[i];
+  }
+
+  static String dateKey([DateTime? now]) {
+    final n = now ?? DateTime.now();
     return '${n.year}-${n.month.toString().padLeft(2, '0')}-${n.day.toString().padLeft(2, '0')}';
   }
+
+  static String addDaysToDateKey(String ymd, int days) {
+    final d = DateTime.tryParse(ymd) ?? DateTime.now();
+    final n = d.add(Duration(days: days));
+    return dateKey(n);
+  }
+
+  String? reviewAt(String wordId) => _prefs.getString('$_kReviewAtPrefix$wordId');
+
+  int? reviewStage(String wordId) => _prefs.getInt('$_kReviewStagePrefix$wordId');
+
+  bool isReviewDue(String wordId, {DateTime? now}) {
+    final at = reviewAt(wordId);
+    if (at == null || at.isEmpty) return false;
+    return at.compareTo(dateKey(now)) <= 0;
+  }
+
+  /// Never learned, or learned but due today/overdue.
+  bool inLearnQueue(String wordId, {DateTime? now}) {
+    if (!learnedIds().contains(wordId)) return true;
+    return isReviewDue(wordId, now: now);
+  }
+
+  int dueReviewCountForBook(String bookId, {DateTime? now}) {
+    final prefix = '$bookId-';
+    final today = dateKey(now);
+    var n = 0;
+    for (final id in learnedIds()) {
+      if (!id.startsWith(prefix)) continue;
+      final at = reviewAt(id);
+      if (at != null && at.compareTo(today) <= 0) n++;
+    }
+    return n;
+  }
+
+  int newWordCountInScope(Iterable<String> wordIds) {
+    final learned = learnedIds();
+    return wordIds.where((id) => !learned.contains(id)).length;
+  }
+
+  Future<void> _setReview(String wordId, {required int stage, required String at}) async {
+    await _prefs.setInt('$_kReviewStagePrefix$wordId', stage.clamp(0, 3));
+    await _prefs.setString('$_kReviewAtPrefix$wordId', at);
+  }
+
+  Future<void> _clearReview(String wordId) async {
+    await _prefs.remove('$_kReviewStagePrefix$wordId');
+    await _prefs.remove('$_kReviewAtPrefix$wordId');
+  }
+
+  /// After 「认识」: first time → stage0 +1d; due again → stage+1 capped, bucket days.
+  Future<void> advanceReviewAfterKnown(String wordId, {DateTime? now}) async {
+    final today = dateKey(now);
+    final cur = reviewStage(wordId);
+    if (cur == null) {
+      await _setReview(wordId, stage: 0, at: addDaysToDateKey(today, daysForStage(0)));
+    } else {
+      final next = (cur + 1).clamp(0, 3);
+      await _setReview(wordId, stage: next, at: addDaysToDateKey(today, daysForStage(next)));
+    }
+  }
+
+  /// 「不认识」/自测选错：回 1 天桶.
+  Future<void> resetReviewAfterUnknown(String wordId, {DateTime? now}) async {
+    final today = dateKey(now);
+    await _setReview(wordId, stage: 0, at: addDaysToDateKey(today, daysForStage(0)));
+  }
+
+
 
   Set<String> learnedIds() {
     return (_prefs.getStringList(_kLearned) ?? const <String>[]).toSet();
@@ -60,9 +142,19 @@ class ProgressStore {
   Future<int> clearLearnedForBook(String bookId) async {
     final prefix = '$bookId-';
     final before = learnedIds();
+    final removedIds = before.where((id) => id.startsWith(prefix)).toList();
     final kept = before.where((id) => !id.startsWith(prefix)).toList();
-    final removed = before.length - kept.length;
+    final removed = removedIds.length;
     await _prefs.setStringList(_kLearned, kept);
+    for (final id in removedIds) {
+      await _clearReview(id);
+    }
+    // Also clear orphan review keys for this book prefix
+    for (final key in _prefs.getKeys()) {
+      if (key.startsWith('$_kReviewAtPrefix$prefix') || key.startsWith('$_kReviewStagePrefix$prefix')) {
+        await _prefs.remove(key);
+      }
+    }
     return removed;
   }
 
@@ -121,21 +213,15 @@ class ProgressStore {
     }
   }
 
-  Future<void> markLearned(String id) async {
+  Future<void> markLearned(String id, {DateTime? now}) async {
     final ids = learnedIds();
-    if (!ids.contains(id)) {
+    final first = !ids.contains(id);
+    if (first) {
       ids.add(id);
       await _prefs.setStringList(_kLearned, ids.toList());
-
-      final today = _todayKey();
-      if (_prefs.getString(_kTodayDate) != today) {
-        await _prefs.setString(_kTodayDate, today);
-        await _prefs.setInt(_kTodayCount, 1);
-      } else {
-        await _prefs.setInt(_kTodayCount, todayCount() + 1);
-      }
-      await _updateStreak(today);
     }
+    await bumpTodayCount();
+    await advanceReviewAfterKnown(id, now: now);
     await removeWrong(id);
   }
 
@@ -151,11 +237,13 @@ class ProgressStore {
     }
     await _updateStreak(today);
   }
-  Future<void> markWrong(String id) async {
+  Future<void> markWrong(String id, {DateTime? now}) async {
     final ids = wrongIds();
-    if (ids.contains(id)) return;
-    ids.add(id);
-    await _prefs.setStringList(_kWrong, ids.toList());
+    if (!ids.contains(id)) {
+      ids.add(id);
+      await _prefs.setStringList(_kWrong, ids.toList());
+    }
+    await resetReviewAfterUnknown(id, now: now);
   }
 
   Future<void> removeWrong(String id) async {
