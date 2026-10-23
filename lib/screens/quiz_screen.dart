@@ -68,6 +68,10 @@ class _QuizScreenState extends State<QuizScreen> {
   /// R32: quiz pool = wrong words only (respects unit when mode/unit filter).
   bool _poolWrongOnly = false;
   int _wrongInScope = 0;
+  /// R35: this-round wrong word ids (first-wrong order; correct removes).
+  List<String> _sessionWrongIds = [];
+  /// R35: currently in a wrong-retry round (variant locked).
+  bool _retryRound = false;
 
   @override
   void initState() {
@@ -118,6 +122,8 @@ class _QuizScreenState extends State<QuizScreen> {
         _spellCtrl.clear();
         _correctCount = 0;
         _wrongCount = 0;
+        _sessionWrongIds = [];
+        _retryRound = false;
         _loading = false;
         _error = widget.seedQuestions!.isEmpty ? '无法生成题目' : null;
       });
@@ -220,6 +226,8 @@ class _QuizScreenState extends State<QuizScreen> {
         _spellCtrl.clear();
         _correctCount = 0;
         _wrongCount = 0;
+        _sessionWrongIds = [];
+        _retryRound = false;
         _wrongInScope = wrongInScope;
         _loading = false;
       });
@@ -248,6 +256,11 @@ class _QuizScreenState extends State<QuizScreen> {
       } else {
         _wrongCount++;
       }
+      _sessionWrongIds = QuizEngine.applySessionWrong(
+        current: _sessionWrongIds,
+        wordId: q.target.id,
+        correct: ok,
+      );
     });
     if (ok) {
       await widget.store.removeWrong(q.target.id);
@@ -349,6 +362,11 @@ class _QuizScreenState extends State<QuizScreen> {
       } else {
         _wrongCount++;
       }
+      _sessionWrongIds = QuizEngine.applySessionWrong(
+        current: _sessionWrongIds,
+        wordId: q.target.id,
+        correct: ok,
+      );
     });
     if (ok) {
       await widget.store.removeWrong(q.target.id);
@@ -470,7 +488,71 @@ class _QuizScreenState extends State<QuizScreen> {
     }
   }
 
+
+  List<Word> _distractorBookWords() {
+    if (_book != null) return _book!.words;
+    final byId = <String, Word>{};
+    for (final q in _questions) {
+      byId[q.target.id] = q.target;
+      for (final o in q.options) {
+        byId[o.id] = o;
+      }
+    }
+    return byId.values.toList();
+  }
+
+  Future<void> _startWrongRetry() async {
+    final wrongIds = List<String>.from(_sessionWrongIds);
+    if (wrongIds.isEmpty) return;
+    final bookWords = _distractorBookWords();
+    final wrongWords = QuizEngine.wordsForRetry(
+      bookWords: bookWords,
+      wrongIdsInOrder: wrongIds,
+    );
+    if (wrongWords.isEmpty) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('暂时没法组卷，先回学习')),
+      );
+      return;
+    }
+    final session = QuizEngine.buildRetrySession(
+      wrongWordsInOrder: wrongWords,
+      bookWords: bookWords,
+      listenMode: _usesMeaningOptions,
+    );
+    if (session.isEmpty) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('暂时没法组卷，先回学习')),
+      );
+      return;
+    }
+    setState(() {
+      _retryRound = true;
+      _questions = session;
+      _index = 0;
+      _selected = null;
+      _answered = false;
+      _spellOk = null;
+      _spellCtrl.clear();
+      _correctCount = 0;
+      _wrongCount = 0;
+      _sessionWrongIds = [];
+      _loading = false;
+      _error = null;
+    });
+    await _speakCurrentIfListen();
+  }
+
+  void _backToLearn() {
+    if (Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
+    }
+  }
+
   String get _title {
+    if (_retryRound) return '错题再练';
     switch (widget.mode) {
       case QuizMode.wrong:
         return widget.wrongUnitScoped ? '自测错词·当前单元' : '自测错词';
@@ -555,17 +637,41 @@ class _QuizScreenState extends State<QuizScreen> {
                   const SizedBox(height: 8),
                   Text('很棒，可以换下一单元了。', style: Theme.of(context).textTheme.bodyMedium, textAlign: TextAlign.center),
                 ],
+                if (_sessionWrongIds.isNotEmpty) ...[
+                  const SizedBox(height: 8),
+                  Text(
+                    '本场错了 ${_sessionWrongIds.length} 个',
+                    key: const ValueKey('quiz_end_wrong_hint'),
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    textAlign: TextAlign.center,
+                  ),
+                ],
                 const SizedBox(height: 20),
-                FilledButton(
-                  key: const ValueKey('quiz_end_retry'),
-                  onPressed: _prepareAndBoot,
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 14),
-                    child: Text('再测一轮', style: TextStyle(fontSize: 18)),
+                if (_sessionWrongIds.isNotEmpty) ...[
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton(
+                      key: const ValueKey('quiz_end_wrong_retry'),
+                      onPressed: _startWrongRetry,
+                      child: const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 14),
+                        child: Text('错题再练', style: TextStyle(fontSize: 18)),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                ],
+                SizedBox(
+                  width: double.infinity,
+                  child: FilledButton(
+                    key: const ValueKey('quiz_end_back'),
+                    onPressed: _backToLearn,
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 14),
+                      child: Text('回学习', style: TextStyle(fontSize: 18)),
+                    ),
                   ),
                 ),
-                if (!widget.embedded)
-                  TextButton(onPressed: () => Navigator.pop(context), child: const Text('返回')),
               ],
             ),
           ),
@@ -590,7 +696,10 @@ class _QuizScreenState extends State<QuizScreen> {
             style: Theme.of(context).textTheme.titleMedium,
           ),
           Text(
-            '自测 · 题 ${_index + 1}/${_questions.length}',
+            _retryRound
+                ? '错题再练 · ${_questions.length}'
+                : '自测 · 题 ${_index + 1}/${_questions.length}',
+            key: ValueKey(_retryRound ? 'quiz_retry_badge' : 'quiz_progress_label'),
             style: Theme.of(context).textTheme.bodySmall,
           ),
           const SizedBox(height: 8),
@@ -652,13 +761,15 @@ class _QuizScreenState extends State<QuizScreen> {
                     ),
                   ],
                   selected: {_segmentValue},
-                  onSelectionChanged: (s) {
-                    final v = s.first;
-                    if ((v == 'listen' || v == 'dictation') && !_listenAvailable) {
-                      return;
-                    }
-                    _onVariantChanged(v);
-                  },
+                  onSelectionChanged: _retryRound
+                      ? null
+                      : (s) {
+                          final v = s.first;
+                          if ((v == 'listen' || v == 'dictation') && !_listenAvailable) {
+                            return;
+                          }
+                          _onVariantChanged(v);
+                        },
                 ),
               );
             },
@@ -670,7 +781,7 @@ class _QuizScreenState extends State<QuizScreen> {
               style: Theme.of(context).textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
             ),
           ],
-          if (widget.seedQuestions == null) ...[
+          if (widget.seedQuestions == null && !_retryRound) ...[
             const SizedBox(height: 8),
             Wrap(
               key: const ValueKey('quiz_pool_chips'),

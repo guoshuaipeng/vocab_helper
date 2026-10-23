@@ -81,7 +81,45 @@ void main() {
       expect(QuizEngine.sessionCap(poolSize: 0, dailyGoal: 20), 0);
     });
 
-  group('QuizScreen scoring', () {
+  
+  group('R35 session wrong / retry pool', () {
+    test('applySessionWrong dedupes and removes on correct', () {
+      var ids = <String>[];
+      ids = QuizEngine.applySessionWrong(current: ids, wordId: 'a', correct: false);
+      ids = QuizEngine.applySessionWrong(current: ids, wordId: 'b', correct: false);
+      ids = QuizEngine.applySessionWrong(current: ids, wordId: 'a', correct: false);
+      expect(ids, ['a', 'b']);
+      ids = QuizEngine.applySessionWrong(current: ids, wordId: 'a', correct: true);
+      expect(ids, ['b']);
+    });
+
+    test('wordsForRetry preserves order and skips missing', () {
+      final book = sampleBook();
+      final words = QuizEngine.wordsForRetry(
+        bookWords: book,
+        wrongIdsInOrder: ['b-2', 'missing', 'b-1', 'b-2'],
+      );
+      expect(words.map((w) => w.id).toList(), ['b-2', 'b-1']);
+    });
+
+    test('buildRetrySession one question per wrong, no dailyGoal cap', () {
+      final book = sampleBook();
+      final wrong = QuizEngine.wordsForRetry(
+        bookWords: book,
+        wrongIdsInOrder: ['b-1', 'b-2', 'b-3', 'b-4', 'b-5', 'b-6'],
+      );
+      final session = QuizEngine.buildRetrySession(
+        wrongWordsInOrder: wrong,
+        bookWords: book,
+        random: Random(1),
+      );
+      expect(session.length, 6);
+      expect(session.map((q) => q.target.id).toList(),
+          ['b-1', 'b-2', 'b-3', 'b-4', 'b-5', 'b-6']);
+    });
+  });
+
+group('QuizScreen scoring', () {
     setUp(() {
       SharedPreferences.setMockInitialValues({'selected_book_id': 'demo'});
     });

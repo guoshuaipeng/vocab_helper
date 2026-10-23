@@ -129,4 +129,57 @@ class QuizEngine {
     }
     return bookWords.where((w) => w.unit == unitFilter).toList();
   }
+
+  /// R35: maintain this-round wrong ids (first-wrong order; correct removes).
+  static List<String> applySessionWrong({
+    required List<String> current,
+    required String wordId,
+    required bool correct,
+  }) {
+    final next = List<String>.from(current);
+    if (correct) {
+      next.removeWhere((id) => id == wordId);
+    } else if (!next.contains(wordId)) {
+      next.add(wordId);
+    }
+    return next;
+  }
+
+  /// R35: stable ordered words for retry (appearance order; missing ids skipped).
+  static List<Word> wordsForRetry({
+    required List<Word> bookWords,
+    required List<String> wrongIdsInOrder,
+  }) {
+    final byId = {for (final w in bookWords) w.id: w};
+    final out = <Word>[];
+    final seen = <String>{};
+    for (final id in wrongIdsInOrder) {
+      if (seen.contains(id)) continue;
+      seen.add(id);
+      final w = byId[id];
+      if (w != null) out.add(w);
+    }
+    return out;
+  }
+
+  /// R35: one question per wrong word, preserve order, no dailyGoal cap.
+  static List<QuizQuestion> buildRetrySession({
+    required List<Word> wrongWordsInOrder,
+    required List<Word> bookWords,
+    Random? random,
+    bool listenMode = false,
+  }) {
+    final rng = random ?? Random();
+    final out = <QuizQuestion>[];
+    for (final t in wrongWordsInOrder) {
+      final q = buildQuestion(
+        target: t,
+        bookWords: bookWords,
+        random: rng,
+        listenMode: listenMode,
+      );
+      if (q != null) out.add(q);
+    }
+    return out;
+  }
 }
