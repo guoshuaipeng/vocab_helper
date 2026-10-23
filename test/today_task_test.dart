@@ -44,18 +44,23 @@ void main() {
         ),
       ),
     );
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 200));
-    for (var i = 0; i < 30; i++) {
-      if (find.byKey(const ValueKey('today_task_learn')).evaluate().isNotEmpty) {
+    await tester.runAsync(() async {
+      await Future<void>.delayed(const Duration(milliseconds: 40));
+    });
+    for (var i = 0; i < 40; i++) {
+      await tester.pump(const Duration(milliseconds: 50));
+      if (find.byKey(const ValueKey('learn_overflow_menu')).evaluate().isNotEmpty) {
         break;
       }
-      await tester.pump(const Duration(milliseconds: 100));
     }
-    await tester.pump(const Duration(milliseconds: 200));
   }
 
-  testWidgets('今日任务 three keys; quiz/learn tap; wrong disabled when empty', (tester) async {
+  Future<void> openOverflow(WidgetTester tester) async {
+    await tester.tap(find.byKey(const ValueKey('learn_overflow_menu')));
+    await tester.pumpAndSettle();
+  }
+
+  testWidgets('今日任务 three keys via overflow; quiz/learn tap; wrong disabled when empty', (tester) async {
     final store = await ProgressStore.open();
     var learnTaps = 0;
     var wrongTaps = 0;
@@ -69,25 +74,33 @@ void main() {
       onQuiz: () => quizTaps++,
     );
 
+    expect(find.byKey(const ValueKey('today_task_learn')), findsNothing);
+    await openOverflow(tester);
+
     expect(find.byKey(const ValueKey('today_task_learn')), findsOneWidget);
     expect(find.byKey(const ValueKey('today_task_wrong')), findsOneWidget);
     expect(find.byKey(const ValueKey('today_task_quiz')), findsOneWidget);
     expect(find.text('学新词'), findsOneWidget);
     expect(find.text('复习错词'), findsOneWidget);
-    expect(find.text('测一测'), findsOneWidget);
+    expect(find.text('自测'), findsOneWidget);
     expect(find.textContaining('暂无错词'), findsWidgets);
 
     await tester.tap(find.byKey(const ValueKey('today_task_quiz')));
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 200));
+    await tester.pumpAndSettle();
     expect(quizTaps, 1);
 
+    await openOverflow(tester);
     await tester.tap(find.byKey(const ValueKey('today_task_wrong')));
     await tester.pump();
     expect(wrongTaps, 0);
 
+    // wrong is disabled — dismiss sheet by tapping barrier
+    await tester.tapAt(const Offset(10, 10));
+    await tester.pumpAndSettle();
+
+    await openOverflow(tester);
     await tester.tap(find.byKey(const ValueKey('today_task_learn')));
-    await tester.pump();
+    await tester.pumpAndSettle();
     expect(learnTaps, 1);
   });
 

@@ -35,6 +35,9 @@ void main() {
         ),
       ),
     );
+    await tester.runAsync(() async {
+      await Future<void>.delayed(const Duration(milliseconds: 40));
+    });
     for (var i = 0; i < 40; i++) {
       await tester.pump(const Duration(milliseconds: 50));
     }
@@ -62,6 +65,8 @@ void main() {
 
     await gesture.up();
     await tester.pump();
-    await tester.pump(const Duration(milliseconds: 160));
+    // Allow R43 slide/flash timer (250ms) to finish.
+    await tester.pump(const Duration(milliseconds: 300));
+    await tester.pump(const Duration(milliseconds: 300));
   });
 }

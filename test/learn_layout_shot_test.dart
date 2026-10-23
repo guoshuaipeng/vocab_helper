@@ -67,12 +67,19 @@ void main() {
 
     expect(find.byKey(const ValueKey('learn_flash_card')), findsOneWidget);
     expect(find.byType(SegmentedButton<String>), findsNothing);
-    expect(find.byKey(const ValueKey('today_task_learn')), findsOneWidget);
-    expect(find.byKey(const ValueKey('unit_picker_button')), findsOneWidget);
+    expect(find.byKey(const ValueKey('learn_overflow_menu')), findsOneWidget);
+    expect(find.byKey(const ValueKey('learn_progress_thin')), findsOneWidget);
+    expect(find.byKey(const ValueKey('today_task_learn')), findsNothing);
+    expect(find.byKey(const ValueKey('unit_picker_button')), findsNothing);
 
     final cardH = tester.getSize(find.byKey(const ValueKey('learn_flash_card'))).height;
-    expect(cardH, greaterThan(844 * 0.40));
+    expect(cardH, greaterThan(844 * 0.45));
     expect(tester.takeException(), isNull);
+
+    await tester.tap(find.byKey(const ValueKey('learn_overflow_menu')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const ValueKey('today_task_learn')), findsOneWidget);
+    expect(find.byKey(const ValueKey('unit_picker_button')), findsOneWidget);
   });
 
   Future<void> capture(

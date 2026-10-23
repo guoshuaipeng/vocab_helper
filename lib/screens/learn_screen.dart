@@ -55,6 +55,8 @@ class _LearnScreenState extends State<LearnScreen> {
   int _queueDueCount = 0;
   /// null | known | unknown — brief edge flash before advancing.
   String? _flashKind;
+  /// Horizontal slide for answer exit: +1 known / -1 unknown.
+  double _slideX = 0;
   bool _speaking = false;
   late final WordSpeaker _speaker;
   bool _ownsSpeaker = false;
@@ -220,12 +222,18 @@ class _LearnScreenState extends State<LearnScreen> {
   }
 
   Future<void> _flashThen(String kind, Future<void> Function() advance) async {
-    setState(() => _flashKind = kind);
-    await Future<void>.delayed(const Duration(milliseconds: 150));
+    setState(() {
+      _flashKind = kind;
+      _slideX = kind == 'known' ? 1.0 : -1.0;
+    });
+    await Future<void>.delayed(const Duration(milliseconds: 250));
     if (!mounted) return;
     await advance();
     if (!mounted) return;
-    setState(() => _flashKind = null);
+    setState(() {
+      _flashKind = null;
+      _slideX = 0;
+    });
   }
 
   Future<void> _onKnown() async {
@@ -267,14 +275,6 @@ class _LearnScreenState extends State<LearnScreen> {
     });
   }
 
-  int _unitWordCount() {
-    final book = _book;
-    if (book == null) return 0;
-    final id = widget.bookId;
-    final filter = id == null ? null : widget.store.unitFilterForBook(id);
-    if (filter == null || filter.isEmpty) return book.words.length;
-    return book.words.where((w) => w.unit == filter).length;
-  }
 
   Future<void> _pickUnit(String? unit) async {
     final id = widget.bookId;
@@ -325,7 +325,11 @@ class _LearnScreenState extends State<LearnScreen> {
     } catch (_) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('暂时没法朗读')),
+          const SnackBar(
+            content: Text('暂时没法朗读'),
+            behavior: SnackBarBehavior.floating,
+            margin: EdgeInsets.fromLTRB(16, 0, 16, 88),
+          ),
         );
       }
     } finally {
@@ -346,6 +350,79 @@ class _LearnScreenState extends State<LearnScreen> {
   Future<void> _dismissRecommendHint() async {
     await widget.store.dismissRecommendHintForToday();
     if (mounted) setState(() {});
+  }
+
+
+  Future<void> _openMorePractice({
+    required List<String> units,
+    required String? selectedUnit,
+    required int wrongCount,
+  }) async {
+    final action = await showModalBottomSheet<String>(
+      context: context,
+      showDragHandle: true,
+      builder: (ctx) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(8, 0, 8, 12),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
+                  child: Text('更多练习', style: Theme.of(ctx).textTheme.titleLarge),
+                ),
+                ListTile(
+                  key: const ValueKey('today_task_learn'),
+                  leading: const Icon(Icons.menu_book),
+                  title: const Text('学新词'),
+                  subtitle: Text('新词 $_queueNewCount · 复习 $_queueDueCount'),
+                  onTap: () => Navigator.pop(ctx, 'learn'),
+                ),
+                ListTile(
+                  key: const ValueKey('today_task_wrong'),
+                  leading: const Icon(Icons.replay),
+                  title: const Text('复习错词'),
+                  subtitle: Text(wrongCount == 0 ? '暂无错词' : '$wrongCount 词'),
+                  enabled: wrongCount > 0 && widget.onReviewWrongAll != null,
+                  onTap: wrongCount > 0 ? () => Navigator.pop(ctx, 'wrong') : null,
+                ),
+                ListTile(
+                  key: const ValueKey('today_task_quiz'),
+                  leading: const Icon(Icons.quiz),
+                  title: const Text('自测'),
+                  enabled: widget.onStartQuiz != null,
+                  onTap: widget.onStartQuiz != null ? () => Navigator.pop(ctx, 'quiz') : null,
+                ),
+                if ((!widget.reviewWrongOnly || widget.reviewWrongUnitScoped) && units.isNotEmpty)
+                  ListTile(
+                    key: const ValueKey('unit_picker_button'),
+                    leading: const Icon(Icons.filter_list),
+                    title: const Text('选择单元'),
+                    subtitle: Text(
+                      selectedUnit == null || selectedUnit.isEmpty
+                          ? '全部 · ${units.length} 单元'
+                          : selectedUnit,
+                    ),
+                    onTap: () => Navigator.pop(ctx, 'unit'),
+                  ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+    if (!mounted || action == null) return;
+    if (action == 'learn') {
+      widget.onLearnNew?.call();
+    } else if (action == 'wrong') {
+      widget.onReviewWrongAll?.call();
+    } else if (action == 'quiz') {
+      widget.onStartQuiz?.call();
+    } else if (action == 'unit') {
+      await _openUnitPicker(units: units, selectedUnit: selectedUnit);
+    }
   }
 
   @override
@@ -428,161 +505,291 @@ class _LearnScreenState extends State<LearnScreen> {
 
     final today = widget.store.todayCount();
     final goal = widget.store.dailyGoal();
-    final streak = widget.store.streakDays();
     final wrongCount = bookId == null ? 0 : widget.store.wrongCountForBook(bookId);
-    final learnSub = '新词 $_queueNewCount · 复习 $_queueDueCount';
-    final learnShowDot = !widget.reviewWrongOnly && _queueDueCount > 0;
-    final wrongSub = wrongCount == 0 ? '暂无错词' : '$wrongCount 词';
-    // 今日任务选中：全书错词复习 → 复习；否则默认学新词（自测走独立路由）
-    final taskSelected = (widget.reviewWrongOnly && !widget.reviewWrongUnitScoped)
-        ? _TodayTask.wrong
-        : _TodayTask.learn;
     final scheme = Theme.of(context).colorScheme;
-
     final media = MediaQuery.of(context);
     final shortest = media.size.shortestSide;
     final isLandscape = media.orientation == Orientation.landscape;
+    // Teal CTA (design lock); seed stays #4F8CFF — not purple.
+    const knowTeal = Color(0xFF0D9488);
 
     return LayoutBuilder(
       builder: (context, constraints) {
         final wide = constraints.maxWidth >= 700 || (isLandscape && constraints.maxWidth >= 600);
         final contentMax = wide ? (shortest >= 600 ? 960.0 : 900.0) : 520.0;
         final hPad = wide ? 28.0 : 16.0;
-        final vPad = wide ? 16.0 : 12.0;
-        final wordSize = wide ? 52.0 : 46.0;
-        final meaningSize = wide ? 40.0 : 34.0;
+        final vPad = wide ? 12.0 : 8.0;
+        final wordSize = wide ? 56.0 : 48.0;
+        final meaningSize = wide ? 28.0 : 24.0;
+        final progress = goal <= 0 ? 0.0 : (today / goal).clamp(0.0, 1.0);
+        final bodyH = constraints.maxHeight;
+        final ctaMinH = bodyH * 0.18;
+        final meaningText = (word.meaning).trim().isEmpty ? '暂无释义' : word.meaning;
 
-        final titleText = widget.reviewWrongOnly
-            ? (widget.reviewWrongUnitScoped
-                ? '错词复习·当前单元 · ${_book?.title ?? ''}'
-                : '错词复习 · ${_book?.title ?? ''}')
-            : (_book?.title ?? '');
-        final progressLine = widget.reviewWrongOnly
-            ? '剩余 ${q.remaining} · 本轮认识 ${q.knownCount} · 本单元 ${_unitWordCount()}'
-            : '新词 $_queueNewCount · 复习 $_queueDueCount · 剩余 ${q.remaining}';
-
-        final unitChip = ((!widget.reviewWrongOnly || widget.reviewWrongUnitScoped) && units.isNotEmpty)
-            ? ActionChip(
-                key: const ValueKey('unit_picker_button'),
-                visualDensity: VisualDensity.compact,
-                avatar: Icon(Icons.filter_list, size: 18, color: scheme.onSurfaceVariant),
-                label: Text(
-                  selectedUnit == null || selectedUnit.isEmpty
-                      ? '全部 · ${units.length} 单元 ▾'
-                      : '$selectedUnit ▾',
-                ),
-                onPressed: () => _openUnitPicker(units: units, selectedUnit: selectedUnit),
-              )
-            : null;
-
-        Widget flashCard() {
-          return AnimatedContainer(
-            key: const ValueKey('learn_flash_card'),
-            duration: const Duration(milliseconds: 150),
-            decoration: BoxDecoration(
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? scheme.surfaceContainerHighest
-                  : scheme.surface,
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: _flashKind == 'known'
-                    ? scheme.primary
-                    : (_flashKind == 'unknown' ? scheme.error : scheme.outlineVariant),
-                width: _flashKind != null ? 2 : 1,
-              ),
-            ),
-            child: Column(
-              children: [
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: IconButton(
-                    key: const ValueKey('flashcard_speak'),
-                    tooltip: '朗读',
-                    onPressed: _speaking ? null : _speakCurrent,
-                    icon: Icon(
-                      Icons.volume_up,
-                      color: _speaking ? scheme.primary : scheme.onSurfaceVariant,
+        Widget thinChrome() {
+          return Column(
+            key: const ValueKey('learn_progress_thin'),
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(4),
+                          child: LinearProgressIndicator(
+                            value: progress,
+                            minHeight: 4,
+                            backgroundColor: scheme.surfaceContainerHighest,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          '今日 $today/$goal'
+                          '${_book?.title != null ? ' · ${_book!.title}' : ''}',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: scheme.onSurfaceVariant,
+                              ),
+                        ),
+                      ],
                     ),
                   ),
-                ),
-                Expanded(
-                  child: GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTap: () => setState(() => _flipped = !_flipped),
-                    child: Center(
-                      child: SingleChildScrollView(
-                        padding: EdgeInsets.fromLTRB(wide ? 36 : 24, 0, wide ? 36 : 24, 20),
-                        child: AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 200),
-                          switchInCurve: Curves.easeOut,
-                          switchOutCurve: Curves.easeIn,
-                          transitionBuilder: (child, anim) {
-                            final scale = Tween<double>(begin: 0.98, end: 1).animate(anim);
-                            return FadeTransition(
-                              opacity: anim,
-                              child: ScaleTransition(scale: scale, child: child),
-                            );
-                          },
-                          child: _flipped
-                              ? Column(
-                                  key: const ValueKey('back'),
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      word.meaning,
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(fontSize: meaningSize, fontWeight: FontWeight.bold),
+                  IconButton(
+                    key: const ValueKey('learn_overflow_menu'),
+                    tooltip: '更多练习',
+                    onPressed: () => _openMorePractice(
+                      units: units,
+                      selectedUnit: selectedUnit,
+                      wrongCount: wrongCount,
+                    ),
+                    icon: const Icon(Icons.more_vert),
+                  ),
+                ],
+              ),
+              if (_shouldShowLearnRecommendHint) ...[
+                const SizedBox(height: 4),
+                Material(
+                  key: const ValueKey('learn_recommend_switch_hint'),
+                  color: scheme.secondaryContainer.withValues(alpha: 0.55),
+                  borderRadius: BorderRadius.circular(10),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(4, 0, 0, 0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: TextButton(
+                              onPressed: widget.onChangeBook,
+                              style: TextButton.styleFrom(
+                                visualDensity: VisualDensity.compact,
+                                foregroundColor: scheme.onSecondaryContainer,
+                                padding: const EdgeInsets.symmetric(horizontal: 8),
+                              ),
+                              child: Text(
+                                '跟课推荐 · 去切换',
+                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: scheme.onSecondaryContainer,
+                                      fontWeight: FontWeight.w600,
                                     ),
-                                    if ((word.example ?? '').isNotEmpty) ...[
-                                      const SizedBox(height: 16),
-                                      Text(
-                                        word.example!,
-                                        textAlign: TextAlign.center,
-                                        style: const TextStyle(fontSize: 16, height: 1.35),
-                                      ),
-                                    ],
-                                    const SizedBox(height: 12),
-                                    Text('点按卡片可翻回', style: Theme.of(context).textTheme.bodySmall),
-                                  ],
-                                )
-                              : Column(
-                                  key: const ValueKey('front'),
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      word.word,
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(fontSize: wordSize, fontWeight: FontWeight.bold, height: 1.15),
-                                    ),
-                                    if (widget.store.learnedIds().contains(word.id)) ...[
-                                      const SizedBox(height: 6),
-                                      Text(
-                                        '复习',
-                                        key: const ValueKey('review_tag'),
-                                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                              color: Theme.of(context).colorScheme.primary,
-                                            ),
-                                      ),
-                                    ],
-                                    if ((word.phonetic ?? '').isNotEmpty) ...[
-                                      const SizedBox(height: 10),
-                                      Text(
-                                        word.phonetic!,
-                                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                              color: Theme.of(context).colorScheme.onSurfaceVariant,
-                                            ),
-                                      ),
-                                    ],
-                                    const SizedBox(height: 16),
-                                    Text('点按卡片看中文', style: Theme.of(context).textTheme.bodySmall),
-                                  ],
-                                ),
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
+                        TextButton(
+                          key: const ValueKey('learn_recommend_hint_dismiss'),
+                          onPressed: _dismissRecommendHint,
+                          style: TextButton.styleFrom(
+                            visualDensity: VisualDensity.compact,
+                            foregroundColor: scheme.onSecondaryContainer,
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                          ),
+                          child: Text(
+                            '今日不再',
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  color: scheme.onSecondaryContainer,
+                                ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
               ],
+              if (_unitFilterHint != null) ...[
+                const SizedBox(height: 2),
+                Text(
+                  _unitFilterHint!,
+                  key: const ValueKey('unit_filter_hint'),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: scheme.onSurfaceVariant,
+                      ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+              if (_reviewNextHint != null) ...[
+                const SizedBox(height: 2),
+                Text(
+                  _reviewNextHint!,
+                  key: const ValueKey('review_next_hint'),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: scheme.primary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ],
+          );
+        }
+
+        Widget flashCard() {
+          final paper = Theme.of(context).brightness == Brightness.dark
+              ? scheme.surfaceContainerHigh
+              : scheme.surfaceContainerLow;
+          return AnimatedSlide(
+            offset: Offset(_slideX, 0),
+            duration: const Duration(milliseconds: 250),
+            curve: Curves.easeInOut,
+            child: AnimatedOpacity(
+              opacity: _slideX == 0 ? 1 : 0.15,
+              duration: const Duration(milliseconds: 250),
+              child: AnimatedContainer(
+                key: const ValueKey('learn_flash_card'),
+                duration: const Duration(milliseconds: 150),
+                decoration: BoxDecoration(
+                  color: paper,
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(
+                    color: _flashKind == 'known'
+                        ? knowTeal
+                        : (_flashKind == 'unknown' ? scheme.error : scheme.outlineVariant.withValues(alpha: 0.45)),
+                    width: _flashKind != null ? 2 : 1,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: scheme.shadow.withValues(alpha: 0.06),
+                      blurRadius: 18,
+                      offset: const Offset(0, 6),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  children: [
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: IconButton(
+                        key: const ValueKey('flashcard_speak'),
+                        tooltip: '朗读',
+                        onPressed: _speaking ? null : _speakCurrent,
+                        icon: Icon(
+                          Icons.volume_up,
+                          color: _speaking ? scheme.primary : scheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () => setState(() => _flipped = !_flipped),
+                        child: Center(
+                          child: SingleChildScrollView(
+                            padding: EdgeInsets.fromLTRB(wide ? 36 : 24, 0, wide ? 36 : 24, 28),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  word.word,
+                                  key: const ValueKey('learn_wow_word'),
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: wordSize,
+                                    fontWeight: FontWeight.w800,
+                                    height: 1.12,
+                                  ),
+                                ),
+                                if (widget.store.learnedIds().contains(word.id)) ...[
+                                  const SizedBox(height: 6),
+                                  Text(
+                                    '复习',
+                                    key: const ValueKey('review_tag'),
+                                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                          color: scheme.primary,
+                                        ),
+                                  ),
+                                ],
+                                if ((word.phonetic ?? '').isNotEmpty) ...[
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    word.phonetic!,
+                                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                          color: scheme.onSurfaceVariant,
+                                        ),
+                                  ),
+                                ],
+                                const SizedBox(height: 16),
+                                AnimatedSize(
+                                  duration: const Duration(milliseconds: 200),
+                                  curve: Curves.easeOut,
+                                  child: _flipped
+                                      ? Column(
+                                          key: const ValueKey('back'),
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text(
+                                              meaningText,
+                                              key: const ValueKey('learn_wow_meaning'),
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontSize: meaningSize,
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
+                                            if ((word.example ?? '').isNotEmpty) ...[
+                                              const SizedBox(height: 12),
+                                              Text(
+                                                word.example!,
+                                                textAlign: TextAlign.center,
+                                                style: const TextStyle(fontSize: 15, height: 1.35),
+                                              ),
+                                            ],
+                                          ],
+                                        )
+                                      : Container(
+                                          key: const ValueKey('learn_wow_reveal_hint'),
+                                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                          decoration: BoxDecoration(
+                                            color: scheme.surface.withValues(alpha: 0.35),
+                                            borderRadius: BorderRadius.circular(20),
+                                            border: Border.all(
+                                              color: scheme.outlineVariant.withValues(alpha: 0.9),
+                                              width: 1.2,
+                                            ),
+                                          ),
+                                          child: Text(
+                                            '· · ·  点按看中文  · · ·',
+                                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                  color: scheme.onSurfaceVariant,
+                                                  letterSpacing: 0.2,
+                                                ),
+                                          ),
+                                        ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           );
         }
@@ -591,20 +798,33 @@ class _LearnScreenState extends State<LearnScreen> {
           final unknown = _PressScale(
             child: OutlinedButton(
               key: const ValueKey('learn_unknown'),
+              style: OutlinedButton.styleFrom(
+                shape: const StadiumBorder(),
+                side: BorderSide(color: scheme.outline),
+                foregroundColor: scheme.onSurface,
+                minimumSize: Size.fromHeight(vertical ? 56 : 52),
+              ),
               onPressed: _flashKind != null ? null : _onUnknown,
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: vertical ? 18 : 14),
-                child: const Text('不认识', style: TextStyle(fontSize: 18)),
+                child: const Text('不认识', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
               ),
             ),
           );
           final known = _PressScale(
             child: FilledButton(
               key: const ValueKey('learn_known'),
+              style: FilledButton.styleFrom(
+                backgroundColor: knowTeal,
+                foregroundColor: Colors.white,
+                disabledBackgroundColor: knowTeal.withValues(alpha: 0.45),
+                shape: const StadiumBorder(),
+                minimumSize: Size.fromHeight(vertical ? 56 : 52),
+              ),
               onPressed: _flashKind != null ? null : _onKnown,
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: vertical ? 18 : 14),
-                child: const Text('认识', style: TextStyle(fontSize: 18)),
+                child: const Text('认识', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
               ),
             ),
           );
@@ -612,23 +832,27 @@ class _LearnScreenState extends State<LearnScreen> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Expanded(child: unknown),
-                const SizedBox(height: 12),
                 Expanded(child: known),
+                const SizedBox(height: 12),
+                Expanded(child: unknown),
               ],
             );
           }
-          return Row(
-            children: [
-              Expanded(child: unknown),
-              const SizedBox(width: 12),
-              Expanded(child: known),
-            ],
+          return ConstrainedBox(
+            constraints: BoxConstraints(minHeight: ctaMinH.clamp(56.0, 120.0)),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(child: unknown),
+                const SizedBox(width: 12),
+                Expanded(child: known),
+              ],
+            ),
           );
         }
 
         return Padding(
-          padding: EdgeInsets.fromLTRB(hPad, vPad, hPad, vPad),
+          padding: EdgeInsets.fromLTRB(hPad, vPad, hPad, vPad + 4),
           child: Align(
             alignment: Alignment.topCenter,
             child: ConstrainedBox(
@@ -636,134 +860,8 @@ class _LearnScreenState extends State<LearnScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // Compact chrome: title · today on one line
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          titleText,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                fontWeight: FontWeight.w600,
-                              ),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        '今日 $today/$goal · 连续 $streak 天',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: scheme.onSurfaceVariant,
-                            ),
-                      ),
-                    ],
-                  ),
-                  if (_shouldShowLearnRecommendHint) ...[
-                    const SizedBox(height: 8),
-                    Material(
-                      key: const ValueKey('learn_recommend_switch_hint'),
-                      color: scheme.secondaryContainer,
-                      borderRadius: BorderRadius.circular(12),
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(8, 2, 4, 2),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: TextButton(
-                                  onPressed: widget.onChangeBook,
-                                  style: TextButton.styleFrom(
-                                    visualDensity: VisualDensity.compact,
-                                    foregroundColor: scheme.onSecondaryContainer,
-                                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                                  ),
-                                  child: Text(
-                                    '跟课推荐 · 去切换',
-                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                          color: scheme.onSecondaryContainer,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            TextButton(
-                              key: const ValueKey('learn_recommend_hint_dismiss'),
-                              onPressed: _dismissRecommendHint,
-                              style: TextButton.styleFrom(
-                                visualDensity: VisualDensity.compact,
-                                foregroundColor: scheme.onSecondaryContainer,
-                                padding: const EdgeInsets.symmetric(horizontal: 8),
-                              ),
-                              child: Text(
-                                '今日不再',
-                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      color: scheme.onSecondaryContainer,
-                                    ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
+                  thinChrome(),
                   const SizedBox(height: 8),
-                  _TodayTaskBar(
-                    compact: true,
-                    todayLabel: '',
-                    selected: taskSelected,
-                    learnSubtitle: learnSub,
-                    learnShowDot: learnShowDot,
-                    wrongSubtitle: wrongSub,
-                    wrongEnabled: wrongCount > 0,
-                    onLearn: () => widget.onLearnNew?.call(),
-                    onWrong: wrongCount > 0 ? () => widget.onReviewWrongAll?.call() : null,
-                    onQuiz: widget.onStartQuiz,
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          progressLine,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                      ),
-                      if (unitChip != null) ...[
-                        const SizedBox(width: 8),
-                        unitChip,
-                      ],
-                    ],
-                  ),
-                  if (_unitFilterHint != null) ...[
-                    const SizedBox(height: 4),
-                    Text(
-                      _unitFilterHint!,
-                      key: const ValueKey('unit_filter_hint'),
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: scheme.onSurfaceVariant,
-                          ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                  if (_reviewNextHint != null) ...[
-                    const SizedBox(height: 4),
-                    Text(
-                      _reviewNextHint!,
-                      key: const ValueKey('review_next_hint'),
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: scheme.primary,
-                            fontWeight: FontWeight.w600,
-                          ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                  const SizedBox(height: 10),
                   Expanded(
                     child: wide
                         ? Row(
@@ -771,14 +869,18 @@ class _LearnScreenState extends State<LearnScreen> {
                             children: [
                               Expanded(flex: 3, child: flashCard()),
                               const SizedBox(width: 16),
-                              SizedBox(width: 168, child: ctaRow(vertical: true)),
+                              SizedBox(width: 176, child: ctaRow(vertical: true)),
                             ],
                           )
                         : Column(
                             children: [
-                              Expanded(child: flashCard()),
+                              Expanded(flex: 55, child: flashCard()),
                               const SizedBox(height: 12),
-                              ctaRow(vertical: false),
+                              Flexible(
+                                flex: 18,
+                                fit: FlexFit.loose,
+                                child: ctaRow(vertical: false),
+                              ),
                             ],
                           ),
                   ),
@@ -788,306 +890,6 @@ class _LearnScreenState extends State<LearnScreen> {
           ),
         );
       },
-    );
-
-  }
-}
-
-
-
-enum _TodayTask { learn, wrong, quiz }
-
-class _TodayTaskBar extends StatelessWidget {
-  const _TodayTaskBar({
-    required this.todayLabel,
-    required this.selected,
-    required this.learnSubtitle,
-    this.learnShowDot = false,
-    required this.wrongSubtitle,
-    required this.wrongEnabled,
-    required this.onLearn,
-    required this.onWrong,
-    required this.onQuiz,
-    this.compact = false,
-  });
-
-  final String todayLabel;
-  final _TodayTask selected;
-  final String learnSubtitle;
-  final bool learnShowDot;
-  final String wrongSubtitle;
-  final bool wrongEnabled;
-  final VoidCallback? onLearn;
-  final VoidCallback? onWrong;
-  final VoidCallback? onQuiz;
-  /// Single-row strip for mid-session study (saves vertical space for the card).
-  final bool compact;
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    if (compact) {
-      return Material(
-        color: scheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(14),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-          child: Row(
-            children: [
-              Expanded(
-                child: _TodayTaskButton(
-                  key: const ValueKey('today_task_learn'),
-                  title: '学新词',
-                  subtitle: learnSubtitle,
-                  icon: Icons.menu_book,
-                  selected: selected == _TodayTask.learn,
-                  showDot: learnShowDot,
-                  compact: true,
-                  onTap: onLearn,
-                ),
-              ),
-              Expanded(
-                child: Tooltip(
-                  message: wrongEnabled ? '复习本词书全部错词' : '暂无错词，先学新词或自测',
-                  child: _TodayTaskButton(
-                    key: const ValueKey('today_task_wrong'),
-                    title: '复习错词',
-                    subtitle: wrongSubtitle,
-                    icon: Icons.replay,
-                    selected: selected == _TodayTask.wrong,
-                    compact: true,
-                    onTap: onWrong,
-                  ),
-                ),
-              ),
-              Expanded(
-                child: _TodayTaskButton(
-                  key: const ValueKey('today_task_quiz'),
-                  title: '自测',
-                  subtitle: '测一测',
-                  icon: Icons.quiz,
-                  selected: selected == _TodayTask.quiz,
-                  compact: true,
-                  onTap: onQuiz,
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-
-    return Material(
-      color: scheme.surfaceContainerLow,
-      borderRadius: BorderRadius.circular(16),
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            if (todayLabel.isNotEmpty) ...[
-              Text(todayLabel, style: Theme.of(context).textTheme.bodySmall),
-              const SizedBox(height: 8),
-            ],
-            Row(
-              children: [
-                Expanded(
-                  child: _TodayTaskButton(
-                    key: const ValueKey('today_task_learn'),
-                    title: '学新词',
-                    subtitle: learnSubtitle,
-                    icon: Icons.menu_book,
-                    selected: selected == _TodayTask.learn,
-                    showDot: learnShowDot,
-                    onTap: onLearn,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Tooltip(
-                    message: wrongEnabled ? '复习本词书全部错词' : '暂无错词，先学新词或自测',
-                    child: _TodayTaskButton(
-                      key: const ValueKey('today_task_wrong'),
-                      title: '复习错词',
-                      subtitle: wrongSubtitle,
-                      icon: Icons.replay,
-                      selected: selected == _TodayTask.wrong,
-                      onTap: onWrong,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: _TodayTaskButton(
-                    key: const ValueKey('today_task_quiz'),
-                    title: '自测',
-                    subtitle: '测一测',
-                    icon: Icons.quiz,
-                    selected: selected == _TodayTask.quiz,
-                    onTap: onQuiz,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-
-class _TodayTaskButton extends StatelessWidget {
-  const _TodayTaskButton({
-    super.key,
-    required this.title,
-    required this.subtitle,
-    required this.icon,
-    required this.selected,
-    required this.onTap,
-    this.showDot = false,
-    this.compact = false,
-  });
-
-  final String title;
-  final String subtitle;
-  final IconData icon;
-  final bool selected;
-  final VoidCallback? onTap;
-  final bool showDot;
-  final bool compact;
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    final enabled = onTap != null;
-    final bg = !enabled
-        ? scheme.surface
-        : (selected ? scheme.primaryContainer : scheme.surface);
-    final titleColor = !enabled
-        ? scheme.onSurface.withValues(alpha: 0.38)
-        : (selected ? scheme.onPrimaryContainer : scheme.onSurface);
-    final subColor = !enabled
-        ? scheme.onSurface.withValues(alpha: 0.38)
-        : (selected ? scheme.onPrimaryContainer : scheme.onSurfaceVariant);
-    final borderColor = !enabled
-        ? scheme.outlineVariant.withValues(alpha: 0.4)
-        : (selected ? scheme.primary : scheme.outlineVariant.withValues(alpha: 0.4));
-    final borderWidth = selected && enabled ? 2.0 : 1.0;
-
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 150),
-      constraints: BoxConstraints(minHeight: compact ? 40 : 56),
-      decoration: BoxDecoration(
-        color: bg,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: borderColor, width: borderWidth),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(16),
-          onTap: onTap,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: compact ? 6 : 4, vertical: compact ? 6 : 8),
-            child: compact
-                ? Row(
-                    children: [
-                      Stack(
-                        clipBehavior: Clip.none,
-                        children: [
-                          Icon(icon, size: 20, color: titleColor),
-                          if (showDot)
-                            Positioned(
-                              right: -2,
-                              top: -2,
-                              child: Container(
-                                key: const ValueKey('learn_due_dot'),
-                                width: 8,
-                                height: 8,
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context).colorScheme.primary,
-                                  shape: BoxShape.circle,
-                                ),
-                              ),
-                            ),
-                        ],
-                      ),
-                      const SizedBox(width: 6),
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              title,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: titleColor),
-                            ),
-                            Text(
-                              subtitle,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(fontSize: 10, color: subColor),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  )
-                : Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Stack(
-                        clipBehavior: Clip.none,
-                        children: [
-                          Icon(icon, size: 24, color: titleColor),
-                          if (showDot)
-                            Positioned(
-                              right: -2,
-                              top: -2,
-                              child: Container(
-                                key: const ValueKey('learn_due_dot'),
-                                width: 8,
-                                height: 8,
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context).colorScheme.primary,
-                                  shape: BoxShape.circle,
-                                ),
-                              ),
-                            ),
-                        ],
-                      ),
-                      const SizedBox(height: 2),
-                      LayoutBuilder(
-                        builder: (context, c) {
-                          final wide = c.maxWidth >= 100;
-                          return Text(
-                            title,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: wide ? 14 : 13,
-                              fontWeight: FontWeight.w700,
-                              color: titleColor,
-                            ),
-                          );
-                        },
-                      ),
-                      Text(
-                        subtitle,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 11, color: subColor),
-                      ),
-                    ],
-                  ),
-          ),
-        ),
-      ),
     );
   }
 }

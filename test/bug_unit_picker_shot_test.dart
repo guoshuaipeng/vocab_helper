@@ -64,7 +64,7 @@ void main() {
     );
     for (var i = 0; i < 80; i++) {
       await tester.pump(const Duration(milliseconds: 40));
-      if (find.byKey(const ValueKey('unit_picker_button')).evaluate().isNotEmpty) break;
+      if (find.byKey(const ValueKey('learn_overflow_menu')).evaluate().isNotEmpty) break;
     }
   }
 
@@ -84,11 +84,14 @@ void main() {
     'capture compact unit picker + sheet',
     (tester) async {
       await pumpLearn(tester, unit: '第1组');
-      expect(find.byKey(const ValueKey('unit_picker_button')), findsOneWidget);
+      expect(find.byKey(const ValueKey('learn_overflow_menu')), findsOneWidget);
       expect(find.byKey(const ValueKey('learn_known')), findsOneWidget);
       expect(tester.takeException(), isNull);
       await save(tester, 'bug-unit-picker-compact-narrow-light.png');
 
+      await tester.tap(find.byKey(const ValueKey('learn_overflow_menu')));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('unit_picker_button')), findsOneWidget);
       await tester.tap(find.byKey(const ValueKey('unit_picker_button')));
       await tester.pumpAndSettle();
       expect(find.byKey(const ValueKey('unit_picker_list')), findsOneWidget);

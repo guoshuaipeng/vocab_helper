@@ -37,23 +37,29 @@ void main() {
         ),
       ),
     );
+    await tester.runAsync(() async {
+      await Future<void>.delayed(const Duration(milliseconds: 40));
+    });
     for (var i = 0; i < 50; i++) {
       await tester.pump(const Duration(milliseconds: 40));
-      if (find.byKey(const ValueKey('unit_picker_button')).evaluate().isNotEmpty) {
+      if (find.byKey(const ValueKey('learn_overflow_menu')).evaluate().isNotEmpty) {
         break;
       }
     }
   }
 
-  testWidgets('compact unit picker; sheet lists units; no overflow; quiet hint', (tester) async {
+  testWidgets('compact unit picker via overflow; sheet lists units; quiet hint', (tester) async {
     await pumpLearn(tester);
 
-    expect(find.byKey(const ValueKey('unit_picker_button')), findsOneWidget);
-    // Must NOT dump every unit inline on the learn page.
+    expect(find.byKey(const ValueKey('unit_picker_button')), findsNothing);
     expect(find.text('第1组'), findsNothing);
     expect(find.byKey(const ValueKey('learn_known')), findsOneWidget);
     expect(find.byKey(const ValueKey('learn_unknown')), findsOneWidget);
     expect(tester.takeException(), isNull);
+
+    await tester.tap(find.byKey(const ValueKey('learn_overflow_menu')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const ValueKey('unit_picker_button')), findsOneWidget);
 
     await tester.tap(find.byKey(const ValueKey('unit_picker_button')));
     await tester.pumpAndSettle();
