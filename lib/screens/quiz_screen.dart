@@ -550,7 +550,7 @@ class _QuizScreenState extends State<QuizScreen> {
           FilledButton(
             onPressed: _answered ? _next : null,
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12),
+              padding: const EdgeInsets.symmetric(vertical: 14),
               child: Text(_index + 1 >= _questions.length ? '查看结果' : '下一题', style: const TextStyle(fontSize: 18)),
             ),
           ),

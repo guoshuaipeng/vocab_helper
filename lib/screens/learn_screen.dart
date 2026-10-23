@@ -47,6 +47,9 @@ class _LearnScreenState extends State<LearnScreen> {
   String? _error;
   int _queueNewCount = 0;
   int _queueDueCount = 0;
+  /// null | known | unknown — brief edge flash before advancing.
+  String? _flashKind;
+  bool _speaking = false;
   late final WordSpeaker _speaker;
   bool _ownsSpeaker = false;
 
@@ -180,28 +183,41 @@ class _LearnScreenState extends State<LearnScreen> {
     }
   }
 
+  Future<void> _flashThen(String kind, Future<void> Function() advance) async {
+    setState(() => _flashKind = kind);
+    await Future<void>.delayed(const Duration(milliseconds: 150));
+    if (!mounted) return;
+    await advance();
+    if (!mounted) return;
+    setState(() => _flashKind = null);
+  }
+
   Future<void> _onKnown() async {
     final q = _queue;
     final cur = q?.current;
-    if (q == null || cur == null) return;
-    await widget.store.markLearned(cur.id);
-    setState(() {
-      q.markKnown();
-      _flipped = false;
+    if (q == null || cur == null || _flashKind != null) return;
+    await _flashThen('known', () async {
+      await widget.store.markLearned(cur.id);
+      setState(() {
+        q.markKnown();
+        _flipped = false;
+      });
+      await _maybeAutoSpeak();
     });
-    await _maybeAutoSpeak();
   }
 
   Future<void> _onUnknown() async {
     final q = _queue;
     final cur = q?.current;
-    if (q == null || cur == null) return;
-    await widget.store.markWrong(cur.id);
-    setState(() {
-      q.markUnknown();
-      _flipped = false;
+    if (q == null || cur == null || _flashKind != null) return;
+    await _flashThen('unknown', () async {
+      await widget.store.markWrong(cur.id);
+      setState(() {
+        q.markUnknown();
+        _flipped = false;
+      });
+      await _maybeAutoSpeak();
     });
-    await _maybeAutoSpeak();
   }
 
   int _unitWordCount() {
@@ -218,6 +234,11 @@ class _LearnScreenState extends State<LearnScreen> {
     if (id == null) return;
     await widget.store.setUnitFilterForBook(id, unit);
     await _boot();
+    if (!mounted) return;
+    final msg = (unit == null || unit.isEmpty) ? '显示全部' : '已筛选 $unit';
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(msg), duration: const Duration(milliseconds: 1200)),
+    );
   }
 
   Future<void> _maybeAutoSpeak() async {
@@ -227,9 +248,20 @@ class _LearnScreenState extends State<LearnScreen> {
 
   Future<void> _speakCurrent() async {
     final word = _queue?.current;
-    if (word == null) return;
-    await _speaker.setAccent(widget.store.ttsAccent());
-    await _speaker.speak(word.word);
+    if (word == null || _speaking) return;
+    setState(() => _speaking = true);
+    try {
+      await _speaker.setAccent(widget.store.ttsAccent());
+      await _speaker.speak(word.word);
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('暂时没法朗读')),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _speaking = false);
+    }
   }
 
   @override
@@ -238,16 +270,30 @@ class _LearnScreenState extends State<LearnScreen> {
       return const Center(child: CircularProgressIndicator());
     }
     if (_error != null) {
+      final err = _error!;
+      final needSetup = err.contains('请先选择');
+      final wrongEmpty = widget.reviewWrongOnly && err.contains('错词');
+      final unitEmpty = err.contains('这个单元暂时没有单词');
+      final loadFail = err.startsWith('加载失败');
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(24),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(_error!, textAlign: TextAlign.center),
+              Text(err, textAlign: TextAlign.center, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600)),
               const SizedBox(height: 12),
-              FilledButton(onPressed: widget.onNeedSetup, child: const Text('去选择年级')),
-              TextButton(onPressed: _boot, child: const Text('重试')),
+              if (needSetup)
+                FilledButton(onPressed: widget.onNeedSetup, child: const Text('去选择年级'))
+              else if (wrongEmpty && widget.onLearnNew != null)
+                FilledButton(onPressed: widget.onLearnNew, child: const Text('去学新词'))
+              else if (unitEmpty)
+                FilledButton(onPressed: () => _pickUnit(null), child: const Text('看全部'))
+              else if (loadFail)
+                FilledButton(onPressed: _boot, child: const Text('重试'))
+              else
+                FilledButton(onPressed: widget.onNeedSetup, child: const Text('去选择年级')),
+              if (!loadFail) TextButton(onPressed: _boot, child: const Text('重试')),
             ],
           ),
         ),
@@ -257,21 +303,37 @@ class _LearnScreenState extends State<LearnScreen> {
     final q = _queue!;
     final word = q.current;
     if (word == null) {
+      final isEmptyDay = !widget.reviewWrongOnly && q.knownCount == 0;
       return Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              widget.reviewWrongOnly
-                  ? '错词本本轮复习完啦！'
-                  : (q.knownCount == 0 ? '今天没有新词和到期复习' : '本轮单词都过完啦！'),
-              style: const TextStyle(fontSize: 20),
-            ),
-            const SizedBox(height: 8),
-            Text('本轮认识 ${q.knownCount} 个', style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: 12),
-            FilledButton(onPressed: _boot, child: const Text('再来一轮')),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                widget.reviewWrongOnly
+                    ? '错词本本轮复习完啦！'
+                    : (isEmptyDay ? '今天没有新词和到期复习' : '本轮单词都过完啦！'),
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                isEmptyDay ? '去自测一下，或明天再来认读。' : '本轮认识 ${q.knownCount} 个，棒！',
+                style: Theme.of(context).textTheme.bodyMedium,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              if (isEmptyDay && widget.onStartQuiz != null)
+                FilledButton(onPressed: widget.onStartQuiz, child: const Text('去自测一下'))
+              else
+                FilledButton(onPressed: _boot, child: const Text('再来一轮')),
+              if (widget.reviewWrongOnly && widget.onLearnNew != null) ...[
+                const SizedBox(height: 8),
+                TextButton(onPressed: widget.onLearnNew, child: const Text('去学新词')),
+              ],
+            ],
+          ),
         ),
       );
     }
@@ -291,6 +353,7 @@ class _LearnScreenState extends State<LearnScreen> {
     final taskSelected = (widget.reviewWrongOnly && !widget.reviewWrongUnitScoped)
         ? _TodayTask.wrong
         : _TodayTask.learn;
+    final scheme = Theme.of(context).colorScheme;
 
     return Padding(
       padding: const EdgeInsets.all(20),
@@ -381,15 +444,32 @@ class _LearnScreenState extends State<LearnScreen> {
           ],
           const SizedBox(height: 8),
           Expanded(
-            child: Card(
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 150),
+              decoration: BoxDecoration(
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? scheme.surfaceContainerHighest
+                    : scheme.surface,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: _flashKind == 'known'
+                      ? scheme.primary
+                      : (_flashKind == 'unknown' ? scheme.error : scheme.outlineVariant),
+                  width: _flashKind != null ? 2 : 1,
+                ),
+              ),
               child: Column(
                 children: [
                   Align(
                     alignment: Alignment.centerRight,
                     child: IconButton(
+                      key: const ValueKey('flashcard_speak'),
                       tooltip: '朗读',
-                      onPressed: _speakCurrent,
-                      icon: const Icon(Icons.volume_up),
+                      onPressed: _speaking ? null : _speakCurrent,
+                      icon: Icon(
+                        Icons.volume_up,
+                        color: _speaking ? scheme.primary : scheme.onSurfaceVariant,
+                      ),
                     ),
                   ),
                   Expanded(
@@ -398,9 +478,18 @@ class _LearnScreenState extends State<LearnScreen> {
                       onTap: () => setState(() => _flipped = !_flipped),
                       child: Center(
                         child: SingleChildScrollView(
-                          padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                          padding: const EdgeInsets.fromLTRB(28, 0, 28, 24),
                           child: AnimatedSwitcher(
                             duration: const Duration(milliseconds: 200),
+                            switchInCurve: Curves.easeOut,
+                            switchOutCurve: Curves.easeIn,
+                            transitionBuilder: (child, anim) {
+                              final scale = Tween<double>(begin: 0.98, end: 1).animate(anim);
+                              return FadeTransition(
+                                opacity: anim,
+                                child: ScaleTransition(scale: scale, child: child),
+                              );
+                            },
                             child: _flipped
                                 ? Column(
                                     key: const ValueKey('back'),
@@ -461,7 +550,7 @@ class _LearnScreenState extends State<LearnScreen> {
             children: [
               Expanded(
                 child: OutlinedButton(
-                  onPressed: _onUnknown,
+                  onPressed: _flashKind != null ? null : _onUnknown,
                   child: const Padding(
                     padding: EdgeInsets.symmetric(vertical: 14),
                     child: Text('不认识', style: TextStyle(fontSize: 18)),
@@ -471,7 +560,7 @@ class _LearnScreenState extends State<LearnScreen> {
               const SizedBox(width: 12),
               Expanded(
                 child: FilledButton(
-                  onPressed: _onKnown,
+                  onPressed: _flashKind != null ? null : _onKnown,
                   child: const Padding(
                     padding: EdgeInsets.symmetric(vertical: 14),
                     child: Text('认识', style: TextStyle(fontSize: 18)),
@@ -520,7 +609,7 @@ class _TodayTaskBar extends StatelessWidget {
       color: scheme.surfaceContainerLow,
       borderRadius: BorderRadius.circular(16),
       child: Padding(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -616,12 +705,12 @@ class _TodayTaskButton extends StatelessWidget {
         : (selected ? scheme.onPrimaryContainer : scheme.onSurfaceVariant);
     final borderColor = !enabled
         ? scheme.outlineVariant.withValues(alpha: 0.4)
-        : (selected ? scheme.primary : scheme.outlineVariant);
+        : (selected ? scheme.primary : scheme.outlineVariant.withValues(alpha: 0.4));
     final borderWidth = selected && enabled ? 2.0 : 1.0;
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 150),
-      constraints: const BoxConstraints(minHeight: 64),
+      constraints: const BoxConstraints(minHeight: 56),
       decoration: BoxDecoration(
         color: bg,
         borderRadius: BorderRadius.circular(16),
@@ -658,12 +747,21 @@ class _TodayTaskButton extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 2),
-                Text(
-                  title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: titleColor),
+                LayoutBuilder(
+                  builder: (context, c) {
+                    final wide = c.maxWidth >= 100;
+                    return Text(
+                      title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: wide ? 14 : 13,
+                        fontWeight: FontWeight.w700,
+                        color: titleColor,
+                      ),
+                    );
+                  },
                 ),
                 Text(
                   subtitle,

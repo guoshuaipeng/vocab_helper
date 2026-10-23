@@ -106,6 +106,35 @@ class _MeScreenState extends State<MeScreen> {
     setState(() {});
   }
 
+
+  Future<void> _confirmClearWrong(String bookId) async {
+    final book = _book;
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('清空错词？'),
+        content: Text(
+          book == null
+              ? '将清空当前词书错词本，此操作不可撤销。'
+              : '将清空「${book.title}」的错词本，此操作不可撤销。',
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('取消')),
+          FilledButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('清空')),
+        ],
+      ),
+    );
+    if (ok != true || !mounted) return;
+    final messenger = ScaffoldMessenger.of(context);
+    final n = await widget.store.clearWrongForBook(bookId);
+    if (!mounted) return;
+    widget.onRefresh();
+    setState(() {});
+    messenger.showSnackBar(
+      SnackBar(content: Text(n == 0 ? '错词本已空' : '已清空 $n 个错词')),
+    );
+  }
+
   Future<void> _editGoal() async {
     final controller = TextEditingController(text: '${widget.store.dailyGoal()}');
     final ok = await showDialog<bool>(
@@ -370,18 +399,7 @@ class _MeScreenState extends State<MeScreen> {
                               ),
                               if (bookId != null)
                                 OutlinedButton(
-                                  onPressed: !hasWrong
-                                      ? null
-                                      : () async {
-                                          final messenger = ScaffoldMessenger.of(context);
-                                          final n = await widget.store.clearWrongForBook(bookId);
-                                          if (!mounted) return;
-                                          widget.onRefresh();
-                                          setState(() {});
-                                          messenger.showSnackBar(
-                                            SnackBar(content: Text(n == 0 ? '错词本已空' : '已清空 $n 个错词')),
-                                          );
-                                        },
+                                  onPressed: !hasWrong ? null : () => _confirmClearWrong(bookId),
                                   child: const Text('清空错词'),
                                 ),
                             ],
