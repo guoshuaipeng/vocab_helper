@@ -35,6 +35,7 @@ void main() {
   Future<void> capture(
     WidgetTester tester, {
     required ThemeData theme,
+    required Brightness brightness,
     required String outName,
   }) async {
     SharedPreferences.setMockInitialValues({
@@ -47,20 +48,28 @@ void main() {
     });
     tester.view.physicalSize = const Size(390, 920);
     tester.view.devicePixelRatio = 1.0;
+    tester.platformDispatcher.platformBrightnessTestValue = brightness;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
+    addTearDown(tester.platformDispatcher.clearPlatformBrightnessTestValue);
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pump();
     final store = await ProgressStore.open();
     final speaker = FakeWordSpeaker()..voiceAvailable = false;
+    final themed = withCjk(theme);
     await tester.pumpWidget(
       MaterialApp(
         key: ValueKey(outName),
-        theme: withCjk(theme),
+        theme: themed,
+        darkTheme: themed,
+        themeMode: brightness == Brightness.dark ? ThemeMode.dark : ThemeMode.light,
         home: Scaffold(
+          backgroundColor: themed.colorScheme.surface,
           body: RepaintBoundary(
             key: const ValueKey('shot_root'),
-            child: MeScreen(
+            child: ColoredBox(
+              color: themed.colorScheme.surface,
+              child: MeScreen(
               key: ValueKey('me_$outName'),
               store: store,
               repo: WordbookRepository(),
@@ -73,6 +82,7 @@ void main() {
               onQuizUnit: () {},
               onQuizWrong: () {},
               onStartDueReview: () {},
+            ),
             ),
           ),
         ),
@@ -89,6 +99,12 @@ void main() {
       await tester.pump(const Duration(milliseconds: 50));
     }
     expect(find.byKey(const ValueKey('me_accent_tts_hint')), findsOneWidget);
+    // Bring accent card fully into view (hint near bottom of card).
+    final list = find.byType(Scrollable);
+    if (list.evaluate().isNotEmpty) {
+      await tester.drag(list.first, const Offset(0, -280));
+      await tester.pump(const Duration(milliseconds: 200));
+    }
 
     await tester.runAsync(() async {
       final boundary =
@@ -102,7 +118,7 @@ void main() {
   }
 
   testWidgets('capture accent-tts missing-voice screenshots', (tester) async {
-    await capture(tester, theme: AppTheme.light(), outName: 'accent-tts-light.png');
-    await capture(tester, theme: AppTheme.dark(), outName: 'accent-tts-dark.png');
+    await capture(tester, theme: AppTheme.light(), brightness: Brightness.light, outName: 'accent-tts-light.png');
+    await capture(tester, theme: AppTheme.dark(), brightness: Brightness.dark, outName: 'accent-tts-dark.png');
   }, skip: !update);
 }
