@@ -10,7 +10,7 @@ import 'package:vocab_helper/theme/app_theme.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('know/unknown wrapped in AnimatedScale 0.98 on press', (tester) async {
+  testWidgets('unknown press scale; known elastic stretch Transform', (tester) async {
     SharedPreferences.setMockInitialValues({
       'selected_book_id': 'pep-ps-3',
       'daily_goal': 20,
@@ -40,33 +40,44 @@ void main() {
     });
     for (var i = 0; i < 40; i++) {
       await tester.pump(const Duration(milliseconds: 50));
+      if (find.byKey(const ValueKey('learn_known')).evaluate().isNotEmpty) break;
     }
 
     expect(find.byKey(const ValueKey('learn_known')), findsOneWidget);
     expect(find.byKey(const ValueKey('learn_unknown')), findsOneWidget);
 
+    // 不认识: still soft AnimatedScale press.
     final scales = find.byType(AnimatedScale);
     expect(scales, findsWidgets);
-
-    // Press known: scale goes to 0.98
-    final gesture = await tester.startGesture(tester.getCenter(find.byKey(const ValueKey('learn_known'))));
+    final gUnknown = await tester.startGesture(
+      tester.getCenter(find.byKey(const ValueKey('learn_unknown'))),
+    );
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 20));
-    AnimatedScale? pressed;
-    for (final e in scales.evaluate()) {
-      final w = e.widget as AnimatedScale;
-      if (w.scale == 0.98) {
-        pressed = w;
+    expect(
+      scales.evaluate().any((e) => (e.widget as AnimatedScale).scale == 0.98),
+      isTrue,
+      reason: 'unknown should press-scale to 0.98',
+    );
+    await gUnknown.up();
+    await tester.pump();
+
+    // 认识: elastic Transform stretches (sy > 1) mid animation.
+    await tester.tap(find.byKey(const ValueKey('learn_known')));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 120));
+    final transforms = find.byType(Transform);
+    var stretched = false;
+    for (final e in transforms.evaluate()) {
+      final m = (e.widget as Transform).transform;
+      final sy = m.entry(1, 1);
+      if (sy > 1.05) {
+        stretched = true;
         break;
       }
     }
-    expect(pressed, isNotNull, reason: 'expected AnimatedScale 0.98 while pressed');
-    expect(pressed!.duration, const Duration(milliseconds: 150));
-
-    await gesture.up();
-    await tester.pump();
-    // Allow R43 slide/flash timer (250ms) to finish.
-    await tester.pump(const Duration(milliseconds: 300));
+    expect(stretched, isTrue, reason: 'known thumb should elongate (sy>1)');
+    await tester.pump(const Duration(milliseconds: 550));
     await tester.pump(const Duration(milliseconds: 300));
   });
 }
