@@ -40,3 +40,10 @@
 - 实际：ProgressStore.dailyGoal；我的进度条；学习页今日进度；夹取 5～200
 - 卡住：无
 - 预防：目标数值做夹取，避免 0 除与离谱输入
+
+## 过程复盘（每 6 轮 · 2026-10-23）
+- 时间：同日连续多轮，单轮多数 <20 分钟；环境与依赖（Flutter 锁、nuget）占了额外时间
+- 返工：Expo→Flutter 一次选型切换；flutter_tts Windows 缺 nuget 导致编不过
+- 用户发现：暂无正式用户 bug 反馈；需求侧明确「本地、不要云端」
+- 可标准化：词书 JSON + catalog 结构已稳定；ProgressStore 前缀约定可写入规则
+- 下阶段：词书补全脚本化；Android SDK；发音引擎抽离已完成
