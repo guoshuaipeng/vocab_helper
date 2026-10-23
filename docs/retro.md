@@ -120,3 +120,9 @@
 - 实际：QuizEngine + QuizScreen；我的双入口 + 学习页 AppBar；错选进错词本、选对移出；design-r18
 - 卡住：无
 - 预防：出题逻辑保持纯函数便于单测；自测答对不 markLearned，避免与闪卡「认识」语义混淆
+
+## Round 19（2026-10-23）
+- 计划：学习页「今日任务」三入口（学新词 / 复习错词 / 自测），对齐 design-r19 §4.1
+- 实际：LearnScreen 任务条 + HomeShell 联动；ValueKey 单测；无错词 Tooltip+辅文；maxWidth 520
+- 卡住：widget 测与 Segmented「自测」文案冲突，改用 ValueKey；有错词时二次 pump 场景未稳定，改用 store 单测补角标数据
+- 预防：任务条按钮加稳定 Key；UI 验收交给 单词UI设计（fullscreen/narrow/light/dark）
