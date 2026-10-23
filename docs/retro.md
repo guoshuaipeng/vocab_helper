@@ -249,3 +249,9 @@
 - 实际：`WordbookRepository.recommendedBookId`；Setup 顶注+预选；Books subtitle「推荐」；单测拆文件避 prefs 污染；两张窄浅截图自验
 - 卡住：Books ListView 惰性构建导致未滚动找不到推荐卡；同文件多 widget 测试 prefs/索引串扰
 - 预防：推荐卡验收必须 scrollUntilVisible；Books 与 Setup 测试分文件；下一轮考虑词书列表推荐置顶
+
+## Round 41（2026-10-23）
+- 计划：词书列表把 R40 推荐本置顶为「推荐跟课」，原分组去重
+- 实际：`_buildBookSections`；空 version 省略；单测无需滚动；窄浅截图
+- 卡住：PowerShell 替换 books_screen 整段易空白符失败 → 整文件重写
+- 预防：大块 UI 重构优先整文件写入；推荐可见性与标签分两轮也可合并
