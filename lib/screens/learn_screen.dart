@@ -817,15 +817,10 @@ class _LearnScreenState extends State<LearnScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        SizedBox(
-                          width: iconSize,
-                          height: iconSize,
-                          child: CustomPaint(
-                            painter: FriendlyThumbPainter(
-                              color: scheme.onSurfaceVariant,
-                              down: true,
-                            ),
-                          ),
+                        FriendlyThumb(
+                          color: scheme.onSurfaceVariant,
+                          size: iconSize,
+                          down: true,
                         ),
                         const SizedBox(height: 8),
                         Text(

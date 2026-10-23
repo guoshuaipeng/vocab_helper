@@ -4,7 +4,38 @@ import 'dart:ui' show lerpDouble;
 
 import 'package:flutter/material.dart';
 
-/// Round outline thumbs-up like soft cuff+fist reference (not Material glyph).
+/// Soft outline thumbs-up (from reference silhouette, tinted).
+class FriendlyThumb extends StatelessWidget {
+  const FriendlyThumb({
+    super.key,
+    required this.color,
+    required this.size,
+    this.down = false,
+  });
+
+  final Color color;
+  final double size;
+  final bool down;
+
+  @override
+  Widget build(BuildContext context) {
+    final img = ColorFiltered(
+      colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+      child: Image.asset(
+        down
+            ? 'assets/icons/thumb_down_friendly.png'
+            : 'assets/icons/thumb_up_friendly.png',
+        width: size,
+        height: size,
+        filterQuality: FilterQuality.high,
+        gaplessPlayback: true,
+      ),
+    );
+    return SizedBox(width: size, height: size, child: img);
+  }
+}
+
+/// Kept for golden / CustomPaint call sites that still need a painter.
 class FriendlyThumbPainter extends CustomPainter {
   FriendlyThumbPainter({
     required this.color,
@@ -16,59 +47,47 @@ class FriendlyThumbPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    // Fallback outline if asset unavailable in tests without load — simple mark.
     final s = math.min(size.width, size.height);
     canvas.save();
     canvas.translate(size.width / 2, size.height / 2);
-    if (down) {
-      canvas.rotate(math.pi);
-    }
+    if (down) canvas.rotate(math.pi);
     canvas.translate(-s / 2, -s / 2);
     canvas.scale(s / 100);
-
     final stroke = Paint()
       ..color = color
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 9.5
+      ..strokeWidth = 8.5
       ..strokeCap = StrokeCap.round
       ..strokeJoin = StrokeJoin.round
       ..isAntiAlias = true;
-
-    // Cuff
-    final cuff = RRect.fromRectAndRadius(
-      const Rect.fromLTWH(5, 36, 24, 46),
-      const Radius.circular(9),
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+        const Rect.fromLTWH(8, 40, 20, 48),
+        const Radius.circular(7),
+      ),
+      stroke,
     );
-    canvas.drawRRect(cuff, stroke);
-    canvas.drawCircle(
-      const Offset(17, 70),
-      3.4,
-      Paint()
-        ..color = color
-        ..style = PaintingStyle.fill
-        ..isAntiAlias = true,
-    );
-
-    // Hand outer silhouette
+    canvas.drawCircle(const Offset(18, 75), 3.0, Paint()..color = color);
     final hand = Path()
-      ..moveTo(31, 50)
-      ..cubicTo(31, 38, 33, 20, 39, 11)
-      ..cubicTo(43, 4, 54, 4, 58, 12)
-      ..cubicTo(62, 20, 60, 34, 57, 42)
-      ..cubicTo(64, 39, 74, 38, 78, 45)
-      ..cubicTo(84, 50, 86, 56, 81, 60)
-      ..cubicTo(88, 63, 90, 70, 85, 74)
-      ..cubicTo(91, 78, 89, 86, 80, 87)
-      ..cubicTo(68, 90, 46, 88, 34, 79)
-      ..cubicTo(29, 74, 28, 62, 31, 50)
+      ..moveTo(32, 48)
+      ..cubicTo(32, 36, 34, 18, 40, 10)
+      ..cubicTo(44, 4, 54, 4, 58, 10)
+      ..cubicTo(62, 16, 62, 30, 58, 38)
+      ..cubicTo(66, 36, 76, 34, 82, 40)
+      ..cubicTo(88, 44, 90, 50, 86, 54)
+      ..cubicTo(92, 56, 94, 62, 90, 66)
+      ..cubicTo(96, 70, 94, 78, 86, 82)
+      ..cubicTo(74, 90, 48, 92, 34, 82)
+      ..cubicTo(30, 76, 30, 60, 32, 48)
       ..close();
     canvas.drawPath(hand, stroke);
-
-    // Groove between thumb and fist
-    final groove = Path()
-      ..moveTo(49, 42)
-      ..cubicTo(51, 49, 49, 56, 44, 60);
-    canvas.drawPath(groove, stroke);
-
+    canvas.drawPath(
+      Path()
+        ..moveTo(50, 40)
+        ..cubicTo(52, 48, 50, 56, 46, 60),
+      stroke,
+    );
     canvas.restore();
   }
 
@@ -77,7 +96,6 @@ class FriendlyThumbPainter extends CustomPainter {
       old.color != color || old.down != down;
 }
 
-/// 认识: friendly thumb flies to screen center, pauses, returns.
 class ElasticKnownThumbCta extends StatefulWidget {
   const ElasticKnownThumbCta({
     super.key,
@@ -175,9 +193,10 @@ class _ElasticKnownThumbCtaState extends State<ElasticKnownThumbCta> {
                     key: _anchorKey,
                     width: widget.iconSize,
                     height: widget.iconSize,
-                    child: CustomPaint(
+                    child: FriendlyThumb(
                       key: const ValueKey('learn_known_thumb_xform'),
-                      painter: FriendlyThumbPainter(color: widget.color),
+                      color: widget.color,
+                      size: widget.iconSize,
                     ),
                   ),
                 ),
@@ -228,9 +247,9 @@ class _ThumbFlightOverlayState extends State<_ThumbFlightOverlay>
     vsync: this,
     duration: const Duration(milliseconds: 480),
   );
-  /// 0 at button, 1 at center. Hold while peak runs, then animate back.
   double _u = 0;
   bool _holding = false;
+  VoidCallback? _tick;
 
   @override
   void initState() {
@@ -239,41 +258,41 @@ class _ThumbFlightOverlayState extends State<_ThumbFlightOverlay>
   }
 
   Future<void> _run() async {
-    _c.addListener(() {
+    void listenOut() {
       if (!mounted || _holding) return;
-      setState(() {
-        _u = Curves.easeInOutCubic.transform(_c.value);
-      });
-    });
+      setState(() => _u = Curves.easeInOutCubic.transform(_c.value));
+    }
+
+    _tick = listenOut;
+    _c.addListener(listenOut);
     await _c.forward();
     if (!mounted) return;
     setState(() {
       _u = 1;
       _holding = true;
     });
-    // Brief pause at center, then fire learn.
     await Future<void>.delayed(const Duration(milliseconds: 220));
     try {
       await widget.onPeak();
     } catch (_) {}
     if (!mounted) return;
-    // Extra beat so the big thumb is readable
     await Future<void>.delayed(const Duration(milliseconds: 160));
     if (!mounted) return;
     setState(() => _holding = false);
-    _c.value = 0;
-    _c.addListener(() {
+    _c.removeListener(listenOut);
+    void listenBack() {
       if (!mounted || _holding) return;
-      setState(() {
-        _u = 1.0 - Curves.easeInOutCubic.transform(_c.value);
-      });
-    });
+      setState(() => _u = 1.0 - Curves.easeInOutCubic.transform(_c.value));
+    }
+    _tick = listenBack;
+    _c.addListener(listenBack);
     await _c.forward(from: 0);
     if (mounted) widget.onDone();
   }
 
   @override
   void dispose() {
+    if (_tick != null) _c.removeListener(_tick!);
     _c.dispose();
     super.dispose();
   }
@@ -293,9 +312,7 @@ class _ThumbFlightOverlayState extends State<_ThumbFlightOverlay>
             height: size,
             child: Transform.scale(
               scale: breath,
-              child: CustomPaint(
-                painter: FriendlyThumbPainter(color: widget.color),
-              ),
+              child: FriendlyThumb(color: widget.color, size: size),
             ),
           ),
         ],

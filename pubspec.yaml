@@ -63,6 +63,7 @@ flutter:
 
   assets:
     - assets/wordbooks/
+    - assets/icons/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

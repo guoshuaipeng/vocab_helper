@@ -47,22 +47,23 @@ Future<void> _pumpLearn(WidgetTester tester) async {
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('friendly thumb painter golden', (tester) async {
+  testWidgets('friendly thumb asset golden', (tester) async {
     await tester.pumpWidget(
-      MaterialApp(
+      const MaterialApp(
         home: Scaffold(
           backgroundColor: Colors.white,
           body: Center(
-            child: SizedBox(
-              width: 160,
-              height: 160,
-              child: CustomPaint(key: const ValueKey('friendly_thumb_golden'), painter: FriendlyThumbPainter(color: const Color(0xFF2A9D8F))),
+            child: FriendlyThumb(
+              key: ValueKey('friendly_thumb_golden'),
+              color: Color(0xFF2A9D8F),
+              size: 160,
             ),
           ),
         ),
       ),
     );
     await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
     await expectLater(
       find.byKey(const ValueKey('friendly_thumb_golden')),
       matchesGoldenFile('goldens/friendly_thumb_up.png'),
@@ -74,17 +75,15 @@ void main() {
     expect(find.byKey(const ValueKey('learn_known_thumb_xform')), findsOneWidget);
     expect(find.byKey(const ValueKey('learn_unknown')), findsOneWidget);
 
-    final store = ((tester.widget(find.byType(LearnScreen)) as LearnScreen).store);
+    final store = (tester.widget(find.byType(LearnScreen)) as LearnScreen).store;
     final before = store.learnedIds().length;
 
     await tester.tap(find.byKey(const ValueKey('learn_known')));
-    // Fly out 480 + pause 220 + onAction/flash (~400) + pause 160 + return 480
     for (var i = 0; i < 40; i++) {
       await tester.pump(const Duration(milliseconds: 50));
     }
     expect(store.learnedIds().length, greaterThan(before));
 
-    // Fresh screen for unknown press
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pump();
     await _pumpLearn(tester);
@@ -100,4 +99,3 @@ void main() {
     await g.cancel();
   });
 }
-
