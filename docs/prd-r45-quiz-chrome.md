@@ -45,11 +45,11 @@
 
 ## 6. Acceptance
 
-- [ ] A1 窄浅截图：纸卡题干 + 细进度 + teal 主 CTA 可见  
-- [ ] A2 五档 Segmented + 题池 Chip 仍可用（再练中仍锁档）  
-- [ ] A3 相关 `flutter test`（quiz_* / engine）绿  
-- [ ] A4 `docs/shots/r45-*.png` + `r45-ui-acceptance.md`（至少窄浅 + 窄深；宽/听写可选）  
-- [ ] A5 requirements / retro 收口；`git push github master`（触发部署）；勿提交无关 `vercel.json`
+- [x] A1 窄浅截图：纸卡题干 + 细进度 + teal 主 CTA 可见  
+- [x] A2 五档 Segmented + 题池 Chip 仍可用（再练中仍锁档）  
+- [x] A3 相关 `flutter test`（quiz_* / engine）绿  
+- [x] A4 `docs/shots/r45-*.png` + `r45-ui-acceptance.md`（至少窄浅 + 窄深；宽/听写可选）  
+- [x] A5 requirements / retro 收口；`git push github master`（触发部署）；勿提交无关 `vercel.json`
 
 ## 7. 风险与技术约束
 

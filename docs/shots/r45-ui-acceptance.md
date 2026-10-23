@@ -2,7 +2,7 @@
 
 **日期**：2026-10-23（Asia/Shanghai）  
 **对照**：[design-r45.md](../design-r45.md) · [prd-r45-quiz-chrome.md](../prd-r45-quiz-chrome.md)  
-**RICE**：B01（85.3） · 免费工具 only（无付费 Refero/Mobbin）
+**RICE**：B01（85.3） · tip `5369d63` + docs `3b931ca` · 免费工具 only（无付费 Refero/Mobbin）
 
 ## 截图
 
@@ -16,7 +16,7 @@
 
 | ID | 结果 | 说明 |
 |----|------|------|
-| A1 纸卡+细进度+teal CTA | ✅ | 窄浅/窄深截图可见 paper 题干、minHeight 4、teal「下一题」 |
+| A1 纸卡+细进度+teal CTA | ✅ | 窄浅/窄深截图可见 paper 题干、minHeight 4、teal「查看结果」/Filled CTA |
 | A2 五档+题池仍可用 | ✅ | Segmented/Chip keys 保留；再练锁档逻辑未改；quiz_* 单测绿 |
 | A3 flutter test | ✅ | quiz_engine + quiz_end/word_pick/spell/dictation/listen/wrong_pool 全绿 |
 | A4 截图清单 | ✅ | 本清单三图（宽/听写可选未做） |
