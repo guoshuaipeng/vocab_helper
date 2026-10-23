@@ -1,95 +1,148 @@
 {
   "books": [
     {
-      "file": "pep-ps-3.json",
       "id": "pep-ps-3",
-      "grade": "三年级",
+      "file": "pep-ps-3.json",
       "version": "人教版PEP",
-      "title": "人教版PEP · 三年级"
+      "grade": "三年级",
+      "title": "人教版PEP · 三年级",
+      "wordCount": 98
     },
     {
-      "file": "pep-ps-4.json",
       "id": "pep-ps-4",
-      "grade": "四年级",
+      "file": "pep-ps-4.json",
       "version": "人教版PEP",
-      "title": "人教版PEP · 四年级"
+      "grade": "四年级",
+      "title": "人教版PEP · 四年级",
+      "wordCount": 87
     },
     {
-      "file": "pep-ps-5.json",
       "id": "pep-ps-5",
-      "grade": "五年级",
+      "file": "pep-ps-5.json",
       "version": "人教版PEP",
-      "title": "人教版PEP · 五年级"
+      "grade": "五年级",
+      "title": "人教版PEP · 五年级",
+      "wordCount": 81
     },
     {
-      "file": "pep-ps-6.json",
       "id": "pep-ps-6",
-      "grade": "六年级",
+      "file": "pep-ps-6.json",
       "version": "人教版PEP",
-      "title": "人教版PEP · 六年级"
-    },
-    {
-      "file": "wy-ps-3.json",
-      "id": "wy-ps-3",
-      "grade": "三年级",
-      "version": "外研版",
-      "title": "外研版 · 三年级（精选）"
-    },
-    {
-      "file": "wy-ps-4.json",
-      "id": "wy-ps-4",
-      "grade": "四年级",
-      "version": "外研版",
-      "title": "外研版 · 四年级（精选）"
-    },
-    {
-      "file": "wy-ps-5.json",
-      "id": "wy-ps-5",
-      "grade": "五年级",
-      "version": "外研版",
-      "title": "外研版 · 五年级（精选）"
-    },
-    {
-      "file": "wy-ps-6.json",
-      "id": "wy-ps-6",
       "grade": "六年级",
+      "title": "人教版PEP · 六年级",
+      "wordCount": 78
+    },
+    {
+      "id": "wy-ps-3",
+      "file": "wy-ps-3.json",
       "version": "外研版",
-      "title": "外研版 · 六年级（精选）"
+      "grade": "三年级",
+      "title": "外研版 · 三年级（精选）",
+      "wordCount": 69
     },
     {
-      "file": "pep_jh_7a_app.json",
+      "id": "wy-ps-4",
+      "file": "wy-ps-4.json",
+      "version": "外研版",
+      "grade": "四年级",
+      "title": "外研版 · 四年级（精选）",
+      "wordCount": 61
+    },
+    {
+      "id": "wy-ps-5",
+      "file": "wy-ps-5.json",
+      "version": "外研版",
+      "grade": "五年级",
+      "title": "外研版 · 五年级（精选）",
+      "wordCount": 46
+    },
+    {
+      "id": "wy-ps-6",
+      "file": "wy-ps-6.json",
+      "version": "外研版",
+      "grade": "六年级",
+      "title": "外研版 · 六年级（精选）",
+      "wordCount": 38
+    },
+    {
+      "id": "hj-ps-3",
+      "file": "hj-ps-3.json",
+      "version": "沪教版",
+      "grade": "三年级",
+      "title": "沪教牛津 · 三年级",
+      "wordCount": 156
+    },
+    {
+      "id": "hj-ps-4",
+      "file": "hj-ps-4.json",
+      "version": "沪教版",
+      "grade": "四年级",
+      "title": "沪教牛津 · 四年级（精选）",
+      "wordCount": 62
+    },
+    {
+      "id": "hj-ps-5",
+      "file": "hj-ps-5.json",
+      "version": "沪教版",
+      "grade": "五年级",
+      "title": "沪教牛津 · 五年级（精选）",
+      "wordCount": 48
+    },
+    {
+      "id": "hj-ps-6",
+      "file": "hj-ps-6.json",
+      "version": "沪教版",
+      "grade": "六年级",
+      "title": "沪教牛津 · 六年级（精选）",
+      "wordCount": 45
+    },
+    {
+      "id": "hj-jh-7",
+      "file": "hj-jh-7.json",
+      "version": "沪教版",
+      "grade": "七年级",
+      "title": "沪教牛津 · 七年级（精选）",
+      "wordCount": 42
+    },
+    {
       "id": "pep-jh-7a",
+      "file": "pep_jh_7a_app.json",
+      "version": "人教版初中",
       "grade": "七年级上",
-      "version": "人教版初中",
-      "title": "人教版初中 · 七年级上"
+      "title": "人教版初中 · 七年级上",
+      "wordCount": 338
     },
     {
-      "file": "pep_jh_7b_app.json",
       "id": "pep-jh-7b",
+      "file": "pep_jh_7b_app.json",
+      "version": "人教版初中",
       "grade": "七年级下",
-      "version": "人教版初中",
-      "title": "人教版初中 · 七年级下"
+      "title": "人教版初中 · 七年级下",
+      "wordCount": 463
     },
     {
-      "file": "pep_jh_8a_app.json",
       "id": "pep-jh-8a",
+      "file": "pep_jh_8a_app.json",
+      "version": "人教版初中",
       "grade": "八年级上",
-      "version": "人教版初中",
-      "title": "人教版初中 · 八年级上"
+      "title": "人教版初中 · 八年级上",
+      "wordCount": 556
     },
     {
-      "file": "pep_jh_8b_app.json",
       "id": "pep-jh-8b",
-      "grade": "八年级下",
+      "file": "pep_jh_8b_app.json",
       "version": "人教版初中",
-      "title": "人教版初中 · 八年级下"
+      "grade": "八年级下",
+      "title": "人教版初中 · 八年级下",
+      "wordCount": 586
     },
     {
-      "file": "pep_jh_9_app.json",
       "id": "pep-jh-9",
-      "grade": "九年级",
+      "file": "pep_jh_9_app.json",
       "version": "人教版初中",
-      "title": "人教版初中 · 九年级"
+      "grade": "九年级",
+      "title": "人教版初中 · 九年级",
+      "wordCount": 725
     }
   ]
 }

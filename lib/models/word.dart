@@ -31,6 +31,7 @@ class WordBookMeta {
     required this.version,
     required this.grade,
     required this.title,
+    this.wordCount = 0,
   });
 
   final String id;
@@ -38,6 +39,7 @@ class WordBookMeta {
   final String version;
   final String grade;
   final String title;
+  final int wordCount;
 
   factory WordBookMeta.fromJson(Map<String, dynamic> json) {
     return WordBookMeta(
@@ -46,6 +48,7 @@ class WordBookMeta {
       version: json['version'] as String,
       grade: json['grade'] as String,
       title: json['title'] as String,
+      wordCount: (json['wordCount'] as num?)?.toInt() ?? 0,
     );
   }
 }
@@ -56,6 +59,7 @@ class WordBook {
     required this.version,
     required this.grade,
     required this.title,
+    this.wordCount = 0,
     required this.source,
     required this.words,
   });
@@ -64,6 +68,7 @@ class WordBook {
   final String version;
   final String grade;
   final String title;
+  final int wordCount;
   final String source;
   final List<Word> words;
 
@@ -76,6 +81,7 @@ class WordBook {
       version: json['version'] as String,
       grade: json['grade'] as String,
       title: json['title'] as String,
+      wordCount: (json['wordCount'] as num?)?.toInt() ?? 0,
       source: (json['source'] as String?) ?? '',
       words: list,
     );

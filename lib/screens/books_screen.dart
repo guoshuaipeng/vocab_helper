@@ -64,7 +64,7 @@ class _BooksScreenState extends State<BooksScreen> {
                   color: selected ? Theme.of(context).colorScheme.primaryContainer : null,
                   child: ListTile(
                     title: Text(b.title),
-                    subtitle: Text(b.grade),
+                    subtitle: Text('${b.grade} · 共 ${b.wordCount} 词'),
                     trailing: selected ? const Icon(Icons.check_circle) : null,
                   ),
                 );
