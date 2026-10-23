@@ -32,9 +32,9 @@
 ## 4. 验收
 
 - [x] 清空 selected 后进 Setup：已选中 2024 七上，点确认进入学习
-- [x] 已选 pep-ps-3：重启仍是 pep-ps-3
+- [x] 已选 pep-ps-3：重启仍是 pep-ps-3（widget keep 测）
 - [x] 词书页推荐本可见「推荐」
-- [x] 窄浅截图 Setup 预选态 + 词书列表推荐态各 1
+- [x] 窄/宽 × 浅/深：Setup 预选态 + 词书列表推荐态（见 shots/r40-ui-acceptance.md）
 
 ## 5. 不做
 

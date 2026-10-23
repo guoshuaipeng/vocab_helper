@@ -246,9 +246,9 @@
 
 ## Round 40（2026-10-23）
 - 计划：无选中词书时 Setup 预选沪教牛津2024七上；Setup/Books 标「推荐」
-- 实际：`WordbookRepository.recommendedBookId`；Setup 顶注+预选；Books subtitle「推荐」；单测拆文件避 prefs 污染；两张窄浅截图自验
-- 卡住：Books ListView 惰性构建导致未滚动找不到推荐卡；同文件多 widget 测试 prefs/索引串扰
-- 预防：推荐卡验收必须 scrollUntilVisible；Books 与 Setup 测试分文件；下一轮考虑词书列表推荐置顶
+- 实际：WordbookRepository.recommendedBookId；Setup 顶注+预选；Books subtitle「推荐」；单测拆文件避 prefs 污染；首轮两张窄浅；收口补齐四态截图 + pep-ps-3 keep 测
+- 卡住：① Books ListView 惰性构建需 scrollUntilVisible（R41 已置顶）；② 同文件连续两个 Setup testWidgets 第二例 hint 丢失——合并为单 testWidgets 双场景
+- 预防：推荐卡验收必须可见（scroll/置顶）；Setup 多场景 prefer 单 testWidgets 或分文件；下一轮 R42 弱提示切换
 
 ## Round 41（2026-10-23）
 - 计划：词书列表把 R40 推荐本置顶为「推荐跟课」，原分组去重
