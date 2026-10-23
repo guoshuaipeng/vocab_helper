@@ -50,7 +50,7 @@ class QuizEngine {
     required Word target,
     required List<Word> bookWords,
     Random? random,
-    /// When true, distractors must have distinct Chinese meanings (听音选义).
+    /// When true, distractors must have distinct Chinese meanings (听音选义 / 看词选义).
     bool listenMode = false,
   }) {
     final rng = random ?? Random();

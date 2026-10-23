@@ -51,7 +51,7 @@ void main() {
     }
   }
 
-  testWidgets('自测卡副文案点明看义/听音/拼写，勿写仅四选一', (tester) async {
+  testWidgets('自测卡副文案点明看义/看词/听音/拼写，勿写仅四选一', (tester) async {
     await pumpMe(tester);
 
     final sub = find.byKey(const ValueKey('me_quiz_card_subtitle'));
@@ -64,6 +64,7 @@ void main() {
     expect(sub, findsOneWidget);
     final text = tester.widget<Text>(sub).data ?? '';
     expect(text.contains('看义'), isTrue);
+    expect(text.contains('看词'), isTrue);
     expect(text.contains('听音'), isTrue);
     expect(text.contains('拼写'), isTrue);
     expect(text.contains('错词'), isTrue);
