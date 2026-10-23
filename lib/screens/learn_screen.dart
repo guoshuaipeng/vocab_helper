@@ -179,6 +179,13 @@ class _LearnScreenState extends State<LearnScreen> {
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              '今日 ${widget.store.todayCount()}/${widget.store.dailyGoal()}${widget.store.todayGoalMet ? ' · 已达标' : ''}',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ),
           const SizedBox(height: 16),
           Expanded(
             child: GestureDetector(

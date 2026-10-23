@@ -96,10 +96,40 @@ class _MeScreenState extends State<MeScreen> {
     setState(() {});
   }
 
+  Future<void> _editGoal() async {
+    final controller = TextEditingController(text: '${widget.store.dailyGoal()}');
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('设置每日目标'),
+        content: TextField(
+          controller: controller,
+          keyboardType: TextInputType.number,
+          decoration: const InputDecoration(
+            labelText: '每天新学单词数',
+            helperText: '建议 5～100，默认 20',
+          ),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('取消')),
+          FilledButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('保存')),
+        ],
+      ),
+    );
+    if (ok != true || !mounted) return;
+    final n = int.tryParse(controller.text.trim()) ?? widget.store.dailyGoal();
+    await widget.store.setDailyGoal(n);
+    widget.onRefresh();
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     final bookId = widget.store.selectedBookId();
     final bookLearned = bookId == null ? 0 : widget.store.learnedCountForBook(bookId);
+    final goal = widget.store.dailyGoal();
+    final today = widget.store.todayCount();
+    final progress = goal == 0 ? 0.0 : (today / goal).clamp(0.0, 1.0);
 
     return RefreshIndicator(
       onRefresh: () async {
@@ -152,9 +182,35 @@ class _MeScreenState extends State<MeScreen> {
             ),
           ),
           const SizedBox(height: 12),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(child: Text('今日目标', style: Theme.of(context).textTheme.titleMedium)),
+                      TextButton(onPressed: _editGoal, child: const Text('修改')),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Text('$today / $goal', style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 8),
+                  LinearProgressIndicator(value: progress),
+                  const SizedBox(height: 8),
+                  Text(
+                    widget.store.todayGoalMet ? '今日目标已完成，棒！' : '再学 ${goal - today} 个就达标',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
           _StatCard(label: '已学单词（全部）', value: '${widget.store.learnedCount()}'),
           const SizedBox(height: 12),
-          _StatCard(label: '今日新学', value: '${widget.store.todayCount()}'),
+          _StatCard(label: '今日新学', value: '$today'),
           const SizedBox(height: 12),
           _StatCard(label: '连续天数', value: '${widget.store.streakDays()}'),
         ],

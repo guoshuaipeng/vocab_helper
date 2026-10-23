@@ -29,4 +29,16 @@ void main() {
     final removed = await store.clearLearnedForBook('missing-book');
     expect(removed, 0);
   });
+
+  test('dailyGoal defaults and clamps', () async {
+    final store = await ProgressStore.open();
+    expect(store.dailyGoal(), 20);
+    await store.setDailyGoal(3);
+    expect(store.dailyGoal(), 5);
+    await store.setDailyGoal(500);
+    expect(store.dailyGoal(), 200);
+    await store.setDailyGoal(30);
+    expect(store.dailyGoal(), 30);
+    expect(store.todayGoalMet, isFalse);
+  });
 }

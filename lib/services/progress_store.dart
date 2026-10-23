@@ -11,6 +11,7 @@ class ProgressStore {
   static const _kStreak = 'streak_days';
   static const _kLastActive = 'last_active_date';
   static const _kBookId = 'selected_book_id';
+  static const _kDailyGoal = 'daily_goal';
 
   static Future<ProgressStore> open() async {
     final prefs = await SharedPreferences.getInstance();
@@ -57,6 +58,15 @@ class ProgressStore {
   }
 
   int streakDays() => _prefs.getInt(_kStreak) ?? 0;
+
+  int dailyGoal() => _prefs.getInt(_kDailyGoal) ?? 20;
+
+  Future<void> setDailyGoal(int n) async {
+    final v = n.clamp(5, 200);
+    await _prefs.setInt(_kDailyGoal, v);
+  }
+
+  bool get todayGoalMet => todayCount() >= dailyGoal();
 
   Future<void> markLearned(String id) async {
     final ids = learnedIds();
