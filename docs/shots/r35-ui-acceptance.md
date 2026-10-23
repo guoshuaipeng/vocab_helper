@@ -2,7 +2,7 @@
 
 **对应**：R35 / P1 自测结束错题再练  
 **设计稿**：`docs/design-r35.md`  
-**状态**：**UI 通过**（tip 待填 · 2026-10-23）  
+**状态**：**UI 通过**（tip 691c43f · 2026-10-23）  
 **代码**：`QuizScreen` 结束页 CTA + `_sessionWrongIds`；`QuizEngine.applySessionWrong` / `wordsForRetry` / `buildRetrySession`  
 **单测**：`test/quiz_engine_test.dart`（R35 group）· `test/quiz_end_test.dart`  
 **截图前缀**：`r35-`
@@ -33,5 +33,5 @@
 - 结论：**通过**
 - 日期：2026-10-23
 - 验收人：单词迭代（自验）
-- tip：（feat commit 后回填）
+- tip：691c43f
 - 备注：六图目视通过；有错双 CTA / 无错单主按钮 / 再练中弱标与题干符合 design-r35。
