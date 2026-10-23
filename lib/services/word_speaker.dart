@@ -5,6 +5,9 @@ abstract class WordSpeaker {
   Future<void> speak(String text);
   Future<void> stop();
   void dispose();
+
+  /// False when no usable English voice (disable 听音选义).
+  Future<bool> englishVoiceAvailable() async => true;
 }
 
 class FlutterWordSpeaker implements WordSpeaker {
@@ -43,6 +46,21 @@ class FlutterWordSpeaker implements WordSpeaker {
   }
 
   @override
+  Future<bool> englishVoiceAvailable() async {
+    try {
+      await _ready;
+      final langs = await _tts.getLanguages;
+      if (langs is! List || langs.isEmpty) return true; // optimistic if unknown
+      return langs.any((l) {
+        final s = l.toString().toLowerCase();
+        return s.startsWith('en') || s.contains('en-') || s.contains('en_');
+      });
+    } catch (_) {
+      return true;
+    }
+  }
+
+  @override
   Future<void> stop() async {
     await _tts.stop();
   }
@@ -57,6 +75,8 @@ class FakeWordSpeaker implements WordSpeaker {
   final List<String> spoken = <String>[];
   String language = 'en-US';
   bool stopped = false;
+  bool voiceAvailable = true;
+  bool throwOnSpeak = false;
 
   @override
   Future<void> setAccent(String languageCode) async {
@@ -65,6 +85,9 @@ class FakeWordSpeaker implements WordSpeaker {
 
   @override
   Future<void> speak(String text) async {
+    if (throwOnSpeak) {
+      throw Exception('tts failed');
+    }
     spoken.add(text);
   }
 
@@ -72,6 +95,9 @@ class FakeWordSpeaker implements WordSpeaker {
   Future<void> stop() async {
     stopped = true;
   }
+
+  @override
+  Future<bool> englishVoiceAvailable() async => voiceAvailable;
 
   @override
   void dispose() {}

@@ -37,6 +37,8 @@ class QuizEngine {
     required Word target,
     required List<Word> bookWords,
     Random? random,
+    /// When true, distractors must have distinct Chinese meanings (听音选义).
+    bool listenMode = false,
   }) {
     final rng = random ?? Random();
     final unit = (target.unit ?? '').trim();
@@ -49,15 +51,19 @@ class QuizEngine {
     final distractors = <Word>[];
     final usedIds = <String>{target.id};
     final usedSpellings = <String>{target.word.toLowerCase()};
+    final usedMeanings = <String>{target.meaning.trim().toLowerCase()};
 
     void takeFrom(List<Word> pool, int need) {
       final shuffled = List<Word>.from(pool)..shuffle(rng);
       for (final w in shuffled) {
         if (distractors.length >= need) break;
         final key = w.word.toLowerCase();
+        final meaningKey = w.meaning.trim().toLowerCase();
         if (usedIds.contains(w.id) || usedSpellings.contains(key)) continue;
+        if (listenMode && (meaningKey.isEmpty || usedMeanings.contains(meaningKey))) continue;
         usedIds.add(w.id);
         usedSpellings.add(key);
+        usedMeanings.add(meaningKey);
         distractors.add(w);
       }
     }
@@ -82,13 +88,19 @@ class QuizEngine {
     required List<Word> bookWords,
     int dailyGoal = 20,
     Random? random,
+    bool listenMode = false,
   }) {
     final rng = random ?? Random();
     final targets = List<Word>.from(pool)..shuffle(rng);
     final limit = sessionCap(poolSize: targets.length, dailyGoal: dailyGoal);
     final out = <QuizQuestion>[];
     for (final t in targets.take(limit)) {
-      final q = buildQuestion(target: t, bookWords: bookWords, random: rng);
+      final q = buildQuestion(
+        target: t,
+        bookWords: bookWords,
+        random: rng,
+        listenMode: listenMode,
+      );
       if (q != null) out.add(q);
     }
     return out;

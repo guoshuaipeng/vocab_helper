@@ -16,6 +16,7 @@ class ProgressStore {
   static const _kUnitFilterPrefix = 'unit_filter_';
   static const _kTtsAccent = 'tts_accent';
   static const _kAutoSpeak = 'auto_speak';
+  static const _kQuizVariant = 'quiz_variant';
 
   static Future<ProgressStore> open() async {
     final prefs = await SharedPreferences.getInstance();
@@ -200,6 +201,17 @@ class ProgressStore {
 
   Future<void> setAutoSpeak(bool v) async {
     await _prefs.setBool(_kAutoSpeak, v);
+  }
+
+  /// `meaning` = 看义选词；`listen` = 听音选义.
+  String quizVariant() {
+    final v = _prefs.getString(_kQuizVariant);
+    return v == 'listen' ? 'listen' : 'meaning';
+  }
+
+  Future<void> setQuizVariant(String variant) async {
+    final v = variant == 'listen' ? 'listen' : 'meaning';
+    await _prefs.setString(_kQuizVariant, v);
   }
 
   String? unitFilterForBook(String bookId) => _prefs.getString('$_kUnitFilterPrefix$bookId');
