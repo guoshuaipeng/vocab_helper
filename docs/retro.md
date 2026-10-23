@@ -169,3 +169,10 @@
 - 卡住：首交截图只截到入口（RepaintBoundary 未包 modal overlay）→ UI 打回
 - 根因：shot root 在 Scaffold body 内，sheet 在 navigator overlay 外
 - 预防：含对话框/sheet 的截图用 MaterialApp.builder 包住 navigator；截前 pumpAndSettle；CJK 勿强绑 monospace
+
+## Round 29（2026-10-23）
+- 计划：我的页「待复习 N」可点 → 到期词 sheet +「开始复习」进认读（沿用 R20 队列）
+- 实际：dueReviewEntriesForBook；MeScreen InkWell + bottom sheet；空态「去学新词」；四态+空态截图；UI 通过
+- 顺利：列表过滤/排序单测与 UI 测分开；shot 用 MaterialApp.builder 包 overlay（承接 R28 教训）
+- 注意：空列表勿挂转圈（会拖死 pumpAndSettle）；entries 空则短路结束 loading
+- 预防：含 sheet 的交验清单必须含预览/列表态，不只入口数字
