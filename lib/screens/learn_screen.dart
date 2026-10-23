@@ -174,71 +174,70 @@ class _LearnScreenState extends State<LearnScreen> {
         children: [
           Align(
             alignment: Alignment.centerLeft,
-            child: Text(
-              '${_book?.title ?? ''} · 剩余 ${q.remaining} · 本轮认识 ${q.knownCount}',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
+            child: Text(_book?.title ?? '', style: Theme.of(context).textTheme.titleMedium),
           ),
           Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              '今日 ${widget.store.todayCount()}/${widget.store.dailyGoal()}${widget.store.todayGoalMet ? ' · 已达标' : ''}',
+              '剩余 ${q.remaining} · 本轮认识 ${q.knownCount} · 今日 ${widget.store.todayCount()}/${widget.store.dailyGoal()}${widget.store.todayGoalMet ? ' · 已达标' : ''}',
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ),
           const SizedBox(height: 16),
           Expanded(
-            child: GestureDetector(
-              onTap: () => setState(() => _flipped = !_flipped),
-              child: Card(
-                child: Stack(
-                  children: [
-                    Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(24),
-                        child: AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 200),
-                          child: _flipped
-                              ? Column(
-                                  key: const ValueKey('back'),
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(word.meaning, style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
-                                    if ((word.example ?? '').isNotEmpty) ...[
+            child: Card(
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: IconButton(
+                      tooltip: '朗读',
+                      onPressed: _speakCurrent,
+                      icon: const Icon(Icons.volume_up),
+                    ),
+                  ),
+                  Expanded(
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () => setState(() => _flipped = !_flipped),
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                          child: AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 200),
+                            child: _flipped
+                                ? Column(
+                                    key: const ValueKey('back'),
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(word.meaning, style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+                                      if ((word.example ?? '').isNotEmpty) ...[
+                                        const SizedBox(height: 16),
+                                        Text(word.example!, textAlign: TextAlign.center, style: const TextStyle(fontSize: 16)),
+                                      ],
+                                      const SizedBox(height: 12),
+                                      Text('点按卡片可翻回', style: Theme.of(context).textTheme.bodySmall),
+                                    ],
+                                  )
+                                : Column(
+                                    key: const ValueKey('front'),
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(word.word, style: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold)),
+                                      if ((word.phonetic ?? '').isNotEmpty) ...[
+                                        const SizedBox(height: 8),
+                                        Text(word.phonetic!, style: Theme.of(context).textTheme.titleMedium),
+                                      ],
                                       const SizedBox(height: 16),
-                                      Text(word.example!, textAlign: TextAlign.center, style: const TextStyle(fontSize: 16)),
+                                      Text('点按卡片看中文', style: Theme.of(context).textTheme.bodySmall),
                                     ],
-                                    const SizedBox(height: 12),
-                                    Text('点按卡片可翻回', style: Theme.of(context).textTheme.bodySmall),
-                                  ],
-                                )
-                              : Column(
-                                  key: const ValueKey('front'),
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(word.word, style: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold)),
-                                    if ((word.phonetic ?? '').isNotEmpty) ...[
-                                      const SizedBox(height: 8),
-                                      Text(word.phonetic!, style: Theme.of(context).textTheme.titleMedium),
-                                    ],
-                                    const SizedBox(height: 16),
-                                    Text('点按卡片看中文', style: Theme.of(context).textTheme.bodySmall),
-                                  ],
-                                ),
+                                  ),
+                          ),
                         ),
                       ),
                     ),
-                    Positioned(
-                      top: 8,
-                      right: 8,
-                      child: IconButton(
-                        tooltip: '朗读',
-                        onPressed: _speakCurrent,
-                        icon: const Icon(Icons.volume_up),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),
