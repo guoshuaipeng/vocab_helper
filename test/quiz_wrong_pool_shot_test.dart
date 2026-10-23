@@ -24,6 +24,27 @@ ThemeData withCjk(ThemeData base) => base.copyWith(
       primaryTextTheme: base.primaryTextTheme.apply(fontFamily: 'ShotCJK'),
     );
 
+/// SharedPreferences.setMockInitialValues does not refresh an already-opened
+/// in-memory store across captures in one testWidgets — sync explicitly.
+Future<ProgressStore> openStoreWithWrongIds(List<String> wrongIds) async {
+  SharedPreferences.setMockInitialValues({
+    'selected_book_id': 'pep-ps-4',
+    'quiz_variant': 'word',
+    'daily_goal': 8,
+    'wrong_ids': wrongIds,
+  });
+  final store = await ProgressStore.open();
+  final want = wrongIds.toSet();
+  for (final id in store.wrongIds().toList()) {
+    if (!want.contains(id)) await store.removeWrong(id);
+  }
+  for (final id in want) {
+    await store.markWrong(id);
+  }
+  await store.setQuizVariant('word');
+  return store;
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   final update = Platform.environment['UPDATE_SHOTS'] == '1';
@@ -47,13 +68,11 @@ void main() {
       'pep-ps-4-5',
       'pep-ps-4-6',
     ],
+    bool showEmptySnackBar = false,
   }) async {
-    SharedPreferences.setMockInitialValues({
-      'selected_book_id': 'pep-ps-4',
-      'quiz_variant': 'word',
-      'daily_goal': 8,
-      'wrong_ids': wrongIds,
-    });
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump(const Duration(milliseconds: 50));
+
     tester.view.physicalSize = size;
     tester.view.devicePixelRatio = 1.0;
     tester.platformDispatcher.platformBrightnessTestValue = brightness;
@@ -61,7 +80,10 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
     addTearDown(tester.platformDispatcher.clearPlatformBrightnessTestValue);
 
-    final store = await ProgressStore.open();
+    final store = await openStoreWithWrongIds(wrongIds);
+    expect(store.wrongIds().length, wrongIds.length,
+        reason: 'shot $outName must use exact wrong count');
+
     final themed = withCjk(theme);
     await tester.pumpWidget(
       MaterialApp(
@@ -90,6 +112,15 @@ void main() {
       for (var i = 0; i < 40; i++) {
         await tester.pump(const Duration(milliseconds: 50));
       }
+    }
+    if (showEmptySnackBar) {
+      expect(find.text('只测错词'), findsOneWidget);
+      expect(find.textContaining('只测错词 ·'), findsNothing);
+      await tester.tap(find.byKey(const ValueKey('quiz_pool_wrong')));
+      for (var i = 0; i < 20; i++) {
+        await tester.pump(const Duration(milliseconds: 50));
+      }
+      expect(find.textContaining('还没有错词，先去学或自测'), findsOneWidget);
     }
 
     await tester.runAsync(() async {
@@ -136,7 +167,7 @@ void main() {
       outName: 'r32-wrong-pool-wide-dark.png',
       wrongOnly: true,
     );
-    // empty wrong chip state on book mode
+    // Real wrong-count=0: Chip「只测错词」+ SnackBar after tap.
     await capture(
       tester,
       size: const Size(390, 920),
@@ -145,6 +176,7 @@ void main() {
       outName: 'r32-wrong-pool-empty-narrow-light.png',
       wrongOnly: false,
       wrongIds: const [],
+      showEmptySnackBar: true,
     );
   }, skip: !update);
 }
