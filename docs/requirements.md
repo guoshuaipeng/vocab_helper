@@ -11,17 +11,17 @@
 
 **PRD**：[docs/prd-learn-wow.md](prd-learn-wow.md)（ChatPRD `ai-development-brief`）  
 **设计稿**：[docs/design-r43.md](design-r43.md)  
-**状态**：**可开发**（2026-10-23 · R42 UI 自验通过后升排）——本 bot 已收口 R42，**未开始** R43 实现。
+**状态**：**已完成**（2026-10-23 · UI 自验通过 · docs/shots/r43-ui-acceptance.md）
 
 **用户故事**  
 作为跟课认读的孩子，打开「学习」后想一眼只盯着当前单词，用大按钮做认识/不认识，并感到比旧版「眼前一亮」。
 
 **范围（做）**
 
-- [ ] focused study：大展示词 + 纸质抬升卡 + 细顶进度 + 底双肥胶囊 CTA
-- [ ] 次要模式进 overflow/sheet；竖屏顶≤15% / 卡≥55% / CTA≥18%；宽屏卡左 CTA 右
-- [ ] 答后 slide（主）+ CTA scale；保留 SRS/自测引擎/书单元入口/中文文案
-- [ ] 验收：窄浅深 + 宽；对照 PRD W1–W11
+- [x] focused study：大展示词 + 纸质抬升卡 + 细顶进度 + 底双肥胶囊 CTA
+- [x] 次要模式进 overflow/sheet；竖屏顶≤15% / 卡≥55% / CTA≥18%；宽屏卡左 CTA 右
+- [x] 答后 slide（主）+ CTA scale；保留 SRS/自测引擎/书单元入口/中文文案
+- [x] 验收：窄浅深 + 宽；对照 PRD W1–W11
 
 **范围（不做）**
 
@@ -58,7 +58,7 @@
 | R40 | 默认推荐沪教牛津2024七上 | [design-r40.md](design-r40.md) | **已完成** |
 | R41 | 词书列表推荐本置顶 | [design-r41.md](design-r41.md) | **已完成** |
 | R42 | 非推荐词书弱提示切换跟课 | [design-r42.md](design-r42.md) · [prd-learn-v2.md](prd-learn-v2.md) | **已完成** |
-| R43 | 学习页眼前一亮大改 | [design-r43.md](design-r43.md) · [prd-learn-wow.md](prd-learn-wow.md) | **可开发** |
+| R43 | 学习页眼前一亮大改 | [design-r43.md](design-r43.md) · [prd-learn-wow.md](prd-learn-wow.md) | **已完成** |
 
 ---
 
@@ -89,7 +89,7 @@
 - [x] **R40** 默认推荐沪教牛津2024七上（见 design-r40；**UI 自验通过** 2026-10-23 · tip `df4f5f0`）
 - [x] **R41** 词书列表推荐本置顶（见 design-r41；**UI 自验通过** 2026-10-23 · tip `25b00d3`）
 - [x] **R42** 非推荐词书弱提示切换跟课（见 design-r42 / prd-learn-v2；**UI 自验通过** 2026-10-23 · docs/shots/r42-ui-acceptance.md）
-- [ ] **R43** 学习页眼前一亮大改（见 design-r43 / prd-learn-wow；**可开发**；待实现）
+- [x] **R43** 学习页眼前一亮大改（见 design-r43 / prd-learn-wow；**UI 自验通过** 2026-10-23 · docs/shots/r43-ui-acceptance.md）
 
 ## P2（体验）
 
@@ -347,6 +347,7 @@
 
 | 日期 | 说明 |
 |------|------|
+| 2026-10-23 | **R43 UI 自验通过**：学习页眼前一亮大改（大词卡+双 CTA+overflow；slide；teal 认识）· r43-ui-acceptance.md |
 | 2026-10-23 | **R42 UI 自验通过**：非推荐弱提示收口；R43 升可开发（未开工） |
 | 2026-10-23 | **R43 设计就绪（R42 后立刻）**：学习页眼前一亮大改 · prd-learn-wow.md + design-r43.md；不打断 R42 进行中勾选；免费工具 only |
 | 2026-10-23 | **R40 补齐**：pep-ps-3 keep 测 + Setup/Books 四态截图；docs/shots/r40-ui-acceptance.md |
