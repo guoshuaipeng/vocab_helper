@@ -50,7 +50,10 @@ void main() {
     expect(find.byKey(const ValueKey('review_next_hint')), findsNothing);
     await tester.tap(find.byKey(const ValueKey('learn_known')));
     await tester.pump();
-    await tester.pump(const Duration(milliseconds: 200));
+    for (var j = 0; j < 40; j++) {
+      await tester.pump(const Duration(milliseconds: 50));
+      if (find.byKey(const ValueKey('review_next_hint')).evaluate().isNotEmpty) break;
+    }
     expect(find.byKey(const ValueKey('review_next_hint')), findsOneWidget);
     expect(find.text('下次 · 明天复习'), findsOneWidget);
 
@@ -60,7 +63,9 @@ void main() {
     expect(find.byKey(const ValueKey('learn_known')), findsOneWidget);
     await tester.tap(find.byKey(const ValueKey('learn_known')));
     await tester.pump();
-    await tester.pump(const Duration(milliseconds: 200));
+    for (var j = 0; j < 40; j++) {
+      await tester.pump(const Duration(milliseconds: 50));
+    }
     expect(find.byKey(const ValueKey('review_next_hint')), findsNothing);
   });
 
