@@ -102,3 +102,10 @@
 - 实际：hj-jh-8 / hj-jh-9 精选；刷新 catalog；勾选 requirements
 - 卡住：无全书公开 JSON
 - 预防：精选必须在 source 字段标明
+
+## Round 16（2026-10-23）
+- 计划：错词本可选只复习当前单元
+- 实际：Me 双入口；LearnScreen.reviewWrongUnitScoped；filterWrongWords 单测；design-r16
+- 卡住：无
+- 预防：错词「全部」与学习单元筛选解耦，避免误以为复习错词总会被单元截断
+

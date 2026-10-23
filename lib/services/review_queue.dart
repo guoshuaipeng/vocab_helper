@@ -1,5 +1,18 @@
 import '../models/word.dart';
 
+/// Filter wrong-book words; [unitFilter] null/empty = whole book.
+List<Word> filterWrongWords({
+  required List<Word> words,
+  required Set<String> wrongIds,
+  String? unitFilter,
+}) {
+  Iterable<Word> list = words.where((w) => wrongIds.contains(w.id));
+  if (unitFilter != null && unitFilter.isNotEmpty) {
+    list = list.where((w) => w.unit == unitFilter);
+  }
+  return list.toList();
+}
+
 /// Session review queue: unknown words are re-queued to the end.
 class ReviewQueue {
   ReviewQueue(List<Word> initial) : _queue = List<Word>.from(initial);

@@ -14,6 +14,7 @@ class LearnScreen extends StatefulWidget {
     required this.bookId,
     required this.onNeedSetup,
     this.reviewWrongOnly = false,
+    this.reviewWrongUnitScoped = false,
     this.speaker,
   });
 
@@ -22,6 +23,8 @@ class LearnScreen extends StatefulWidget {
   final String? bookId;
   final VoidCallback onNeedSetup;
   final bool reviewWrongOnly;
+  /// When [reviewWrongOnly], limit to ProgressStore unit filter (same as learn).
+  final bool reviewWrongUnitScoped;
   final WordSpeaker? speaker;
 
   @override
@@ -60,7 +63,9 @@ class _LearnScreenState extends State<LearnScreen> {
   @override
   void didUpdateWidget(covariant LearnScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.bookId != widget.bookId || oldWidget.reviewWrongOnly != widget.reviewWrongOnly) {
+    if (oldWidget.bookId != widget.bookId ||
+        oldWidget.reviewWrongOnly != widget.reviewWrongOnly ||
+        oldWidget.reviewWrongUnitScoped != widget.reviewWrongUnitScoped) {
       _boot();
     }
   }
@@ -88,24 +93,28 @@ class _LearnScreenState extends State<LearnScreen> {
         return;
       }
       final unitFilter = widget.store.unitFilterForBook(id);
+      final applyUnit = !widget.reviewWrongOnly || widget.reviewWrongUnitScoped;
       var scoped = book.words;
-      if (unitFilter != null && unitFilter.isNotEmpty) {
+      if (applyUnit && unitFilter != null && unitFilter.isNotEmpty) {
         scoped = book.words.where((w) => w.unit == unitFilter).toList();
       }
 
       List<Word> list;
       if (widget.reviewWrongOnly) {
-        final wrong = widget.store.wrongIds();
-        list = scoped.where((w) => wrong.contains(w.id)).toList();
+        list = filterWrongWords(
+          words: book.words,
+          wrongIds: widget.store.wrongIds(),
+          unitFilter: widget.reviewWrongUnitScoped ? unitFilter : null,
+        );
         if (list.isEmpty) {
           setState(() {
             _book = book;
             _queue = ReviewQueue(list);
             _flipped = false;
             _loading = false;
-            _error = unitFilter == null
-                ? '错词本是空的，先在学习里点「不认识」吧'
-                : '当前单元没有错词，可换单元或学完全书后再复习';
+            _error = widget.reviewWrongUnitScoped && unitFilter != null && unitFilter.isNotEmpty
+                ? '当前单元没有错词，可换单元或复习全部错词'
+                : '错词本是空的，先在学习里点「不认识」吧';
           });
           return;
         }
@@ -245,7 +254,11 @@ class _LearnScreenState extends State<LearnScreen> {
           Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              widget.reviewWrongOnly ? '错词复习 · ${_book?.title ?? ''}' : (_book?.title ?? ''),
+              widget.reviewWrongOnly
+                  ? (widget.reviewWrongUnitScoped
+                      ? '错词复习·当前单元 · ${_book?.title ?? ''}'
+                      : '错词复习 · ${_book?.title ?? ''}')
+                  : (_book?.title ?? ''),
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ),
@@ -256,7 +269,7 @@ class _LearnScreenState extends State<LearnScreen> {
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ),
-          if (!widget.reviewWrongOnly && units.isNotEmpty) ...[
+          if ((!widget.reviewWrongOnly || widget.reviewWrongUnitScoped) && units.isNotEmpty) ...[
             const SizedBox(height: 8),
             SizedBox(
               height: 40,

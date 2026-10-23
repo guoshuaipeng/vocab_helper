@@ -12,6 +12,7 @@ class MeScreen extends StatefulWidget {
     required this.onRefresh,
     required this.onChangeBook,
     required this.onReviewWrong,
+    required this.onReviewWrongCurrentUnit,
   });
 
   final ProgressStore store;
@@ -19,6 +20,7 @@ class MeScreen extends StatefulWidget {
   final VoidCallback onRefresh;
   final VoidCallback onChangeBook;
   final VoidCallback onReviewWrong;
+  final VoidCallback onReviewWrongCurrentUnit;
 
   @override
   State<MeScreen> createState() => _MeScreenState();
@@ -265,34 +267,62 @@ class _MeScreenState extends State<MeScreen> {
                   const SizedBox(height: 4),
                   Text('点「不认识」会加入本词书错词本；点「认识」会移出。', style: Theme.of(context).textTheme.bodySmall),
                   const SizedBox(height: 12),
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: [
-                      FilledButton.icon(
-                        onPressed: (bookId == null || widget.store.wrongCountForBook(bookId) == 0)
-                            ? null
-                            : widget.onReviewWrong,
-                        icon: const Icon(Icons.replay),
-                        label: const Text('复习错词'),
-                      ),
-                      if (bookId != null)
-                        OutlinedButton(
-                          onPressed: widget.store.wrongCountForBook(bookId) == 0
-                              ? null
-                              : () async {
-                                  final messenger = ScaffoldMessenger.of(context);
-                                  final n = await widget.store.clearWrongForBook(bookId);
-                                  if (!mounted) return;
-                                  widget.onRefresh();
-                                  setState(() {});
-                                  messenger.showSnackBar(
-                                    SnackBar(content: Text(n == 0 ? '错词本已空' : '已清空 $n 个错词')),
-                                  );
-                                },
-                          child: const Text('清空错词'),
-                        ),
-                    ],
+                  Builder(
+                    builder: (context) {
+                      final unit = bookId == null ? null : widget.store.unitFilterForBook(bookId);
+                      final hasUnit = unit != null && unit.isNotEmpty;
+                      final hasWrong = bookId != null && widget.store.wrongCountForBook(bookId) > 0;
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (hasUnit)
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 8),
+                              child: Text('学习页当前单元：$unit', style: Theme.of(context).textTheme.bodySmall),
+                            ),
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: [
+                              FilledButton.icon(
+                                onPressed: hasWrong ? widget.onReviewWrong : null,
+                                icon: const Icon(Icons.replay),
+                                label: const Text('复习全部错词'),
+                              ),
+                              FilledButton.tonalIcon(
+                                onPressed: (hasWrong && hasUnit) ? widget.onReviewWrongCurrentUnit : null,
+                                icon: const Icon(Icons.filter_list),
+                                label: Text(hasUnit ? '只复习$unit' : '只复习当前单元'),
+                              ),
+                              if (bookId != null)
+                                OutlinedButton(
+                                  onPressed: !hasWrong
+                                      ? null
+                                      : () async {
+                                          final messenger = ScaffoldMessenger.of(context);
+                                          final n = await widget.store.clearWrongForBook(bookId);
+                                          if (!mounted) return;
+                                          widget.onRefresh();
+                                          setState(() {});
+                                          messenger.showSnackBar(
+                                            SnackBar(content: Text(n == 0 ? '错词本已空' : '已清空 $n 个错词')),
+                                          );
+                                        },
+                                  child: const Text('清空错词'),
+                                ),
+                            ],
+                          ),
+                          if (!hasUnit && hasWrong)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8),
+                              child: Text(
+                                '提示：在学习页选一个单元后，可「只复习当前单元」。',
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                            ),
+                        ],
+                      );
+                    },
                   ),
                 ],
               ),

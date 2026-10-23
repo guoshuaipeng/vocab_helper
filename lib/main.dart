@@ -101,6 +101,15 @@ class HomeShell extends StatefulWidget {
 class _HomeShellState extends State<HomeShell> {
   int _index = 0;
   bool _reviewWrongOnly = false;
+  bool _reviewWrongUnitScoped = false;
+
+  void _enterWrongReview({required bool unitScoped}) {
+    setState(() {
+      _reviewWrongOnly = true;
+      _reviewWrongUnitScoped = unitScoped;
+      _index = 0;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,6 +121,7 @@ class _HomeShellState extends State<HomeShell> {
         bookId: bookId,
         onNeedSetup: widget.onChangeBook,
         reviewWrongOnly: _reviewWrongOnly,
+        reviewWrongUnitScoped: _reviewWrongUnitScoped,
       ),
       BooksScreen(
         store: widget.store,
@@ -120,7 +130,14 @@ class _HomeShellState extends State<HomeShell> {
         onChangeBook: widget.onChangeBook,
         onBookSelected: () => setState(() {}),
       ),
-      MeScreen(store: widget.store, repo: widget.repo, onRefresh: () => setState(() {}), onChangeBook: widget.onChangeBook, onReviewWrong: () => setState(() { _reviewWrongOnly = true; _index = 0; }),),
+      MeScreen(
+        store: widget.store,
+        repo: widget.repo,
+        onRefresh: () => setState(() {}),
+        onChangeBook: widget.onChangeBook,
+        onReviewWrong: () => _enterWrongReview(unitScoped: false),
+        onReviewWrongCurrentUnit: () => _enterWrongReview(unitScoped: true),
+      ),
     ];
 
     return Scaffold(
@@ -128,7 +145,13 @@ class _HomeShellState extends State<HomeShell> {
       body: IndexedStack(index: _index, children: pages),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _index,
-        onDestinationSelected: (i) => setState(() { if (i != 0) _reviewWrongOnly = false; _index = i; }),
+        onDestinationSelected: (i) => setState(() {
+          if (i != 0) {
+            _reviewWrongOnly = false;
+            _reviewWrongUnitScoped = false;
+          }
+          _index = i;
+        }),
         destinations: const [
           NavigationDestination(icon: Icon(Icons.school_outlined), selectedIcon: Icon(Icons.school), label: '学习'),
           NavigationDestination(icon: Icon(Icons.menu_book_outlined), selectedIcon: Icon(Icons.menu_book), label: '词书'),
