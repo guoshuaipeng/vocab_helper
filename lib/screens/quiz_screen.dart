@@ -576,6 +576,41 @@ class _QuizScreenState extends State<QuizScreen> {
     );
   }
 
+
+  static const Color _quizTeal = Color(0xFF0D9488);
+
+  ButtonStyle get _quizFilledStyle => FilledButton.styleFrom(
+        backgroundColor: _quizTeal,
+        foregroundColor: Colors.white,
+      );
+
+  Widget _quizPaper({
+    Key? key,
+    required Widget child,
+    EdgeInsetsGeometry padding = const EdgeInsets.symmetric(horizontal: 20, vertical: 28),
+  }) {
+    final scheme = Theme.of(context).colorScheme;
+    final paper = Theme.of(context).brightness == Brightness.dark
+        ? scheme.surfaceContainerHigh
+        : scheme.surfaceContainerLow;
+    return DecoratedBox(
+      key: key,
+      decoration: BoxDecoration(
+        color: paper,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: scheme.outlineVariant.withValues(alpha: 0.45)),
+        boxShadow: [
+          BoxShadow(
+            color: scheme.shadow.withValues(alpha: 0.06),
+            blurRadius: 18,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Padding(padding: padding, child: child),
+    );
+  }
+
   Widget _buildBody(BuildContext context) {
     if (_loading) {
       return const Center(child: CircularProgressIndicator());
@@ -601,7 +636,6 @@ class _QuizScreenState extends State<QuizScreen> {
     if (_index >= _questions.length) {
       final total = _correctCount + _wrongCount;
       final rate = total == 0 ? 0 : ((_correctCount * 100) / total).round();
-      final scheme = Theme.of(context).colorScheme;
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(24),
@@ -619,10 +653,10 @@ class _QuizScreenState extends State<QuizScreen> {
                 Text(
                   '$rate%',
                   key: const ValueKey('quiz_end_rate'),
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 36,
                     fontWeight: FontWeight.w600,
-                    color: scheme.primary,
+                    color: _quizTeal,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -665,6 +699,7 @@ class _QuizScreenState extends State<QuizScreen> {
                   width: double.infinity,
                   child: FilledButton(
                     key: const ValueKey('quiz_end_back'),
+                    style: _quizFilledStyle,
                     onPressed: _backToLearn,
                     child: const Padding(
                       padding: EdgeInsets.symmetric(vertical: 14),
@@ -693,21 +728,25 @@ class _QuizScreenState extends State<QuizScreen> {
         children: [
           Text(
             _book?.title ?? widget.seedBookTitle ?? '',
-            style: Theme.of(context).textTheme.titleMedium,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: scheme.onSurfaceVariant,
+                ),
           ),
           Text(
             _retryRound
                 ? '错题再练 · ${_questions.length}'
                 : '自测 · 题 ${_index + 1}/${_questions.length}',
             key: ValueKey(_retryRound ? 'quiz_retry_badge' : 'quiz_progress_label'),
-            style: Theme.of(context).textTheme.bodySmall,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: scheme.onSurfaceVariant,
+                ),
           ),
           const SizedBox(height: 8),
           ClipRRect(
             borderRadius: BorderRadius.circular(4),
             child: LinearProgressIndicator(
               value: (_index + 1) / _questions.length,
-              minHeight: 6,
+              minHeight: 4,
               backgroundColor: scheme.surfaceContainerHighest,
             ),
           ),
@@ -718,13 +757,9 @@ class _QuizScreenState extends State<QuizScreen> {
               return AnimatedSize(
                 duration: const Duration(milliseconds: 150),
                 child: SegmentedButton<String>(
-                  style: ButtonStyle(
-                    visualDensity: narrow
-                        ? VisualDensity.compact
-                        : VisualDensity.standard,
-                    tapTargetSize: narrow
-                        ? MaterialTapTargetSize.shrinkWrap
-                        : MaterialTapTargetSize.padded,
+                  style: const ButtonStyle(
+                    visualDensity: VisualDensity.compact,
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
                   segments: [
                     ButtonSegment(
@@ -812,16 +847,14 @@ class _QuizScreenState extends State<QuizScreen> {
               child: ListView(
                 key: ValueKey(_isDictation ? 'quiz_dictation_pane' : 'quiz_spell_pane'),
                 children: [
-                  Card(
+                  _quizPaper(
                     key: ValueKey(_isDictation ? 'prompt_dictation' : 'prompt_spell'),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 28),
-                      child: _isDictation
+                    child: _isDictation
                           ? Column(
                               children: [
                                 Text('听写', style: Theme.of(context).textTheme.labelLarge),
                                 const SizedBox(height: 12),
-                                Icon(Icons.volume_up, size: 56, color: scheme.primary),
+                                Icon(Icons.volume_up, size: 56, color: scheme.onSurface),
                                 const SizedBox(height: 12),
                                 SizedBox(
                                   height: 48,
@@ -851,13 +884,12 @@ class _QuizScreenState extends State<QuizScreen> {
                                   q.promptMeaning,
                                   textAlign: TextAlign.center,
                                   style: const TextStyle(
-                                    fontSize: 28,
+                                    fontSize: 30,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ],
                             ),
-                    ),
                   ),
                   const SizedBox(height: 16),
                   TextField(
@@ -890,12 +922,12 @@ class _QuizScreenState extends State<QuizScreen> {
                     if (_spellOk == true)
                       Row(
                         children: [
-                          Icon(Icons.check_circle, color: scheme.primary, size: 20),
+                          const Icon(Icons.check_circle, color: _quizTeal, size: 20),
                           const SizedBox(width: 6),
                           Text(
                             _isDictation ? '拼对了' : '拼对了',
-                            style: TextStyle(
-                              color: scheme.primary,
+                            style: const TextStyle(
+                              color: _quizTeal,
                               fontWeight: FontWeight.w600,
                               fontSize: 16,
                             ),
@@ -919,6 +951,7 @@ class _QuizScreenState extends State<QuizScreen> {
                           ? (_isDictation ? 'quiz_dictation_next' : 'quiz_spell_next')
                           : (_isDictation ? 'quiz_dictation_check' : 'quiz_spell_check'),
                     ),
+                    style: _quizFilledStyle,
                     onPressed: _answered ? _next : _checkSpell,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 14),
@@ -935,23 +968,22 @@ class _QuizScreenState extends State<QuizScreen> {
               ),
             )
           else ...[
-            Card(
+            _quizPaper(
               key: ValueKey(
                 _effectiveListen
                     ? 'prompt_listen'
                     : (_isWordPick ? 'prompt_word' : 'prompt_meaning'),
               ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: _isWordPick ? 16 : 28,
-                ),
-                child: _effectiveListen
+              padding: EdgeInsets.symmetric(
+                horizontal: 20,
+                vertical: _isWordPick ? 16 : 28,
+              ),
+              child: _effectiveListen
                     ? Column(
                         children: [
                           Text('听英文，选意思', style: Theme.of(context).textTheme.labelLarge),
                           const SizedBox(height: 12),
-                          Icon(Icons.volume_up, size: 56, color: scheme.primary),
+                          Icon(Icons.volume_up, size: 56, color: scheme.onSurface),
                           const SizedBox(height: 12),
                           SizedBox(
                             height: 48,
@@ -982,14 +1014,14 @@ class _QuizScreenState extends State<QuizScreen> {
                                 q.target.word,
                                 key: const ValueKey('prompt_word_text'),
                                 textAlign: TextAlign.center,
-                                style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                                style: const TextStyle(fontSize: 38, fontWeight: FontWeight.w800),
                               ),
                               IconButton(
                                 key: const ValueKey('quiz_word_speak'),
                                 tooltip: '朗读',
                                 visualDensity: VisualDensity.compact,
                                 onPressed: () => _speak(q.target.word),
-                                icon: const Icon(Icons.volume_up),
+                                icon: Icon(Icons.volume_up, color: scheme.onSurface),
                               ),
                             ],
                           )
@@ -1000,11 +1032,10 @@ class _QuizScreenState extends State<QuizScreen> {
                               Text(
                                 q.promptMeaning,
                                 textAlign: TextAlign.center,
-                                style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                                style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                               ),
                             ],
                           ),
-              ),
             ),
             const SizedBox(height: 16),
             Expanded(
@@ -1019,7 +1050,7 @@ class _QuizScreenState extends State<QuizScreen> {
                       if (i == q.correctIndex) {
                         bg = scheme.primaryContainer;
                         fg = scheme.onPrimaryContainer;
-                        side = BorderSide(color: scheme.primary, width: 2);
+                        side = const BorderSide(color: _quizTeal, width: 2);
                       } else if (i == _selected) {
                         bg = scheme.errorContainer;
                         fg = scheme.onErrorContainer;
@@ -1059,7 +1090,7 @@ class _QuizScreenState extends State<QuizScreen> {
                             IconButton(
                               tooltip: '朗读',
                               onPressed: () => _speak(opt.word),
-                              icon: const Icon(Icons.volume_up),
+                              icon: Icon(Icons.volume_up, color: scheme.onSurface),
                             ),
                         ],
                       ),
@@ -1108,10 +1139,11 @@ class _QuizScreenState extends State<QuizScreen> {
                   style: Theme.of(context).textTheme.titleSmall,
                 )
               else
-                Text('答对了！', style: TextStyle(color: scheme.primary, fontWeight: FontWeight.w600, fontSize: 16)),
+                const Text('答对了！', style: TextStyle(color: _quizTeal, fontWeight: FontWeight.w600, fontSize: 16)),
             ],
             const SizedBox(height: 8),
             FilledButton(
+              style: _quizFilledStyle,
               onPressed: _answered ? _next : null,
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 14),

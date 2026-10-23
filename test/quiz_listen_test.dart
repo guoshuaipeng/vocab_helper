@@ -165,7 +165,7 @@ void main() {
     for (var i = 0; i < 30; i++) {
       await tester.pump(const Duration(milliseconds: 50));
     }
-    expect(find.text('请安装系统英文语音包后再用听音'), findsOneWidget);
+    expect(find.textContaining('请安装系统英文语音包后再用听音'), findsOneWidget);
     expect(find.text('选出对应的英文单词'), findsOneWidget);
   });
 }

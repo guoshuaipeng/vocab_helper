@@ -127,7 +127,7 @@ void main() {
   testWidgets('wide short shows all 4 meaning options on screen', (tester) async {
     SharedPreferences.setMockInitialValues({'quiz_variant': 'word', 'daily_goal': 5});
     final store = await ProgressStore.open();
-    tester.view.physicalSize = const Size(900, 700);
+    tester.view.physicalSize = const Size(900, 560);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
