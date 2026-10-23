@@ -46,6 +46,7 @@ class WordBookMeta {
     required this.grade,
     required this.title,
     this.wordCount = 0,
+    this.sourceLabel = '',
   });
 
   final String id;
@@ -54,6 +55,8 @@ class WordBookMeta {
   final String grade;
   final String title;
   final int wordCount;
+  /// Short badge for list cards, e.g. 扩充词表.
+  final String sourceLabel;
 
   factory WordBookMeta.fromJson(Map<String, dynamic> json) {
     return WordBookMeta(
@@ -63,6 +66,7 @@ class WordBookMeta {
       grade: json['grade'] as String,
       title: json['title'] as String,
       wordCount: (json['wordCount'] as num?)?.toInt() ?? 0,
+      sourceLabel: (json['sourceLabel'] as String?) ?? '',
     );
   }
 }

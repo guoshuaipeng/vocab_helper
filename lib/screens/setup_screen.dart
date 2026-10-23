@@ -112,7 +112,11 @@ class _SetupScreenState extends State<SetupScreen> {
               color: selected ? Theme.of(context).colorScheme.primaryContainer : null,
               child: ListTile(
                 title: Text(b.grade),
-                subtitle: Text('${b.title} · 共 ${b.wordCount} 词'),
+                subtitle: Text(
+                  b.sourceLabel.isEmpty
+                      ? '${b.title} · 共 ${b.wordCount} 词'
+                      : '${b.title} · 共 ${b.wordCount} 词 · ${b.sourceLabel}',
+                ),
                 trailing: selected ? const Icon(Icons.check_circle) : null,
                 onTap: () => setState(() => _bookId = b.id),
               ),
