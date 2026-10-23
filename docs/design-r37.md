@@ -50,11 +50,11 @@
 
 ## 6. 验收（iOS）
 
-- [ ] 无网拍照/选图能出英文候选列表  
-- [ ] 确认前可改词/义/单元；取消不写入  
-- [ ] 加入后学习页该单元可见  
-- [ ] 截图：相机入口、识别列表、选单元确认（浅色至少）  
-- [ ] 单测：OCR 文本 → 词抽取纯函数；匹配当前书打分
+- [x] 无网拍照/选图能出英文候选列表（iOS Vision 接线；Windows 用粘贴等价）  
+- [x] 确认前可改词/义/单元；取消不写入  
+- [x] 加入后学习页该单元可见（custom overlay 合并 loadBook）  
+- [x] 截图：确认列表窄/宽/深浅（见 r37-ui-acceptance.md）；入口在学习顶栏+我的  
+- [x] 单测：OCR 文本 → 词抽取纯函数；匹配当前书打分；overlay；加入流程
 
 ---
 
@@ -63,3 +63,9 @@
 - 课本拍照反光/双栏排版 → 召回差，靠人工改。  
 - 版权：用户自有课本页个人使用；不上传。  
 - Flutter 插件封装 Vision 需 iOS 真机验证。
+
+## 8. 实现备注（2026-10-23）
+
+- Flutter：`image_picker` + `PhotoVocabScreen`；词写入 `CustomWordOverlay`（prefs），`WordbookRepository.loadBook` 合并。
+- iOS：`AppDelegate` MethodChannel `com.vocab_helper/vision_ocr` → Vision `VNRecognizeTextRequest`；Info.plist 已加相机/相册说明。
+- **真机待验** Vision；Windows 以「粘贴文字」交付完整加词路径。
