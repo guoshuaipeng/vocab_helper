@@ -1,1 +1,772 @@
-{"id":"pep-ps-3","version":"人教版PEP","grade":"三年级","title":"人教版PEP · 三年级","source":"公开 PEP 小学词表整理（精选同步词）+扩充","words":[{"id":"pep-ps-3-1","word":"ruler","meaning":"尺子","phonetic":"/ˈruːlə/","example":""},{"id":"pep-ps-3-2","word":"pencil","meaning":"铅笔","phonetic":"/ˈpensl/","example":""},{"id":"pep-ps-3-3","word":"eraser","meaning":"橡皮","phonetic":"/ɪˈreɪzə/","example":""},{"id":"pep-ps-3-4","word":"crayon","meaning":"蜡笔","phonetic":"/ˈkreɪən/","example":""},{"id":"pep-ps-3-5","word":"bag","meaning":"包","phonetic":"/bæɡ/","example":""},{"id":"pep-ps-3-6","word":"pen","meaning":"钢笔","phonetic":"/pen/","example":""},{"id":"pep-ps-3-7","word":"book","meaning":"书","phonetic":"/bʊk/","example":""},{"id":"pep-ps-3-8","word":"pencil box","meaning":"铅笔盒","phonetic":"","example":""},{"id":"pep-ps-3-9","word":"red","meaning":"红色的","phonetic":"/red/","example":""},{"id":"pep-ps-3-10","word":"green","meaning":"绿色的","phonetic":"/ɡriːn/","example":""},{"id":"pep-ps-3-11","word":"yellow","meaning":"黄色的","phonetic":"/ˈjeləʊ/","example":""},{"id":"pep-ps-3-12","word":"blue","meaning":"蓝色的","phonetic":"/bluː/","example":""},{"id":"pep-ps-3-13","word":"black","meaning":"黑色的","phonetic":"/blæk/","example":""},{"id":"pep-ps-3-14","word":"brown","meaning":"棕色的","phonetic":"/braʊn/","example":""},{"id":"pep-ps-3-15","word":"white","meaning":"白色的","phonetic":"/waɪt/","example":""},{"id":"pep-ps-3-16","word":"orange","meaning":"橙色的；橙子","phonetic":"/ˈɒrɪndʒ/","example":""},{"id":"pep-ps-3-17","word":"face","meaning":"脸","phonetic":"/feɪs/","example":""},{"id":"pep-ps-3-18","word":"ear","meaning":"耳朵","phonetic":"/ɪə/","example":""},{"id":"pep-ps-3-19","word":"eye","meaning":"眼睛","phonetic":"/aɪ/","example":""},{"id":"pep-ps-3-20","word":"nose","meaning":"鼻子","phonetic":"/nəʊz/","example":""},{"id":"pep-ps-3-21","word":"mouth","meaning":"嘴","phonetic":"/maʊθ/","example":""},{"id":"pep-ps-3-22","word":"arm","meaning":"胳膊","phonetic":"/ɑːm/","example":""},{"id":"pep-ps-3-23","word":"hand","meaning":"手","phonetic":"/hænd/","example":""},{"id":"pep-ps-3-24","word":"head","meaning":"头","phonetic":"/hed/","example":""},{"id":"pep-ps-3-25","word":"body","meaning":"身体","phonetic":"/ˈbɒdi/","example":""},{"id":"pep-ps-3-26","word":"leg","meaning":"腿","phonetic":"/leɡ/","example":""},{"id":"pep-ps-3-27","word":"foot","meaning":"脚","phonetic":"/fʊt/","example":""},{"id":"pep-ps-3-28","word":"duck","meaning":"鸭子","phonetic":"/dʌk/","example":""},{"id":"pep-ps-3-29","word":"pig","meaning":"猪","phonetic":"/pɪɡ/","example":""},{"id":"pep-ps-3-30","word":"cat","meaning":"猫","phonetic":"/kæt/","example":""},{"id":"pep-ps-3-31","word":"bear","meaning":"熊","phonetic":"/beə/","example":""},{"id":"pep-ps-3-32","word":"dog","meaning":"狗","phonetic":"/dɒɡ/","example":""},{"id":"pep-ps-3-33","word":"elephant","meaning":"大象","phonetic":"/ˈelɪfənt/","example":""},{"id":"pep-ps-3-34","word":"monkey","meaning":"猴子","phonetic":"/ˈmʌŋki/","example":""},{"id":"pep-ps-3-35","word":"bird","meaning":"鸟","phonetic":"/bɜːd/","example":""},{"id":"pep-ps-3-36","word":"tiger","meaning":"老虎","phonetic":"/ˈtaɪɡə/","example":""},{"id":"pep-ps-3-37","word":"panda","meaning":"大熊猫","phonetic":"/ˈpændə/","example":""},{"id":"pep-ps-3-38","word":"zoo","meaning":"动物园","phonetic":"/zuː/","example":""},{"id":"pep-ps-3-39","word":"bread","meaning":"面包","phonetic":"/bred/","example":""},{"id":"pep-ps-3-40","word":"juice","meaning":"果汁","phonetic":"/dʒuːs/","example":""},{"id":"pep-ps-3-41","word":"egg","meaning":"蛋","phonetic":"/eɡ/","example":""},{"id":"pep-ps-3-42","word":"milk","meaning":"牛奶","phonetic":"/mɪlk/","example":""},{"id":"pep-ps-3-43","word":"water","meaning":"水","phonetic":"/ˈwɔːtə/","example":""},{"id":"pep-ps-3-44","word":"cake","meaning":"蛋糕","phonetic":"/keɪk/","example":""},{"id":"pep-ps-3-45","word":"fish","meaning":"鱼","phonetic":"/fɪʃ/","example":""},{"id":"pep-ps-3-46","word":"rice","meaning":"米饭","phonetic":"/raɪs/","example":""},{"id":"pep-ps-3-47","word":"one","meaning":"一","phonetic":"/wʌn/","example":""},{"id":"pep-ps-3-48","word":"two","meaning":"二","phonetic":"/tuː/","example":""},{"id":"pep-ps-3-49","word":"three","meaning":"三","phonetic":"/θriː/","example":""},{"id":"pep-ps-3-50","word":"four","meaning":"四","phonetic":"/fɔː/","example":""},{"id":"pep-ps-3-51","word":"five","meaning":"五","phonetic":"/faɪv/","example":""},{"id":"pep-ps-3-52","word":"six","meaning":"六","phonetic":"/sɪks/","example":""},{"id":"pep-ps-3-53","word":"seven","meaning":"七","phonetic":"/ˈsevn/","example":""},{"id":"pep-ps-3-54","word":"eight","meaning":"八","phonetic":"/eɪt/","example":""},{"id":"pep-ps-3-55","word":"nine","meaning":"九","phonetic":"/naɪn/","example":""},{"id":"pep-ps-3-56","word":"ten","meaning":"十","phonetic":"/ten/","example":""},{"id":"pep-ps-3-57","word":"UK","meaning":"英国","phonetic":"","example":""},{"id":"pep-ps-3-58","word":"Canada","meaning":"加拿大","phonetic":"/ˈkænədə/","example":""},{"id":"pep-ps-3-59","word":"USA","meaning":"美国","phonetic":"","example":""},{"id":"pep-ps-3-60","word":"China","meaning":"中国","phonetic":"/ˈtʃaɪnə/","example":""},{"id":"pep-ps-3-61","word":"student","meaning":"学生","phonetic":"/ˈstjuːdnt/","example":""},{"id":"pep-ps-3-62","word":"teacher","meaning":"教师","phonetic":"/ˈtiːtʃə/","example":""},{"id":"pep-ps-3-63","word":"boy","meaning":"男孩","phonetic":"/bɔɪ/","example":""},{"id":"pep-ps-3-64","word":"girl","meaning":"女孩","phonetic":"/ɡɜːl/","example":""},{"id":"pep-ps-3-65","word":"friend","meaning":"朋友","phonetic":"/frend/","example":""},{"id":"pep-ps-3-66","word":"today","meaning":"今天","phonetic":"/təˈdeɪ/","example":""},{"id":"pep-ps-3-67","word":"father","meaning":"父亲","phonetic":"/ˈfɑːðə/","example":""},{"id":"pep-ps-3-68","word":"mother","meaning":"母亲","phonetic":"/ˈmʌðə/","example":""},{"id":"pep-ps-3-69","word":"sister","meaning":"姐；妹","phonetic":"/ˈsɪstə/","example":""},{"id":"pep-ps-3-70","word":"brother","meaning":"兄；弟","phonetic":"/ˈbrʌðə/","example":""},{"id":"pep-ps-3-71","word":"family","meaning":"家庭","phonetic":"/ˈfæməli/","example":""},{"id":"pep-ps-3-72","word":"grandmother","meaning":"（外）祖母","phonetic":"","example":""},{"id":"pep-ps-3-73","word":"grandfather","meaning":"（外）祖父","phonetic":"","example":""},{"id":"pep-ps-3-74","word":"thin","meaning":"瘦的","phonetic":"/θɪn/","example":""},{"id":"pep-ps-3-75","word":"fat","meaning":"胖的","phonetic":"/fæt/","example":""},{"id":"pep-ps-3-76","word":"tall","meaning":"高的","phonetic":"/tɔːl/","example":""},{"id":"pep-ps-3-77","word":"short","meaning":"矮的；短的","phonetic":"/ʃɔːt/","example":""},{"id":"pep-ps-3-78","word":"long","meaning":"长的","phonetic":"/lɒŋ/","example":""},{"id":"pep-ps-3-79","word":"small","meaning":"小的","phonetic":"/smɔːl/","example":""},{"id":"pep-ps-3-80","word":"big","meaning":"大的","phonetic":"/bɪɡ/","example":""},{"id":"pep-ps-3-81","word":"giraffe","meaning":"长颈鹿","phonetic":"/dʒɪˈrɑːf/","example":""},{"id":"pep-ps-3-82","word":"on","meaning":"在…上面","phonetic":"/ɒn/","example":""},{"id":"pep-ps-3-83","word":"in","meaning":"在…里面","phonetic":"/ɪn/","example":""},{"id":"pep-ps-3-84","word":"under","meaning":"在…下面","phonetic":"/ˈʌndə/","example":""},{"id":"pep-ps-3-85","word":"chair","meaning":"椅子","phonetic":"/tʃeə/","example":""},{"id":"pep-ps-3-86","word":"desk","meaning":"书桌","phonetic":"/desk/","example":""},{"id":"pep-ps-3-87","word":"ball","meaning":"球","phonetic":"/bɔːl/","example":""},{"id":"pep-ps-3-88","word":"car","meaning":"小汽车","phonetic":"/kɑː/","example":""},{"id":"pep-ps-3-89","word":"boat","meaning":"小船","phonetic":"/bəʊt/","example":""},{"id":"pep-ps-3-90","word":"map","meaning":"地图","phonetic":"/mæp/","example":""},{"id":"pep-ps-3-91","word":"toy","meaning":"玩具","phonetic":"/tɔɪ/","example":""},{"id":"pep-ps-3-92","word":"pear","meaning":"梨","phonetic":"/peə/","example":""},{"id":"pep-ps-3-93","word":"apple","meaning":"苹果","phonetic":"/ˈæpl/","example":""},{"id":"pep-ps-3-94","word":"banana","meaning":"香蕉","phonetic":"/bəˈnɑːnə/","example":""},{"id":"pep-ps-3-95","word":"watermelon","meaning":"西瓜","phonetic":"/ˈwɔːtəmelən/","example":""},{"id":"pep-ps-3-96","word":"strawberry","meaning":"草莓","phonetic":"/ˈstrɔːbəri/","example":""},{"id":"pep-ps-3-97","word":"grape","meaning":"葡萄","phonetic":"/ɡreɪp/","example":""},{"id":"pep-ps-3-98","word":"fruit","meaning":"水果","phonetic":"/fruːt/","example":""},{"id":"pep-ps-3-99","word":"glue","meaning":"胶水","phonetic":"","example":""},{"id":"pep-ps-3-100","word":"scissors","meaning":"剪刀","phonetic":"","example":""},{"id":"pep-ps-3-101","word":"paper","meaning":"纸","phonetic":"","example":""},{"id":"pep-ps-3-102","word":"notebook","meaning":"笔记本","phonetic":"","example":""},{"id":"pep-ps-3-103","word":"storybook","meaning":"故事书","phonetic":"","example":""},{"id":"pep-ps-3-104","word":"doll","meaning":"玩偶","phonetic":"","example":""},{"id":"pep-ps-3-105","word":"kite","meaning":"风筝","phonetic":"","example":""},{"id":"pep-ps-3-106","word":"baby","meaning":"婴儿","phonetic":"","example":""},{"id":"pep-ps-3-107","word":"grandma","meaning":"奶奶；外婆","phonetic":"","example":""},{"id":"pep-ps-3-108","word":"grandpa","meaning":"爷爷；外公","phonetic":"","example":""},{"id":"pep-ps-3-109","word":"classmate","meaning":"同学","phonetic":"","example":""}]}
+{
+  "id": "pep-ps-3",
+  "version": "人教版PEP",
+  "grade": "三年级",
+  "title": "人教版PEP · 三年级",
+  "source": "公开 PEP 小学词表整理（精选同步词）+扩充；R21 补全/校正 phonetic+example（公开词表整理，儿童向例句）",
+  "words": [
+    {
+      "id": "pep-ps-3-1",
+      "word": "ruler",
+      "meaning": "尺子",
+      "phonetic": "/ˈruːlə/",
+      "example": "I use a ruler to draw a line."
+    },
+    {
+      "id": "pep-ps-3-2",
+      "word": "pencil",
+      "meaning": "铅笔",
+      "phonetic": "/ˈpensl/",
+      "example": "Please lend me a pencil."
+    },
+    {
+      "id": "pep-ps-3-3",
+      "word": "eraser",
+      "meaning": "橡皮",
+      "phonetic": "/ɪˈreɪzə/",
+      "example": "My eraser is pink and soft."
+    },
+    {
+      "id": "pep-ps-3-4",
+      "word": "crayon",
+      "meaning": "蜡笔",
+      "phonetic": "/ˈkreɪən/",
+      "example": "She draws with a red crayon."
+    },
+    {
+      "id": "pep-ps-3-5",
+      "word": "bag",
+      "meaning": "包",
+      "phonetic": "/bæɡ/",
+      "example": "My bag is on the chair."
+    },
+    {
+      "id": "pep-ps-3-6",
+      "word": "pen",
+      "meaning": "钢笔",
+      "phonetic": "/pen/",
+      "example": "I write with a blue pen."
+    },
+    {
+      "id": "pep-ps-3-7",
+      "word": "book",
+      "meaning": "书",
+      "phonetic": "/bʊk/",
+      "example": "This book is about animals."
+    },
+    {
+      "id": "pep-ps-3-8",
+      "word": "pencil box",
+      "meaning": "铅笔盒",
+      "phonetic": "/ˈpensl bɒks/",
+      "example": "My pencil box is on the desk."
+    },
+    {
+      "id": "pep-ps-3-9",
+      "word": "red",
+      "meaning": "红色的",
+      "phonetic": "/red/",
+      "example": "I like the red apple."
+    },
+    {
+      "id": "pep-ps-3-10",
+      "word": "green",
+      "meaning": "绿色的",
+      "phonetic": "/ɡriːn/",
+      "example": "The green leaf looks fresh."
+    },
+    {
+      "id": "pep-ps-3-11",
+      "word": "yellow",
+      "meaning": "黄色的",
+      "phonetic": "/ˈjeləʊ/",
+      "example": "The yellow sun is bright."
+    },
+    {
+      "id": "pep-ps-3-12",
+      "word": "blue",
+      "meaning": "蓝色的",
+      "phonetic": "/bluː/",
+      "example": "The sky is blue today."
+    },
+    {
+      "id": "pep-ps-3-13",
+      "word": "black",
+      "meaning": "黑色的",
+      "phonetic": "/blæk/",
+      "example": "My cat is black and soft."
+    },
+    {
+      "id": "pep-ps-3-14",
+      "word": "brown",
+      "meaning": "棕色的",
+      "phonetic": "/braʊn/",
+      "example": "The brown bear is big."
+    },
+    {
+      "id": "pep-ps-3-15",
+      "word": "white",
+      "meaning": "白色的",
+      "phonetic": "/waɪt/",
+      "example": "I have a white rabbit."
+    },
+    {
+      "id": "pep-ps-3-16",
+      "word": "orange",
+      "meaning": "橙色的；橙子",
+      "phonetic": "/ˈɒrɪndʒ/",
+      "example": "I eat an orange after lunch."
+    },
+    {
+      "id": "pep-ps-3-17",
+      "word": "face",
+      "meaning": "脸",
+      "phonetic": "/feɪs/",
+      "example": "Wash your face every morning."
+    },
+    {
+      "id": "pep-ps-3-18",
+      "word": "ear",
+      "meaning": "耳朵",
+      "phonetic": "/ɪə/",
+      "example": "I can hear with my ear."
+    },
+    {
+      "id": "pep-ps-3-19",
+      "word": "eye",
+      "meaning": "眼睛",
+      "phonetic": "/aɪ/",
+      "example": "She has a bright eye."
+    },
+    {
+      "id": "pep-ps-3-20",
+      "word": "nose",
+      "meaning": "鼻子",
+      "phonetic": "/nəʊz/",
+      "example": "My nose can smell flowers."
+    },
+    {
+      "id": "pep-ps-3-21",
+      "word": "mouth",
+      "meaning": "嘴",
+      "phonetic": "/maʊθ/",
+      "example": "Open your mouth and say ah."
+    },
+    {
+      "id": "pep-ps-3-22",
+      "word": "arm",
+      "meaning": "胳膊",
+      "phonetic": "/ɑːm/",
+      "example": "Raise your arm high."
+    },
+    {
+      "id": "pep-ps-3-23",
+      "word": "hand",
+      "meaning": "手",
+      "phonetic": "/hænd/",
+      "example": "Wave your hand to say hello."
+    },
+    {
+      "id": "pep-ps-3-24",
+      "word": "head",
+      "meaning": "头",
+      "phonetic": "/hed/",
+      "example": "Put the hat on your head."
+    },
+    {
+      "id": "pep-ps-3-25",
+      "word": "body",
+      "meaning": "身体",
+      "phonetic": "/ˈbɒdi/",
+      "example": "Exercise keeps your body strong."
+    },
+    {
+      "id": "pep-ps-3-26",
+      "word": "leg",
+      "meaning": "腿",
+      "phonetic": "/leɡ/",
+      "example": "My left leg is tired."
+    },
+    {
+      "id": "pep-ps-3-27",
+      "word": "foot",
+      "meaning": "脚",
+      "phonetic": "/fʊt/",
+      "example": "My foot is in the shoe."
+    },
+    {
+      "id": "pep-ps-3-28",
+      "word": "duck",
+      "meaning": "鸭子",
+      "phonetic": "/dʌk/",
+      "example": "The duck swims in the pond."
+    },
+    {
+      "id": "pep-ps-3-29",
+      "word": "pig",
+      "meaning": "猪",
+      "phonetic": "/pɪɡ/",
+      "example": "The pig is pink and fat."
+    },
+    {
+      "id": "pep-ps-3-30",
+      "word": "cat",
+      "meaning": "猫",
+      "phonetic": "/kæt/",
+      "example": "The cat sleeps on the sofa."
+    },
+    {
+      "id": "pep-ps-3-31",
+      "word": "bear",
+      "meaning": "熊",
+      "phonetic": "/beə/",
+      "example": "The bear likes honey."
+    },
+    {
+      "id": "pep-ps-3-32",
+      "word": "dog",
+      "meaning": "狗",
+      "phonetic": "/dɒɡ/",
+      "example": "My dog runs in the park."
+    },
+    {
+      "id": "pep-ps-3-33",
+      "word": "elephant",
+      "meaning": "大象",
+      "phonetic": "/ˈelɪfənt/",
+      "example": "The elephant has a long trunk."
+    },
+    {
+      "id": "pep-ps-3-34",
+      "word": "monkey",
+      "meaning": "猴子",
+      "phonetic": "/ˈmʌŋki/",
+      "example": "The monkey climbs the tree."
+    },
+    {
+      "id": "pep-ps-3-35",
+      "word": "bird",
+      "meaning": "鸟",
+      "phonetic": "/bɜːd/",
+      "example": "A bird sings in the tree."
+    },
+    {
+      "id": "pep-ps-3-36",
+      "word": "tiger",
+      "meaning": "老虎",
+      "phonetic": "/ˈtaɪɡə/",
+      "example": "The tiger has orange stripes."
+    },
+    {
+      "id": "pep-ps-3-37",
+      "word": "panda",
+      "meaning": "大熊猫",
+      "phonetic": "/ˈpændə/",
+      "example": "The panda eats bamboo."
+    },
+    {
+      "id": "pep-ps-3-38",
+      "word": "zoo",
+      "meaning": "动物园",
+      "phonetic": "/zuː/",
+      "example": "We go to the zoo on Sunday."
+    },
+    {
+      "id": "pep-ps-3-39",
+      "word": "bread",
+      "meaning": "面包",
+      "phonetic": "/bred/",
+      "example": "I eat bread for breakfast."
+    },
+    {
+      "id": "pep-ps-3-40",
+      "word": "juice",
+      "meaning": "果汁",
+      "phonetic": "/dʒuːs/",
+      "example": "I drink orange juice."
+    },
+    {
+      "id": "pep-ps-3-41",
+      "word": "egg",
+      "meaning": "蛋",
+      "phonetic": "/eɡ/",
+      "example": "I like a boiled egg."
+    },
+    {
+      "id": "pep-ps-3-42",
+      "word": "milk",
+      "meaning": "牛奶",
+      "phonetic": "/mɪlk/",
+      "example": "Drink some milk every day."
+    },
+    {
+      "id": "pep-ps-3-43",
+      "word": "water",
+      "meaning": "水",
+      "phonetic": "/ˈwɔːtə/",
+      "example": "Please drink more water."
+    },
+    {
+      "id": "pep-ps-3-44",
+      "word": "cake",
+      "meaning": "蛋糕",
+      "phonetic": "/keɪk/",
+      "example": "Happy birthday! Here is a cake."
+    },
+    {
+      "id": "pep-ps-3-45",
+      "word": "fish",
+      "meaning": "鱼",
+      "phonetic": "/fɪʃ/",
+      "example": "The fish swims in the water."
+    },
+    {
+      "id": "pep-ps-3-46",
+      "word": "rice",
+      "meaning": "米饭",
+      "phonetic": "/raɪs/",
+      "example": "We eat rice for dinner."
+    },
+    {
+      "id": "pep-ps-3-47",
+      "word": "one",
+      "meaning": "一",
+      "phonetic": "/wʌn/",
+      "example": "I have one red apple."
+    },
+    {
+      "id": "pep-ps-3-48",
+      "word": "two",
+      "meaning": "二",
+      "phonetic": "/tuː/",
+      "example": "I see two little birds."
+    },
+    {
+      "id": "pep-ps-3-49",
+      "word": "three",
+      "meaning": "三",
+      "phonetic": "/θriː/",
+      "example": "There are three books here."
+    },
+    {
+      "id": "pep-ps-3-50",
+      "word": "four",
+      "meaning": "四",
+      "phonetic": "/fɔː/",
+      "example": "I have four pencils."
+    },
+    {
+      "id": "pep-ps-3-51",
+      "word": "five",
+      "meaning": "五",
+      "phonetic": "/faɪv/",
+      "example": "She has five stickers."
+    },
+    {
+      "id": "pep-ps-3-52",
+      "word": "six",
+      "meaning": "六",
+      "phonetic": "/sɪks/",
+      "example": "There are six chairs."
+    },
+    {
+      "id": "pep-ps-3-53",
+      "word": "seven",
+      "meaning": "七",
+      "phonetic": "/ˈsevn/",
+      "example": "I am seven years old."
+    },
+    {
+      "id": "pep-ps-3-54",
+      "word": "eight",
+      "meaning": "八",
+      "phonetic": "/eɪt/",
+      "example": "We have eight crayons."
+    },
+    {
+      "id": "pep-ps-3-55",
+      "word": "nine",
+      "meaning": "九",
+      "phonetic": "/naɪn/",
+      "example": "Nine kids play outside."
+    },
+    {
+      "id": "pep-ps-3-56",
+      "word": "ten",
+      "meaning": "十",
+      "phonetic": "/ten/",
+      "example": "Count from one to ten."
+    },
+    {
+      "id": "pep-ps-3-57",
+      "word": "UK",
+      "meaning": "英国",
+      "phonetic": "/ˌjuːˈkeɪ/",
+      "example": "London is in the UK."
+    },
+    {
+      "id": "pep-ps-3-58",
+      "word": "Canada",
+      "meaning": "加拿大",
+      "phonetic": "/ˈkænədə/",
+      "example": "Canada is a big country."
+    },
+    {
+      "id": "pep-ps-3-59",
+      "word": "USA",
+      "meaning": "美国",
+      "phonetic": "/ˌjuː es ˈeɪ/",
+      "example": "New York is in the USA."
+    },
+    {
+      "id": "pep-ps-3-60",
+      "word": "China",
+      "meaning": "中国",
+      "phonetic": "/ˈtʃaɪnə/",
+      "example": "I live in China."
+    },
+    {
+      "id": "pep-ps-3-61",
+      "word": "student",
+      "meaning": "学生",
+      "phonetic": "/ˈstjuːdnt/",
+      "example": "I am a primary student."
+    },
+    {
+      "id": "pep-ps-3-62",
+      "word": "teacher",
+      "meaning": "教师",
+      "phonetic": "/ˈtiːtʃə/",
+      "example": "Our teacher is kind."
+    },
+    {
+      "id": "pep-ps-3-63",
+      "word": "boy",
+      "meaning": "男孩",
+      "phonetic": "/bɔɪ/",
+      "example": "The boy plays football."
+    },
+    {
+      "id": "pep-ps-3-64",
+      "word": "girl",
+      "meaning": "女孩",
+      "phonetic": "/ɡɜːl/",
+      "example": "The girl reads a story."
+    },
+    {
+      "id": "pep-ps-3-65",
+      "word": "friend",
+      "meaning": "朋友",
+      "phonetic": "/frend/",
+      "example": "Tom is my best friend."
+    },
+    {
+      "id": "pep-ps-3-66",
+      "word": "today",
+      "meaning": "今天",
+      "phonetic": "/təˈdeɪ/",
+      "example": "Today is a sunny day."
+    },
+    {
+      "id": "pep-ps-3-67",
+      "word": "father",
+      "meaning": "父亲",
+      "phonetic": "/ˈfɑːðə/",
+      "example": "My father cooks dinner."
+    },
+    {
+      "id": "pep-ps-3-68",
+      "word": "mother",
+      "meaning": "母亲",
+      "phonetic": "/ˈmʌðə/",
+      "example": "My mother helps me study."
+    },
+    {
+      "id": "pep-ps-3-69",
+      "word": "sister",
+      "meaning": "姐；妹",
+      "phonetic": "/ˈsɪstə/",
+      "example": "My sister likes music."
+    },
+    {
+      "id": "pep-ps-3-70",
+      "word": "brother",
+      "meaning": "兄；弟",
+      "phonetic": "/ˈbrʌðə/",
+      "example": "My brother plays basketball."
+    },
+    {
+      "id": "pep-ps-3-71",
+      "word": "family",
+      "meaning": "家庭",
+      "phonetic": "/ˈfæməli/",
+      "example": "I love my family."
+    },
+    {
+      "id": "pep-ps-3-72",
+      "word": "grandmother",
+      "meaning": "（外）祖母",
+      "phonetic": "/ˈɡrænmʌðə/",
+      "example": "My grandmother tells stories."
+    },
+    {
+      "id": "pep-ps-3-73",
+      "word": "grandfather",
+      "meaning": "（外）祖父",
+      "phonetic": "/ˈɡrænfɑːðə/",
+      "example": "My grandfather walks every morning."
+    },
+    {
+      "id": "pep-ps-3-74",
+      "word": "thin",
+      "meaning": "瘦的",
+      "phonetic": "/θɪn/",
+      "example": "The thin cat runs fast."
+    },
+    {
+      "id": "pep-ps-3-75",
+      "word": "fat",
+      "meaning": "胖的",
+      "phonetic": "/fæt/",
+      "example": "The fat pig sleeps a lot."
+    },
+    {
+      "id": "pep-ps-3-76",
+      "word": "tall",
+      "meaning": "高的",
+      "phonetic": "/tɔːl/",
+      "example": "He is tall and strong."
+    },
+    {
+      "id": "pep-ps-3-77",
+      "word": "short",
+      "meaning": "矮的；短的",
+      "phonetic": "/ʃɔːt/",
+      "example": "This short pencil is new."
+    },
+    {
+      "id": "pep-ps-3-78",
+      "word": "long",
+      "meaning": "长的",
+      "phonetic": "/lɒŋ/",
+      "example": "The giraffe has a long neck."
+    },
+    {
+      "id": "pep-ps-3-79",
+      "word": "small",
+      "meaning": "小的",
+      "phonetic": "/smɔːl/",
+      "example": "I have a small bag."
+    },
+    {
+      "id": "pep-ps-3-80",
+      "word": "big",
+      "meaning": "大的",
+      "phonetic": "/bɪɡ/",
+      "example": "Look at the big elephant."
+    },
+    {
+      "id": "pep-ps-3-81",
+      "word": "giraffe",
+      "meaning": "长颈鹿",
+      "phonetic": "/dʒɪˈrɑːf/",
+      "example": "The giraffe is very tall."
+    },
+    {
+      "id": "pep-ps-3-82",
+      "word": "on",
+      "meaning": "在…上面",
+      "phonetic": "/ɒn/",
+      "example": "The book is on the desk."
+    },
+    {
+      "id": "pep-ps-3-83",
+      "word": "in",
+      "meaning": "在…里面",
+      "phonetic": "/ɪn/",
+      "example": "The pen is in the bag."
+    },
+    {
+      "id": "pep-ps-3-84",
+      "word": "under",
+      "meaning": "在…下面",
+      "phonetic": "/ˈʌndə/",
+      "example": "The ball is under the chair."
+    },
+    {
+      "id": "pep-ps-3-85",
+      "word": "chair",
+      "meaning": "椅子",
+      "phonetic": "/tʃeə/",
+      "example": "Please sit on the chair."
+    },
+    {
+      "id": "pep-ps-3-86",
+      "word": "desk",
+      "meaning": "书桌",
+      "phonetic": "/desk/",
+      "example": "My desk is clean."
+    },
+    {
+      "id": "pep-ps-3-87",
+      "word": "ball",
+      "meaning": "球",
+      "phonetic": "/bɔːl/",
+      "example": "Kick the ball to me."
+    },
+    {
+      "id": "pep-ps-3-88",
+      "word": "car",
+      "meaning": "小汽车",
+      "phonetic": "/kɑː/",
+      "example": "Dad drives a blue car."
+    },
+    {
+      "id": "pep-ps-3-89",
+      "word": "boat",
+      "meaning": "小船",
+      "phonetic": "/bəʊt/",
+      "example": "We see a boat on the lake."
+    },
+    {
+      "id": "pep-ps-3-90",
+      "word": "map",
+      "meaning": "地图",
+      "phonetic": "/mæp/",
+      "example": "Find China on the map."
+    },
+    {
+      "id": "pep-ps-3-91",
+      "word": "toy",
+      "meaning": "玩具",
+      "phonetic": "/tɔɪ/",
+      "example": "This toy car is fun."
+    },
+    {
+      "id": "pep-ps-3-92",
+      "word": "pear",
+      "meaning": "梨",
+      "phonetic": "/peə/",
+      "example": "I eat a sweet pear."
+    },
+    {
+      "id": "pep-ps-3-93",
+      "word": "apple",
+      "meaning": "苹果",
+      "phonetic": "/ˈæpl/",
+      "example": "An apple a day is good."
+    },
+    {
+      "id": "pep-ps-3-94",
+      "word": "banana",
+      "meaning": "香蕉",
+      "phonetic": "/bəˈnɑːnə/",
+      "example": "Monkeys like bananas."
+    },
+    {
+      "id": "pep-ps-3-95",
+      "word": "watermelon",
+      "meaning": "西瓜",
+      "phonetic": "/ˈwɔːtəmelən/",
+      "example": "The watermelon is sweet."
+    },
+    {
+      "id": "pep-ps-3-96",
+      "word": "strawberry",
+      "meaning": "草莓",
+      "phonetic": "/ˈstrɔːbəri/",
+      "example": "I like strawberry ice cream."
+    },
+    {
+      "id": "pep-ps-3-97",
+      "word": "grape",
+      "meaning": "葡萄",
+      "phonetic": "/ɡreɪp/",
+      "example": "These grapes are purple."
+    },
+    {
+      "id": "pep-ps-3-98",
+      "word": "fruit",
+      "meaning": "水果",
+      "phonetic": "/fruːt/",
+      "example": "Eat more fruit every day."
+    },
+    {
+      "id": "pep-ps-3-99",
+      "word": "glue",
+      "meaning": "胶水",
+      "phonetic": "/ɡluː/",
+      "example": "Use glue to stick the paper."
+    },
+    {
+      "id": "pep-ps-3-100",
+      "word": "scissors",
+      "meaning": "剪刀",
+      "phonetic": "/ˈsɪzəz/",
+      "example": "Be careful with the scissors."
+    },
+    {
+      "id": "pep-ps-3-101",
+      "word": "paper",
+      "meaning": "纸",
+      "phonetic": "/ˈpeɪpə/",
+      "example": "Draw a flower on the paper."
+    },
+    {
+      "id": "pep-ps-3-102",
+      "word": "notebook",
+      "meaning": "笔记本",
+      "phonetic": "/ˈnəʊtbʊk/",
+      "example": "Write new words in your notebook."
+    },
+    {
+      "id": "pep-ps-3-103",
+      "word": "storybook",
+      "meaning": "故事书",
+      "phonetic": "/ˈstɔːribʊk/",
+      "example": "I read a storybook at night."
+    },
+    {
+      "id": "pep-ps-3-104",
+      "word": "doll",
+      "meaning": "玩偶",
+      "phonetic": "/dɒl/",
+      "example": "She plays with her doll."
+    },
+    {
+      "id": "pep-ps-3-105",
+      "word": "kite",
+      "meaning": "风筝",
+      "phonetic": "/kaɪt/",
+      "example": "I fly a kite in the park."
+    },
+    {
+      "id": "pep-ps-3-106",
+      "word": "baby",
+      "meaning": "婴儿",
+      "phonetic": "/ˈbeɪbi/",
+      "example": "The baby is sleeping."
+    },
+    {
+      "id": "pep-ps-3-107",
+      "word": "grandma",
+      "meaning": "奶奶；外婆",
+      "phonetic": "/ˈɡrænmɑː/",
+      "example": "Grandma makes yummy soup."
+    },
+    {
+      "id": "pep-ps-3-108",
+      "word": "grandpa",
+      "meaning": "爷爷；外公",
+      "phonetic": "/ˈɡrænpɑː/",
+      "example": "Grandpa tells funny jokes."
+    },
+    {
+      "id": "pep-ps-3-109",
+      "word": "classmate",
+      "meaning": "同学",
+      "phonetic": "/ˈklɑːsmeɪt/",
+      "example": "My classmate sits next to me."
+    }
+  ]
+}
