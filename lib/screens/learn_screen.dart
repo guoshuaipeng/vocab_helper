@@ -549,26 +549,32 @@ class _LearnScreenState extends State<LearnScreen> {
           Row(
             children: [
               Expanded(
-                child: OutlinedButton(
-                  onPressed: _flashKind != null ? null : _onUnknown,
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 14),
-                    child: Text('不认识', style: TextStyle(fontSize: 18)),
+                child: _PressScale(
+                  child: OutlinedButton(
+                    key: const ValueKey('learn_unknown'),
+                    onPressed: _flashKind != null ? null : _onUnknown,
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 14),
+                      child: Text('不认识', style: TextStyle(fontSize: 18)),
+                    ),
                   ),
                 ),
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: FilledButton(
-                  onPressed: _flashKind != null ? null : _onKnown,
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 14),
-                    child: Text('认识', style: TextStyle(fontSize: 18)),
+                child: _PressScale(
+                  child: FilledButton(
+                    key: const ValueKey('learn_known'),
+                    onPressed: _flashKind != null ? null : _onKnown,
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 14),
+                      child: Text('认识', style: TextStyle(fontSize: 18)),
+                    ),
                   ),
                 ),
               ),
             ],
-          ),
+          )
         ],
       ),
     );
@@ -778,3 +784,34 @@ class _TodayTaskButton extends StatelessWidget {
     );
   }
 }
+
+
+/// Press feedback: scale to 0.98 for ~150ms (P2 learn-scale).
+class _PressScale extends StatefulWidget {
+  const _PressScale({required this.child});
+
+  final Widget child;
+
+  @override
+  State<_PressScale> createState() => _PressScaleState();
+}
+
+class _PressScaleState extends State<_PressScale> {
+  bool _pressed = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Listener(
+      onPointerDown: (_) => setState(() => _pressed = true),
+      onPointerUp: (_) => setState(() => _pressed = false),
+      onPointerCancel: (_) => setState(() => _pressed = false),
+      child: AnimatedScale(
+        scale: _pressed ? 0.98 : 1.0,
+        duration: const Duration(milliseconds: 150),
+        curve: Curves.easeOut,
+        child: widget.child,
+      ),
+    );
+  }
+}
+
