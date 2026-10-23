@@ -200,3 +200,10 @@
 - 卡住：同一次 testWidgets 内 setMockInitialValues 不刷新已打开的 SharedPreferences，空态截图与窄浅几乎同帧
 - 根因：InMemory prefs 实例跨 capture 复用；wrong_ids 未写回清空
 - 预防：多 capture 必须 open 后按意图 sync（clear/markWrong）；空态断言 wrongCount==0 且文案无「· N」后再 toImage
+
+## Round 33（2026-10-23）
+- 计划：todayCount 上升沿跨 dailyGoal → 同日一次轻反馈；我的页完成态
+- 实际：bumpTodayCount 返回 celebrate + goal_celebrated_ymd；我的「今日已完成 · n/n」一次过（2b6bfdb）；首交 MaterialBanner 标题被 AppBar 槽高裁切打回，改 Overlay 顶栏轻卡片后通过（a7e54fa）
+- 卡住：MaterialBanner 多行 content 在 Scaffold banner 槽内高度不够，只露副文「已学 n/goal」+「继续」
+- 根因：Banner 槽按单行/旁挂 actions 布局，Column 标题被裁；截图还曾把 Overlay 放在 RepaintBoundary 外
+- 预防：多行非模态提示优先 Overlay/自定义卡，勿依赖 MaterialBanner 多行；shot 的 RepaintBoundary 须包住 MaterialApp（含 Overlay）
