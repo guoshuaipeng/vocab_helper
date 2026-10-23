@@ -11,12 +11,16 @@
 - **任何新接手的人 / 自动化助手 / 换 bot**：打开仓库后第一步读 `docs/requirements.md`，从「进行中」或最高优先级未勾选项取 1 个主需求继续迭代，不要问「要不要继续」。
 - 完成一项就改成 `[x]`，并在文件底部「变更记录」留一行。
 - 迭代节奏：读 requirements → 交互/UI 设计（`docs/design-rN.md`）→ 开发 → 测试 → 设计师验收 → 复盘（`docs/retro.md`）。规则见 `docs/dev-rules.md`。
+- **主需求无设计稿不开发**；需求/UI 打磨标准见 [`docs/ux-guidelines.md`](docs/ux-guidelines.md)。下一轮实现：[`docs/design-r18.md`](docs/design-r18.md)（自测）。
 
 其它文档：
 
 | 文件 | 用途 |
 |------|------|
 | `docs/requirements.md` | **需求单一来源（必读）** |
+| `docs/ux-guidelines.md` | 需求与交互/视觉持续打磨约定 |
+| `docs/design-r18.md` | R18 自测：线框、流程、文案、验收 |
+| `docs/design-r19.md` / `r20` | 今日任务、间隔复习（设计已出） |
 | `docs/dev-rules.md` | 开发规则（≤15 条） |
 | `docs/retro.md` | 每轮复盘 |
 | `docs/design-r*.md` | 各轮交互/UI 设计说明 |

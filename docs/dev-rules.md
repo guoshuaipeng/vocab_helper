@@ -13,3 +13,4 @@
 11. 单词 id 用「词书id-序号」前缀，便于按词书清理进度。
 12. Windows 编带原生插件的包前确认工具链（如 nuget）。
 13. 每轮开始先读 docs/requirements.md；新需求写入该文件并勾选完成项。
+14. 主需求须有 docs/design-rN.md（含线框/文案/验收）才开发；打磨标准见 docs/ux-guidelines.md。

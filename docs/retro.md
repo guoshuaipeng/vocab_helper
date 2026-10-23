@@ -126,3 +126,10 @@
 - 实际：LearnScreen 任务条 + HomeShell 联动；ValueKey 单测；无错词 Tooltip+辅文；maxWidth 520
 - 卡住：widget 测与 Segmented「自测」文案冲突，改用 ValueKey；有错词时二次 pump 场景未稳定，改用 store 单测补角标数据
 - 预防：任务条按钮加稳定 Key；UI 验收交给 单词UI设计（fullscreen/narrow/light/dark）
+
+## Round 22（2026-10-23）
+- 计划：听音选义自测（Segmented + TTS 降级 + FakeWordSpeaker 单测），对齐 design-r22
+- 实际：quiz_variant / listenMode 引擎 + UI；TTS 失败整轮降级看义；无语音包禁用听音段；UI 验收通过
+- 卡住：无；美感抛光刻意留给 R25，避免听音主线膨胀
+- 预防：有声题型必须预置「失败整轮降级」与单测 FakeSpeaker；功能验收与体验跃迁可分轮，但要写清边界
+
