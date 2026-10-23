@@ -1,5 +1,39 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
+/// 本周打卡格状态（自然周周一～周日）。
+enum CheckInDayStatus {
+  /// 有记录且 count ≥ goal
+  met,
+
+  /// 有记录且 count < goal（仅过去日）
+  missed,
+
+  /// 过去日无键
+  empty,
+
+  /// 今天且尚未达标
+  todayProgress,
+
+  /// 本周内未来日
+  future,
+}
+
+class CheckInDay {
+  const CheckInDay({
+    required this.ymd,
+    required this.weekday,
+    required this.status,
+    this.count,
+  });
+
+  final String ymd;
+
+  /// DateTime.weekday：1=周一 … 7=周日
+  final int weekday;
+  final CheckInDayStatus status;
+  final int? count;
+}
+
 class ProgressStore {
   ProgressStore(this._prefs);
 
@@ -17,6 +51,7 @@ class ProgressStore {
   static const _kTtsAccent = 'tts_accent';
   static const _kAutoSpeak = 'auto_speak';
   static const _kQuizVariant = 'quiz_variant';
+  static const _kDayCountPrefix = 'day_count_';
 
   static Future<ProgressStore> open() async {
     final prefs = await SharedPreferences.getInstance();
@@ -30,9 +65,6 @@ class ProgressStore {
   }
 
   bool get hasSelectedBook => selectedBookId() != null && selectedBookId()!.isNotEmpty;
-
-  String _todayKey() => dateKey();
-
 
   static const _kReviewAtPrefix = 'review_at_';
   static const _kReviewStagePrefix = 'review_stage_';
@@ -116,8 +148,6 @@ class ProgressStore {
     await _setReview(wordId, stage: 0, at: addDaysToDateKey(today, daysForStage(0)));
   }
 
-
-
   Set<String> learnedIds() {
     return (_prefs.getStringList(_kLearned) ?? const <String>[]).toSet();
   }
@@ -150,7 +180,6 @@ class ProgressStore {
     for (final id in removedIds) {
       await _clearReview(id);
     }
-    // Also clear orphan review keys for this book prefix
     for (final key in _prefs.getKeys()) {
       if (key.startsWith('$_kReviewAtPrefix$prefix') || key.startsWith('$_kReviewStagePrefix$prefix')) {
         await _prefs.remove(key);
@@ -168,8 +197,8 @@ class ProgressStore {
     return removed;
   }
 
-  int todayCount() {
-    final today = _todayKey();
+  int todayCount({DateTime? now}) {
+    final today = dateKey(now);
     if (_prefs.getString(_kTodayDate) != today) return 0;
     return _prefs.getInt(_kTodayCount) ?? 0;
   }
@@ -225,35 +254,87 @@ class ProgressStore {
     }
   }
 
+  /// 跨日：先把昨日桶写入 `day_count_yyyy-MM-dd`，再清零今日。
+  Future<void> ensureDayRolled({DateTime? now}) => _archiveIfRolled(now);
+
+  Future<void> _archiveIfRolled(DateTime? now) async {
+    final today = dateKey(now);
+    final stored = _prefs.getString(_kTodayDate);
+    if (stored == null || stored == today) return;
+    final count = _prefs.getInt(_kTodayCount) ?? 0;
+    await _prefs.setInt('$_kDayCountPrefix$stored', count);
+    await _prefs.setString(_kTodayDate, today);
+    await _prefs.setInt(_kTodayCount, 0);
+  }
+
+  /// 某日学词数。`null` = 无记录（无归档键且非当前今日桶）。
+  int? dayCountFor(String ymd, {DateTime? now}) {
+    final storedDate = _prefs.getString(_kTodayDate);
+    if (storedDate == ymd) {
+      return _prefs.getInt(_kTodayCount) ?? 0;
+    }
+    final key = '$_kDayCountPrefix$ymd';
+    if (!_prefs.containsKey(key)) return null;
+    return _prefs.getInt(key) ?? 0;
+  }
+
+  /// 含 [now] 的自然周（周一～周日）七格状态。
+  List<CheckInDay> weekCheckIns({DateTime? now}) {
+    final n = now ?? DateTime.now();
+    final today = DateTime(n.year, n.month, n.day);
+    final monday = today.subtract(Duration(days: today.weekday - 1));
+    final goal = dailyGoal();
+    return List<CheckInDay>.generate(7, (i) {
+      final d = DateTime(monday.year, monday.month, monday.day + i);
+      final ymd = dateKey(d);
+      final count = dayCountFor(ymd, now: n);
+      final CheckInDayStatus status;
+      if (d.isAfter(today)) {
+        status = CheckInDayStatus.future;
+      } else if (d == today) {
+        status = (count != null && count >= goal)
+            ? CheckInDayStatus.met
+            : CheckInDayStatus.todayProgress;
+      } else if (count == null) {
+        status = CheckInDayStatus.empty;
+      } else if (count >= goal) {
+        status = CheckInDayStatus.met;
+      } else {
+        status = CheckInDayStatus.missed;
+      }
+      return CheckInDay(ymd: ymd, weekday: d.weekday, status: status, count: count);
+    });
+  }
+
   Future<void> markLearned(String id, {DateTime? now}) async {
     final ids = learnedIds();
     final first = !ids.contains(id);
     if (first) {
       ids.add(id);
       await _prefs.setStringList(_kLearned, ids.toList());
-      await bumpTodayCount();
-      // 首次认识：固定进 1 天桶（即使此前点过「不认识」写过 stage）
+      await bumpTodayCount(now: now);
       final today = dateKey(now);
       await _setReview(id, stage: 0, at: addDaysToDateKey(today, daysForStage(0)));
     } else {
-      await bumpTodayCount();
+      await bumpTodayCount(now: now);
       await advanceReviewAfterKnown(id, now: now);
     }
     await removeWrong(id);
   }
 
-
   /// Increment today's activity count without marking a word learned (e.g. quiz correct).
-  Future<void> bumpTodayCount() async {
-    final today = _todayKey();
+  Future<void> bumpTodayCount({DateTime? now}) async {
+    await _archiveIfRolled(now);
+    final today = dateKey(now);
     if (_prefs.getString(_kTodayDate) != today) {
       await _prefs.setString(_kTodayDate, today);
       await _prefs.setInt(_kTodayCount, 1);
     } else {
-      await _prefs.setInt(_kTodayCount, todayCount() + 1);
+      await _prefs.setInt(_kTodayCount, (_prefs.getInt(_kTodayCount) ?? 0) + 1);
     }
     await _updateStreak(today);
   }
+
   Future<void> markWrong(String id, {DateTime? now}) async {
     final ids = wrongIds();
     if (!ids.contains(id)) {
@@ -270,9 +351,9 @@ class ProgressStore {
     await _prefs.setStringList(_kWrong, ids.toList());
   }
 
-
-  Future<void> touchActive() async {
-    await _updateStreak(_todayKey());
+  Future<void> touchActive({DateTime? now}) async {
+    await _archiveIfRolled(now);
+    await _updateStreak(dateKey(now));
   }
 
   Future<void> _updateStreak(String today) async {

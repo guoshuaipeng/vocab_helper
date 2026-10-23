@@ -93,4 +93,89 @@ void main() {
     await store.setAutoSpeak(true);
     expect(store.autoSpeak(), isTrue);
   });
+
+  test('cross-day archives today_count into day_count_ymd', () async {
+    final store = await ProgressStore.open();
+    final day1 = DateTime(2026, 10, 20);
+    final day2 = DateTime(2026, 10, 21);
+    await store.setDailyGoal(5);
+    for (var i = 0; i < 5; i++) {
+      await store.bumpTodayCount(now: day1);
+    }
+    expect(store.todayCount(now: day1), 5);
+    expect(store.dayCountFor('2026-10-20', now: day1), 5);
+
+    await store.bumpTodayCount(now: day2);
+    expect(store.dayCountFor('2026-10-20', now: day2), 5);
+    expect(store.todayCount(now: day2), 1);
+    expect(store.dayCountFor('2026-10-19', now: day2), isNull);
+  });
+
+  test('ensureDayRolled archives without bump', () async {
+    final store = await ProgressStore.open();
+    final mon = DateTime(2026, 10, 19);
+    final tue = DateTime(2026, 10, 20);
+    await store.setDailyGoal(10);
+    await store.bumpTodayCount(now: mon);
+    await store.bumpTodayCount(now: mon);
+    await store.ensureDayRolled(now: tue);
+    expect(store.dayCountFor('2026-10-19', now: tue), 2);
+    expect(store.todayCount(now: tue), 0);
+  });
+
+  test('weekCheckIns Mon-Sun boundaries and no fake met', () async {
+    final store = await ProgressStore.open();
+    await store.setDailyGoal(5);
+    final sunday = DateTime(2026, 10, 25);
+    final monday = DateTime(2026, 10, 19);
+    final tuesday = DateTime(2026, 10, 20);
+    for (var i = 0; i < 5; i++) {
+      await store.bumpTodayCount(now: monday);
+    }
+    await store.ensureDayRolled(now: tuesday);
+    await store.bumpTodayCount(now: tuesday);
+    await store.ensureDayRolled(now: sunday);
+
+    final week = store.weekCheckIns(now: sunday);
+    expect(week.length, 7);
+    expect(week.first.weekday, 1);
+    expect(week.last.weekday, 7);
+    expect(week[0].ymd, '2026-10-19');
+    expect(week[0].status, CheckInDayStatus.met);
+    expect(week[1].ymd, '2026-10-20');
+    expect(week[1].status, CheckInDayStatus.missed);
+    for (var i = 2; i <= 5; i++) {
+      expect(week[i].status, CheckInDayStatus.empty, reason: 'day index $i');
+      expect(week[i].count, isNull);
+    }
+    expect(week[6].status, CheckInDayStatus.todayProgress);
+  });
+
+  test('weekCheckIns future days on Monday', () async {
+    final store = await ProgressStore.open();
+    await store.setDailyGoal(5);
+    final monday = DateTime(2026, 10, 19);
+    final week = store.weekCheckIns(now: monday);
+    expect(week[0].status, CheckInDayStatus.todayProgress);
+    for (var i = 1; i < 7; i++) {
+      expect(week[i].status, CheckInDayStatus.future);
+    }
+  });
+
+  test('changing goal does not rewrite archived day_count', () async {
+    final store = await ProgressStore.open();
+    final day1 = DateTime(2026, 10, 20);
+    final day2 = DateTime(2026, 10, 21);
+    await store.setDailyGoal(10);
+    for (var i = 0; i < 8; i++) {
+      await store.bumpTodayCount(now: day1);
+    }
+    await store.ensureDayRolled(now: day2);
+    expect(store.dayCountFor('2026-10-20', now: day2), 8);
+    await store.setDailyGoal(5);
+    expect(store.dayCountFor('2026-10-20', now: day2), 8);
+    final week = store.weekCheckIns(now: day2);
+    final cell = week.firstWhere((d) => d.ymd == '2026-10-20');
+    expect(cell.status, CheckInDayStatus.met);
+  });
 }
