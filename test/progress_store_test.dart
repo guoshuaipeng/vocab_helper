@@ -76,4 +76,11 @@ void main() {
     await store.setTtsAccent('nope');
     expect(store.ttsAccent(), 'en-US');
   });
+
+  test('autoSpeak defaults false', () async {
+    final store = await ProgressStore.open();
+    expect(store.autoSpeak(), isFalse);
+    await store.setAutoSpeak(true);
+    expect(store.autoSpeak(), isTrue);
+  });
 }

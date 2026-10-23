@@ -15,6 +15,7 @@ class ProgressStore {
   static const _kDailyGoal = 'daily_goal';
   static const _kUnitFilterPrefix = 'unit_filter_';
   static const _kTtsAccent = 'tts_accent';
+  static const _kAutoSpeak = 'auto_speak';
 
   static Future<ProgressStore> open() async {
     final prefs = await SharedPreferences.getInstance();
@@ -101,6 +102,12 @@ class ProgressStore {
   Future<void> setTtsAccent(String code) async {
     final v = code == 'en-GB' ? 'en-GB' : 'en-US';
     await _prefs.setString(_kTtsAccent, v);
+  }
+
+  bool autoSpeak() => _prefs.getBool(_kAutoSpeak) ?? false;
+
+  Future<void> setAutoSpeak(bool v) async {
+    await _prefs.setBool(_kAutoSpeak, v);
   }
 
   String? unitFilterForBook(String bookId) => _prefs.getString('$_kUnitFilterPrefix$bookId');

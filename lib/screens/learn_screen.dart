@@ -131,6 +131,7 @@ class _LearnScreenState extends State<LearnScreen> {
         _flipped = false;
         _loading = false;
       });
+      await _maybeAutoSpeak();
     } catch (e) {
       setState(() {
         _loading = false;
@@ -148,6 +149,7 @@ class _LearnScreenState extends State<LearnScreen> {
       q.markKnown();
       _flipped = false;
     });
+    await _maybeAutoSpeak();
   }
 
   Future<void> _onUnknown() async {
@@ -159,6 +161,7 @@ class _LearnScreenState extends State<LearnScreen> {
       q.markUnknown();
       _flipped = false;
     });
+    await _maybeAutoSpeak();
   }
 
   Future<void> _pickUnit(String? unit) async {
@@ -166,6 +169,11 @@ class _LearnScreenState extends State<LearnScreen> {
     if (id == null) return;
     await widget.store.setUnitFilterForBook(id, unit);
     await _boot();
+  }
+
+  Future<void> _maybeAutoSpeak() async {
+    if (!widget.store.autoSpeak()) return;
+    await _speakCurrent();
   }
 
   Future<void> _speakCurrent() async {

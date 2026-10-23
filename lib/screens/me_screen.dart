@@ -232,6 +232,17 @@ class _MeScreenState extends State<MeScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text('学习页点喇叭时使用该口音（依赖系统已安装的语音包）。', style: Theme.of(context).textTheme.bodySmall),
+                  const SizedBox(height: 8),
+                  SwitchListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: const Text('出现新词时自动朗读'),
+                    value: widget.store.autoSpeak(),
+                    onChanged: (v) async {
+                      await widget.store.setAutoSpeak(v);
+                      widget.onRefresh();
+                      setState(() {});
+                    },
+                  ),
                 ],
               ),
             ),
