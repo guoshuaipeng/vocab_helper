@@ -69,12 +69,42 @@ class ProgressStore {
 
   static const _kReviewAtPrefix = 'review_at_';
   static const _kReviewStagePrefix = 'review_stage_';
+  static const _kReviewNextHint = 'review_next_hint_enabled';
 
-  /// Interval days for stage 0/1/2/3 → 1 / 3 / 7 / 7.
+  /// R38 max stage (0..4 → 1/3/7/14/30 days).
+  static const int maxReviewStage = 4;
+
+  /// Interval days for stage 0/1/2/3/4 → 1 / 3 / 7 / 14 / 30.
   static int daysForStage(int stage) {
-    const days = [1, 3, 7, 7];
-    final i = stage.clamp(0, 3);
+    const days = [1, 3, 7, 14, 30];
+    final i = stage.clamp(0, maxReviewStage);
     return days[i];
+  }
+
+  /// Kid-friendly label for the next review after landing on [stage].
+  static String labelForStage(int stage) {
+    switch (stage.clamp(0, maxReviewStage)) {
+      case 0:
+        return '明天复习';
+      case 1:
+        return '3天后';
+      case 2:
+        return '约一周';
+      case 3:
+        return '约两周';
+      default:
+        return '约一个月';
+    }
+  }
+
+  static String nextReviewHintForStage(int stage) =>
+      '下次 · ${labelForStage(stage)}';
+
+  /// Show next-review tip after 认识. Default on; can disable.
+  bool reviewNextHintEnabled() => _prefs.getBool(_kReviewNextHint) ?? true;
+
+  Future<void> setReviewNextHintEnabled(bool enabled) async {
+    await _prefs.setBool(_kReviewNextHint, enabled);
   }
 
   static String dateKey([DateTime? now]) {
@@ -135,7 +165,7 @@ class ProgressStore {
   }
 
   Future<void> _setReview(String wordId, {required int stage, required String at}) async {
-    await _prefs.setInt('$_kReviewStagePrefix$wordId', stage.clamp(0, 3));
+    await _prefs.setInt('$_kReviewStagePrefix$wordId', stage.clamp(0, maxReviewStage));
     await _prefs.setString('$_kReviewAtPrefix$wordId', at);
   }
 
@@ -144,14 +174,14 @@ class ProgressStore {
     await _prefs.remove('$_kReviewAtPrefix$wordId');
   }
 
-  /// After 「认识」: first time → stage0 +1d; due again → stage+1 capped, bucket days.
+  /// After 「认识」: first time → stage0 +1d; due again → stage+1 capped at 4, bucket days.
   Future<void> advanceReviewAfterKnown(String wordId, {DateTime? now}) async {
     final today = dateKey(now);
     final cur = reviewStage(wordId);
     if (cur == null) {
       await _setReview(wordId, stage: 0, at: addDaysToDateKey(today, daysForStage(0)));
     } else {
-      final next = (cur + 1).clamp(0, 3);
+      final next = (cur + 1).clamp(0, maxReviewStage);
       await _setReview(wordId, stage: next, at: addDaysToDateKey(today, daysForStage(next)));
     }
   }

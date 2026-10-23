@@ -498,34 +498,50 @@ class _MeScreenState extends State<MeScreen> {
                       final color = !hasBook || due == 0
                           ? scheme.onSurfaceVariant
                           : scheme.primary;
-                      return Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          key: const ValueKey('me_due_review'),
-                          onTap: hasBook ? _openDueReviewSheet : null,
-                          borderRadius: BorderRadius.circular(12),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    label,
-                                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                          color: color,
-                                          fontWeight: due > 0 ? FontWeight.w600 : FontWeight.w400,
-                                        ),
-                                  ),
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              key: const ValueKey('me_due_review'),
+                              onTap: hasBook ? _openDueReviewSheet : null,
+                              borderRadius: BorderRadius.circular(12),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        label,
+                                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                              color: color,
+                                              fontWeight: due > 0 ? FontWeight.w600 : FontWeight.w400,
+                                            ),
+                                      ),
+                                    ),
+                                    if (hasBook)
+                                      Icon(
+                                        Icons.chevron_right,
+                                        color: color,
+                                      ),
+                                  ],
                                 ),
-                                if (hasBook)
-                                  Icon(
-                                    Icons.chevron_right,
-                                    color: color,
-                                  ),
-                              ],
+                              ),
                             ),
                           ),
-                        ),
+                          if (hasBook)
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 4),
+                              child: Text(
+                                '间隔会随认识变长',
+                                key: const ValueKey('me_review_curve_hint'),
+                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: scheme.onSurfaceVariant,
+                                    ),
+                              ),
+                            ),
+                        ],
                       );
                     },
                   ),

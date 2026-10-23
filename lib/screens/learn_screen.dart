@@ -59,6 +59,10 @@ class _LearnScreenState extends State<LearnScreen> {
   String? _unitFilterHint;
   Timer? _unitHintTimer;
 
+  /// R38: quiet "下次 · …" after 认识 (not a SnackBar).
+  String? _reviewNextHint;
+  Timer? _reviewNextHintTimer;
+
   @override
   void initState() {
     super.initState();
@@ -74,6 +78,7 @@ class _LearnScreenState extends State<LearnScreen> {
   @override
   void dispose() {
     _unitHintTimer?.cancel();
+    _reviewNextHintTimer?.cancel();
     if (_ownsSpeaker) {
       _speaker.dispose();
     }
@@ -190,6 +195,17 @@ class _LearnScreenState extends State<LearnScreen> {
     }
   }
 
+
+  void _showReviewNextHint(String msg) {
+    if (!widget.store.reviewNextHintEnabled()) return;
+    _reviewNextHintTimer?.cancel();
+    setState(() => _reviewNextHint = msg);
+    _reviewNextHintTimer = Timer(const Duration(milliseconds: 1600), () {
+      if (!mounted) return;
+      if (_reviewNextHint == msg) setState(() => _reviewNextHint = null);
+    });
+  }
+
   Future<void> _flashThen(String kind, Future<void> Function() advance) async {
     setState(() => _flashKind = kind);
     await Future<void>.delayed(const Duration(milliseconds: 150));
@@ -205,10 +221,14 @@ class _LearnScreenState extends State<LearnScreen> {
     if (q == null || cur == null || _flashKind != null) return;
     await _flashThen('known', () async {
       final celebrate = await widget.store.markLearned(cur.id);
+      final stage = widget.store.reviewStage(cur.id) ?? 0;
       setState(() {
         q.markKnown();
         _flipped = false;
       });
+      if (mounted) {
+        _showReviewNextHint(ProgressStore.nextReviewHintForStage(stage));
+      }
       if (celebrate && mounted) {
         showGoalCelebratedBanner(
           context,
@@ -647,6 +667,19 @@ class _LearnScreenState extends State<LearnScreen> {
                       key: const ValueKey('unit_filter_hint'),
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: scheme.onSurfaceVariant,
+                          ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                  if (_reviewNextHint != null) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      _reviewNextHint!,
+                      key: const ValueKey('review_next_hint'),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: scheme.primary,
+                            fontWeight: FontWeight.w600,
                           ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
