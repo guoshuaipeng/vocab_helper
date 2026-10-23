@@ -5,7 +5,7 @@
 **原则（Impeccable）**：问题=推荐本音标槽位永远空；解法=**内容补齐**，不改布局堆控件。  
 **参考**：R21 pep-ps-3 `/…/` IPA；公开模式 Anki/百词斩词下音标。  
 **工具**：免费 Dictionary API + UI Notes/公开模式；禁用付费 Mobbin/Refero。  
-**状态**：可开发
+**状态**：**已完成**（UI 自验通过）
 
 ---
 
@@ -92,11 +92,11 @@
 
 ## 9. 验收
 
-- [ ] A1 单字词 phonetic ≥85%  
-- [ ] A2 抽查 ≥5 词含 `/`（含 guitar、honest）  
-- [ ] A3 窄浅未揭晓截图可见词下音标 → `docs/shots/r44-*.png`  
-- [ ] A4 acceptance 勾选；自测不展示音标（回归）  
-- [ ] A5 `flutter test` 相关套件绿；本地 tip；未 push  
+- [x] A1 单字词 phonetic ≥85%  
+- [x] A2 抽查 ≥5 词含 `/`（含 guitar、honest）  
+- [x] A3 窄浅未揭晓截图可见词下音标 → `docs/shots/r44-*.png`  
+- [x] A4 acceptance 勾选；自测不展示音标（回归）  
+- [x] A5 `flutter test` 相关套件绿；本地 tip；未 push  
 
 ---
 

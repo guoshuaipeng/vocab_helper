@@ -53,4 +53,45 @@ void main() {
     final sel = books.firstWhere((e) => e['id'] == 'hj-jh-7');
     expect((sel['title'] as String?) ?? '', contains('精选'));
   });
+
+  test('hj-ox-7a-2024: single-word phonetic >=85% with slash IPA sample', () async {
+    final raw = await rootBundle.loadString('assets/wordbooks/hj-ox-7a-2024.json');
+    final data = jsonDecode(raw) as Map<String, dynamic>;
+    final words = (data['words'] as List).cast<Map<String, dynamic>>();
+
+    final singles = words
+        .where((w) => !((w['word'] as String?) ?? '').contains(' '))
+        .toList();
+    expect(singles.length, greaterThan(200));
+
+    final withPh = singles
+        .where((w) => ((w['phonetic'] as String?) ?? '').trim().isNotEmpty)
+        .toList();
+    final ratio = withPh.length / singles.length;
+    expect(
+      ratio,
+      greaterThanOrEqualTo(0.85),
+      reason: 'phonetic ${withPh.length}/${singles.length}',
+    );
+
+    final source = ((data['source'] as String?) ?? '').toLowerCase();
+    expect(
+      source.contains('dictionaryapi'),
+      isTrue,
+      reason: 'source should cite dictionaryapi.dev',
+    );
+
+    for (final lemma in ['guitar', 'honest', 'patient', 'improve', 'confident']) {
+      final hit = words.firstWhere((w) => w['word'] == lemma);
+      final ph = ((hit['phonetic'] as String?) ?? '').trim();
+      expect(ph.startsWith('/'), isTrue, reason: '$lemma phonetic=$ph');
+      expect(ph.endsWith('/'), isTrue, reason: '$lemma phonetic=$ph');
+    }
+
+    for (final w in withPh.take(20)) {
+      final ph = (w['phonetic'] as String).trim();
+      expect(ph.startsWith('/'), isTrue, reason: '${w['word']} phonetic=$ph');
+      expect(ph.endsWith('/'), isTrue, reason: '${w['word']} phonetic=$ph');
+    }
+  });
 }
