@@ -243,7 +243,7 @@ class _LearnScreenState extends State<LearnScreen> {
           Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              '剩余 ${q.remaining} · 本轮认识 ${q.knownCount} · 今日 ${widget.store.todayCount()}/${widget.store.dailyGoal()}${widget.store.todayGoalMet ? ' · 已达标' : ''}',
+              '剩余 ${q.remaining} · 本轮认识 ${q.knownCount} · 本单元 ${_unitWordCount()} · 今日 ${widget.store.todayCount()}/${widget.store.dailyGoal()}${widget.store.todayGoalMet ? ' · 已达标' : ''}',
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ),
