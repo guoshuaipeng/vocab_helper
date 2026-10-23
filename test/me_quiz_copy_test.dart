@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'support/expand_me_more.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vocab_helper/screens/me_screen.dart';
 import 'package:vocab_helper/services/progress_store.dart';
 import 'package:vocab_helper/services/wordbook_repository.dart';
 import 'package:vocab_helper/theme/app_theme.dart';
+
+
+
+
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -54,6 +59,7 @@ void main() {
   testWidgets('自测卡副文案点明看义/看词/听音/拼写，勿写仅四选一', (tester) async {
     await pumpMe(tester);
 
+    await expandMeMore(tester);
     final sub = find.byKey(const ValueKey('me_quiz_card_subtitle'));
     for (var i = 0; i < 16 && sub.evaluate().isEmpty; i++) {
       final list = find.byType(Scrollable);

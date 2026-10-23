@@ -7,7 +7,7 @@
 
 ## 进行中
 
-（空 · R46 已收口 2026-10-23）
+（空 · R47 已收口 2026-10-23）
 
 ---
 
@@ -44,7 +44,7 @@
 | R44 | 推荐本 hj-ox 补音标 | [design-r44.md](design-r44.md) · [prd-hj-ox-phonetic.md](prd-hj-ox-phonetic.md) | **已完成** |
 | R45 | 自测页视觉对齐学习页（B01） | [design-r45.md](design-r45.md) · [prd-r45-quiz-chrome.md](prd-r45-quiz-chrome.md) | **已完成** |
 | R46 | 错词本→自测闭环（B03） | [design-r46.md](design-r46.md) · [prd-r46-wrong-quiz-loop.md](prd-r46-wrong-quiz-loop.md) | **已完成** |
-| R47 | 我的页信息层级（RICE #5） | 见迭代 PRD B05 | **已排期** |
+| R47 | 我的页信息层级（B05） | [design-r47.md](design-r47.md) · [prd-r47-mine-hierarchy.md](prd-r47-mine-hierarchy.md) | **已完成** |
 
 ---
 
@@ -79,7 +79,7 @@
 - [x] **R44** 推荐本 hj-ox 补音标（prd-hj-ox-phonetic；design-r44；**UI 自验通过** 2026-10-23 · 单字词 phonetic ~92.6%）
 - [x] **R45** 自测页视觉对齐学习页（迭代 PRD B01；**UI 自验通过** 2026-10-23 · docs/shots/r45-ui-acceptance.md）
 - [x] **R46** 错词本→自测一键闭环（迭代 PRD B03；**UI 自验通过** 2026-10-23 · docs/shots/r46-ui-acceptance.md）
-- [ ] **R47** 我的页信息层级（迭代 PRD B05；待 design）
+- [x] **R47** 我的页信息层级（迭代 PRD B05；**UI 自验通过** 2026-10-23 · docs/shots/r47-ui-acceptance.md）
 
 ## P2（体验）
 
@@ -92,6 +92,18 @@
 ## 已完成轮次（详情）
 
 
+
+
+### Round 47 · 我的页信息层级（已完成）
+
+**PRD**：[prd-r47-mine-hierarchy.md](prd-r47-mine-hierarchy.md) · **设计**：[design-r47.md](design-r47.md) · **RICE** B05（12.3）  
+**状态**：**已完成**（UI 自验 · docs/shots/r47-ui-acceptance.md）
+
+- [x] 纸卡 Hero：当前词书 + 今日目标细进度 + 待复习 + 本周打卡
+- [x] 行动区：错词入口 + teal「自测本词书」+「测这些」
+- [x] 「更多设置」默认折叠：导出/单元/拍照/口音/统计
+- [x] 既有 ValueKey 保留；旧测先 expand `me_more_section`
+- [x] 截图 r47-hero 浅深 + more-expanded；`git push github master`
 
 ### Round 46 · 错词本→自测一键闭环（已完成）
 

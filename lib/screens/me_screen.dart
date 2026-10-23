@@ -421,6 +421,34 @@ class _MeScreenState extends State<MeScreen> {
     setState(() {});
   }
 
+  static const Color _meTeal = Color(0xFF0D9488);
+
+  Color _mePaperColor(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Theme.of(context).brightness == Brightness.dark
+        ? scheme.surfaceContainerHigh
+        : scheme.surfaceContainerLow;
+  }
+
+  Widget _mePaper({Key? key, required Widget child}) {
+    final scheme = Theme.of(context).colorScheme;
+    return Material(
+      key: key,
+      color: _mePaperColor(context),
+      elevation: 1,
+      shadowColor: Colors.black.withValues(alpha: 0.12),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(24),
+        side: BorderSide(color: scheme.outlineVariant.withValues(alpha: 0.45)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: child,
+      ),
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final bookId = widget.store.selectedBookId();
@@ -428,449 +456,504 @@ class _MeScreenState extends State<MeScreen> {
     final goal = widget.store.dailyGoal();
     final today = widget.store.todayCount();
     final progress = goal == 0 ? 0.0 : (today / goal).clamp(0.0, 1.0);
+    final scheme = Theme.of(context).colorScheme;
+    final unit = bookId == null ? null : widget.store.unitFilterForBook(bookId);
+    final hasUnit = unit != null && unit.isNotEmpty;
+    final hasWrong = bookId != null && widget.store.wrongCountForBook(bookId) > 0;
+    final hasBook = bookId != null && bookId.isNotEmpty;
+    final due = hasBook ? widget.store.dueReviewCountForBook(bookId) : 0;
+    final dueLabel = !hasBook
+        ? '先选一本词书'
+        : (due == 0 ? '暂无到期复习' : '待复习 $due');
+    final dueColor = !hasBook || due == 0 ? scheme.onSurfaceVariant : _meTeal;
+    final wrongCount = hasBook ? widget.store.wrongCountForBook(bookId) : 0;
+    final wrongColor = !hasBook || wrongCount == 0 ? scheme.onSurfaceVariant : _meTeal;
 
     return RefreshIndicator(
       onRefresh: () async {
         widget.onRefresh();
         await _loadBook();
       },
-      child: ListView(
-        cacheExtent: 4000,
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
         padding: const EdgeInsets.all(20),
-        children: [
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
           Text('我的进度', style: Theme.of(context).textTheme.headlineSmall),
           const SizedBox(height: 16),
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: _loadingBook
-                  ? const Center(child: Padding(padding: EdgeInsets.all(12), child: CircularProgressIndicator()))
-                  : Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('当前词书', style: Theme.of(context).textTheme.titleMedium),
-                        const SizedBox(height: 8),
+          // —— Hero: 当前书 + 今日 + 待复习 ——
+          _mePaper(
+            key: const ValueKey('me_hero'),
+            child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (_loadingBook)
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 8),
+                          child: Center(child: CircularProgressIndicator()),
+                        )
+                      else ...[
+                      Text(
+                        '当前词书',
+                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                              color: scheme.onSurfaceVariant,
+                            ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        _book == null ? '尚未选择' : _book!.title,
+                        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+                      ),
+                      if (_book != null) ...[
+                        const SizedBox(height: 4),
                         Text(
-                          _book == null ? '尚未选择' : _book!.title,
-                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                        ),
-                        if (_book != null) ...[
-                          const SizedBox(height: 4),
-                          Text('${_book!.version} · ${_book!.grade} · 本词书已学 $bookLearned / ${_book!.wordCount}'),
-                        ],
-                        if (_shouldShowRecommendHint) ...[
-                          const SizedBox(height: 10),
-                          Material(
-                            key: const ValueKey('me_recommend_switch_hint'),
-                            color: Theme.of(context).colorScheme.secondaryContainer,
-                            borderRadius: BorderRadius.circular(12),
-                            child: Padding(
-                              padding: const EdgeInsets.fromLTRB(12, 10, 8, 10),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      '跟课推荐：沪教牛津2024七上',
-                                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                            color: Theme.of(context).colorScheme.onSecondaryContainer,
-                                          ),
-                                    ),
-                                  ),
-                                  TextButton(
-                                    onPressed: widget.onChangeBook,
-                                    style: TextButton.styleFrom(
-                                      foregroundColor: Theme.of(context).colorScheme.onSecondaryContainer,
-                                    ),
-                                    child: const Text('去切换'),
-                                  ),
-                                ],
+                          '${_book!.version} · ${_book!.grade} · 本词书已学 $bookLearned / ${_book!.wordCount}',
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: scheme.onSurfaceVariant,
                               ),
+                        ),
+                      ],
+                      if (_shouldShowRecommendHint) ...[
+                        const SizedBox(height: 10),
+                        Material(
+                          key: const ValueKey('me_recommend_switch_hint'),
+                          color: scheme.secondaryContainer,
+                          borderRadius: BorderRadius.circular(12),
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(12, 10, 8, 10),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    '跟课推荐：沪教牛津2024七上',
+                                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                          color: scheme.onSecondaryContainer,
+                                        ),
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: widget.onChangeBook,
+                                  style: TextButton.styleFrom(
+                                    foregroundColor: scheme.onSecondaryContainer,
+                                  ),
+                                  child: const Text('去切换'),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                      const SizedBox(height: 10),
+                      OutlinedButton.icon(
+                        onPressed: widget.onChangeBook,
+                        icon: const Icon(Icons.tune, size: 18),
+                        label: const Text('更换教材'),
+                      ),
+                      ],
+                      const SizedBox(height: 16),
+                      Divider(height: 1, color: scheme.outlineVariant.withValues(alpha: 0.6)),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              '今日目标',
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: _editGoal,
+                            style: TextButton.styleFrom(foregroundColor: _meTeal),
+                            child: const Text('修改'),
+                          ),
+                        ],
+                      ),
+                      Text(
+                        '$today / $goal',
+                        key: const ValueKey('me_today_goal_count'),
+                        style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: widget.store.todayGoalMet ? _meTeal : scheme.onSurface,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(4),
+                        child: LinearProgressIndicator(
+                          value: progress,
+                          minHeight: 4,
+                          color: _meTeal,
+                          backgroundColor: scheme.surfaceContainerHighest,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        key: const ValueKey('me_today_goal_status'),
+                        children: [
+                          if (widget.store.todayGoalMet) ...[
+                            const Icon(Icons.check_circle, size: 18, color: _meTeal),
+                            const SizedBox(width: 6),
+                          ],
+                          Expanded(
+                            child: Text(
+                              widget.store.todayGoalMet
+                                  ? '今日已完成 · $today/$goal'
+                                  : '再学 ${goal - today} 个就达标',
+                              style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           ),
                         ],
-                        const SizedBox(height: 12),
-                        Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
-                          children: [
-                            OutlinedButton.icon(
-                              onPressed: widget.onChangeBook,
-                              icon: const Icon(Icons.tune),
-                              label: const Text('更换教材'),
+                      ),
+                      const SizedBox(height: 4),
+                      Material(
+                        color: due > 0
+                            ? _meTeal.withValues(alpha: 0.10)
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(12),
+                        child: InkWell(
+                          key: const ValueKey('me_due_review'),
+                          onTap: hasBook ? _openDueReviewSheet : null,
+                          borderRadius: BorderRadius.circular(12),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    dueLabel,
+                                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                          color: dueColor,
+                                          fontWeight: due > 0 ? FontWeight.w600 : FontWeight.w400,
+                                        ),
+                                  ),
+                                ),
+                                if (hasBook)
+                                  Icon(Icons.chevron_right, color: dueColor),
+                              ],
                             ),
-                            TextButton.icon(
-                              key: const ValueKey('export_progress'),
-                              onPressed: _book == null ? null : _exportProgress,
-                              icon: const Icon(Icons.upload_file_outlined),
-                              label: Text(_book == null
-                                  ? '先选一本词书'
-                                  : '导出本词书进度'),
-                            ),
-                            TextButton.icon(
-                              key: const ValueKey('me_unit_progress'),
-                              onPressed: _book == null ? null : _openUnitProgressSheet,
-                              icon: const Icon(Icons.view_list_outlined),
-                              label: Text(_book == null ? '先选一本词书' : '单元进度'),
-                            ),
-                            if (widget.onPhotoVocab != null)
-                              FilledButton.tonalIcon(
-                                key: const ValueKey('me_photo_vocab'),
-                                onPressed: _book == null ? null : widget.onPhotoVocab,
-                                icon: const Icon(Icons.document_scanner_outlined),
-                                label: const Text('拍照加词'),
-                              ),
-                            if (_book != null)
-                              OutlinedButton.icon(
-                                onPressed: _confirmClear,
-                                icon: const Icon(Icons.delete_outline),
-                                label: const Text('清空本词书进度'),
-                              ),
-                          ],
+                          ),
                         ),
-                      ],
-                    ),
+                      ),
+                      if (hasBook)
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8, bottom: 4),
+                          child: Text(
+                            '间隔会随认识变长',
+                            key: const ValueKey('me_review_curve_hint'),
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  color: scheme.onSurfaceVariant,
+                                ),
+                          ),
+                        ),
+                      const SizedBox(height: 12),
+                      _WeekCheckIn(store: widget.store),
+                    ],
             ),
           ),
           const SizedBox(height: 12),
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(child: Text('今日目标', style: Theme.of(context).textTheme.titleMedium)),
-                      TextButton(onPressed: _editGoal, child: const Text('修改')),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    '$today / $goal',
-                    key: const ValueKey('me_today_goal_count'),
-                    style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 8),
-                  LinearProgressIndicator(value: progress),
-                  const SizedBox(height: 8),
-                  Row(
-                    key: const ValueKey('me_today_goal_status'),
-                    children: [
-                      if (widget.store.todayGoalMet) ...[
-                        Icon(Icons.check_circle, size: 18, color: Theme.of(context).colorScheme.primary),
-                        const SizedBox(width: 6),
-                      ],
-                      Expanded(
-                        child: Text(
-                          widget.store.todayGoalMet
-                              ? '今日已完成 · $today/$goal'
-                              : '再学 ${goal - today} 个就达标',
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
+          // —— 行动：错词 + 自测 ——
+          _mePaper(
+            key: const ValueKey('me_actions'),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '现在去做',
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                        color: scheme.onSurfaceVariant,
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Builder(
-                    builder: (context) {
-                      final id = widget.store.selectedBookId();
-                      final hasBook = id != null && id.isNotEmpty;
-                      final due = hasBook ? widget.store.dueReviewCountForBook(id) : 0;
-                      final label = !hasBook
-                          ? '先选一本词书'
-                          : (due == 0 ? '暂无到期复习' : '待复习 $due');
-                      final scheme = Theme.of(context).colorScheme;
-                      final color = !hasBook || due == 0
-                          ? scheme.onSurfaceVariant
-                          : scheme.primary;
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              key: const ValueKey('me_due_review'),
-                              onTap: hasBook ? _openDueReviewSheet : null,
-                              borderRadius: BorderRadius.circular(12),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 8),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        label,
-                                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                              color: color,
-                                              fontWeight: due > 0 ? FontWeight.w600 : FontWeight.w400,
-                                            ),
-                                      ),
-                                    ),
-                                    if (hasBook)
-                                      Icon(
-                                        Icons.chevron_right,
-                                        color: color,
-                                      ),
-                                  ],
-                                ),
+                ),
+                const SizedBox(height: 8),
+                InkWell(
+                  key: const ValueKey('me_wrong_book_entry'),
+                  onTap: hasBook ? _openWrongBookSheet : null,
+                  borderRadius: BorderRadius.circular(12),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '错词本',
+                                style: Theme.of(context).textTheme.titleMedium,
                               ),
-                            ),
-                          ),
-                          if (hasBook)
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 4),
-                              child: Text(
-                                '间隔会随认识变长',
-                                key: const ValueKey('me_review_curve_hint'),
+                              const SizedBox(height: 2),
+                              Text(
+                                hasBook ? '查看 · 测这些' : '先选一本词书',
                                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                       color: scheme.onSurfaceVariant,
                                     ),
                               ),
-                            ),
-                        ],
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  _WeekCheckIn(store: widget.store),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 12),
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('朗读口音', style: Theme.of(context).textTheme.titleMedium),
-                  const SizedBox(height: 8),
-                  SegmentedButton<String>(
-                    segments: const [
-                      ButtonSegment(value: 'en-US', label: Text('美音'), icon: Icon(Icons.volume_up)),
-                      ButtonSegment(value: 'en-GB', label: Text('英音'), icon: Icon(Icons.volume_up)),
-                    ],
-                    selected: {widget.store.ttsAccent()},
-                    onSelectionChanged: (s) async {
-                      await widget.store.setTtsAccent(s.first);
-                      widget.onRefresh();
-                      setState(() {});
-                    },
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    '学习页点喇叭时使用该口音（依赖系统已安装的语音包）。',
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                  if (_englishVoiceOk == false) ...[
-                    const SizedBox(height: 8),
-                    Text(
-                      '还没有英文语音包。请到系统设置里安装英文语音，装好后喇叭和听音就能用。',
-                      key: const ValueKey('me_accent_tts_hint'),
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
-                          ),
-                    ),
-                  ],
-                  const SizedBox(height: 8),
-                  SwitchListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: const Text('出现新词时自动朗读'),
-                    value: widget.store.autoSpeak(),
-                    onChanged: (v) async {
-                      await widget.store.setAutoSpeak(v);
-                      widget.onRefresh();
-                      setState(() {});
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 12),
-
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('学习自测', style: Theme.of(context).textTheme.titleMedium),
-                  const SizedBox(height: 8),
-                  Text(
-                    '可看义 / 看词 / 听音 / 拼写 / 听写；答错仍进错词本。',
-                    key: const ValueKey('me_quiz_card_subtitle'),
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                  const SizedBox(height: 12),
-                  Builder(
-                    builder: (context) {
-                      final unit = bookId == null ? null : widget.store.unitFilterForBook(bookId);
-                      final hasUnit = unit != null && unit.isNotEmpty;
-                      final hasWrong = bookId != null && widget.store.wrongCountForBook(bookId) > 0;
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Wrap(
-                            spacing: 8,
-                            runSpacing: 8,
-                            children: [
-                              FilledButton.icon(
-                                onPressed: bookId == null ? null : widget.onQuizBook,
-                                icon: const Icon(Icons.quiz_outlined),
-                                label: const Text('自测本词书'),
-                              ),
-                              FilledButton.tonalIcon(
-                                onPressed: (bookId != null && hasUnit) ? widget.onQuizUnit : null,
-                                icon: const Icon(Icons.filter_list),
-                                label: Text(hasUnit ? '自测$unit' : '自测当前单元'),
-                              ),
-                              FilledButton.tonalIcon(
-                                key: const ValueKey('me_quiz_wrong_pool'),
-                                onPressed: hasWrong ? widget.onQuizWrong : null,
-                                icon: const Icon(Icons.fact_check_outlined),
-                                label: const Text('测这些'),
-                              ),
-                            ],
-                          ),
-                          if (!hasUnit && bookId != null)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8),
-                              child: Text(
-                                '提示：在学习页选一个单元后，可「自测当前单元」。',
-                                style: Theme.of(context).textTheme.bodySmall,
-                              ),
-                            ),
-                        ],
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 12),
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('错词本', style: Theme.of(context).textTheme.titleMedium),
-                  const SizedBox(height: 4),
-                  Builder(
-                    builder: (context) {
-                      final scheme = Theme.of(context).colorScheme;
-                      final hasBook = bookId != null;
-                      final count = hasBook ? widget.store.wrongCountForBook(bookId) : 0;
-                      final countColor = !hasBook || count == 0
-                          ? scheme.onSurfaceVariant
-                          : scheme.primary;
-                      return InkWell(
-                        key: const ValueKey('me_wrong_book_entry'),
-                        onTap: hasBook ? _openWrongBookSheet : null,
-                        borderRadius: BorderRadius.circular(12),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 6),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      '$count',
-                                      style: TextStyle(
-                                        fontSize: 28,
-                                        fontWeight: FontWeight.bold,
-                                        color: countColor,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 2),
-                                    Text(
-                                      hasBook ? '查看 · 测这些' : '先选一本词书',
-                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                            color: scheme.onSurfaceVariant,
-                                          ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              if (hasBook)
-                                Icon(
-                                  Icons.chevron_right,
-                                  color: scheme.onSurfaceVariant,
-                                ),
                             ],
                           ),
                         ),
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 4),
-                  Text('点「不认识」会加入本词书错词本；点「认识」会移出。', style: Theme.of(context).textTheme.bodySmall),
-                  const SizedBox(height: 12),
-                  Builder(
-                    builder: (context) {
-                      final unit = bookId == null ? null : widget.store.unitFilterForBook(bookId);
-                      final hasUnit = unit != null && unit.isNotEmpty;
-                      final hasWrong = bookId != null && widget.store.wrongCountForBook(bookId) > 0;
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          if (hasUnit)
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 8),
-                              child: Text('学习页当前单元：$unit', style: Theme.of(context).textTheme.bodySmall),
-                            ),
-                          Wrap(
-                            spacing: 8,
-                            runSpacing: 8,
-                            children: [
-                              FilledButton.icon(
-                                onPressed: hasWrong ? widget.onReviewWrong : null,
-                                icon: const Icon(Icons.replay),
-                                label: const Text('复习全部错词'),
-                              ),
-                              FilledButton.tonalIcon(
-                                onPressed: (hasWrong && hasUnit) ? widget.onReviewWrongCurrentUnit : null,
-                                icon: const Icon(Icons.filter_list),
-                                label: Text(hasUnit ? '只复习$unit' : '只复习当前单元'),
-                              ),
-                              if (bookId != null)
-                                OutlinedButton(
-                                  onPressed: !hasWrong ? null : () => _confirmClearWrong(bookId),
-                                  child: const Text('清空错词'),
-                                ),
-                            ],
+                        Text(
+                          '$wrongCount',
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: wrongColor,
                           ),
-                          if (!hasUnit && hasWrong)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8),
-                              child: Text(
-                                '提示：在学习页选一个单元后，可「只复习当前单元」。',
-                                style: Theme.of(context).textTheme.bodySmall,
-                              ),
-                            ),
+                        ),
+                        if (hasBook) ...[
+                          const SizedBox(width: 4),
+                          Icon(Icons.chevron_right, color: scheme.onSurfaceVariant),
                         ],
-                      );
-                    },
+                      ],
+                    ),
                   ),
-                ],
-              ),
+                ),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    FilledButton.icon(
+                      onPressed: bookId == null ? null : widget.onQuizBook,
+                      style: FilledButton.styleFrom(
+                        backgroundColor: _meTeal,
+                        foregroundColor: Colors.white,
+                      ),
+                      icon: const Icon(Icons.quiz_outlined),
+                      label: const Text('自测本词书'),
+                    ),
+                    FilledButton.tonalIcon(
+                      key: const ValueKey('me_quiz_wrong_pool'),
+                      onPressed: hasWrong ? widget.onQuizWrong : null,
+                      icon: const Icon(Icons.fact_check_outlined),
+                      label: const Text('测这些'),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 12),
-          _StatsSummaryCard(
-            learned: widget.store.learnedCount(),
-            todayNew: today,
-            streak: widget.store.streakDays(),
+          const SizedBox(height: 8),
+          // —— 更多设置（默认折叠）——
+          Material(
+            color: Colors.transparent,
+            child: Theme(
+            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+            child: ExpansionTile(
+              key: const ValueKey('me_more_section'),
+              initiallyExpanded: false,
+              tilePadding: const EdgeInsets.symmetric(horizontal: 4),
+              childrenPadding: const EdgeInsets.only(bottom: 8),
+              title: Text(
+                '更多设置',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              subtitle: Text(
+                '导出 · 单元 · 口音 · 统计',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: scheme.onSurfaceVariant,
+                    ),
+              ),
+              children: [
+                _mePaper(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('词书工具', style: Theme.of(context).textTheme.titleSmall),
+                      const SizedBox(height: 8),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: [
+                          TextButton.icon(
+                            key: const ValueKey('export_progress'),
+                            onPressed: !hasBook ? null : _exportProgress,
+                            icon: const Icon(Icons.upload_file_outlined),
+                            label: Text(
+                              !hasBook ? '先选一本词书' : '导出本词书进度',
+                            ),
+                          ),
+                          TextButton.icon(
+                            key: const ValueKey('me_unit_progress'),
+                            onPressed: !hasBook ? null : _openUnitProgressSheet,
+                            icon: const Icon(Icons.view_list_outlined),
+                            label: Text(!hasBook ? '先选一本词书' : '单元进度'),
+                          ),
+                          if (widget.onPhotoVocab != null)
+                            FilledButton.tonalIcon(
+                              key: const ValueKey('me_photo_vocab'),
+                              onPressed: !hasBook ? null : widget.onPhotoVocab,
+                              icon: const Icon(Icons.document_scanner_outlined),
+                              label: const Text('拍照加词'),
+                            ),
+                          if (hasBook)
+                            OutlinedButton.icon(
+                              onPressed: _confirmClear,
+                              icon: const Icon(Icons.delete_outline),
+                              label: const Text('清空本词书进度'),
+                            ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 12),
+                _mePaper(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('学习自测', style: Theme.of(context).textTheme.titleMedium),
+                      const SizedBox(height: 8),
+                      Text(
+                        '可看义 / 看词 / 听音 / 拼写 / 听写；答错仍进错词本。',
+                        key: const ValueKey('me_quiz_card_subtitle'),
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                      const SizedBox(height: 12),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: [
+                          FilledButton.tonalIcon(
+                            onPressed: (bookId != null && hasUnit) ? widget.onQuizUnit : null,
+                            icon: const Icon(Icons.filter_list),
+                            label: Text(hasUnit ? '自测$unit' : '自测当前单元'),
+                          ),
+                        ],
+                      ),
+                      if (!hasUnit && bookId != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: Text(
+                            '提示：在学习页选一个单元后，可「自测当前单元」。',
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ),
+                      const SizedBox(height: 16),
+                      Text('错词复习', style: Theme.of(context).textTheme.titleSmall),
+                      const SizedBox(height: 4),
+                      Text(
+                        '点「不认识」会加入本词书错词本；点「认识」会移出。',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                      if (hasUnit)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: Text(
+                            '学习页当前单元：$unit',
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ),
+                      const SizedBox(height: 8),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: [
+                          FilledButton.icon(
+                            onPressed: hasWrong ? widget.onReviewWrong : null,
+                            icon: const Icon(Icons.replay),
+                            label: const Text('复习全部错词'),
+                          ),
+                          FilledButton.tonalIcon(
+                            onPressed: (hasWrong && hasUnit)
+                                ? widget.onReviewWrongCurrentUnit
+                                : null,
+                            icon: const Icon(Icons.filter_list),
+                            label: Text(hasUnit ? '只复习$unit' : '只复习当前单元'),
+                          ),
+                          if (bookId != null)
+                            OutlinedButton(
+                              onPressed: !hasWrong
+                                  ? null
+                                  : () => _confirmClearWrong(bookId),
+                              child: const Text('清空错词'),
+                            ),
+                        ],
+                      ),
+                      if (!hasUnit && hasWrong)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: Text(
+                            '提示：在学习页选一个单元后，可「只复习当前单元」。',
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 12),
+                _mePaper(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('朗读口音', style: Theme.of(context).textTheme.titleMedium),
+                      const SizedBox(height: 8),
+                      SegmentedButton<String>(
+                        segments: const [
+                          ButtonSegment(
+                            value: 'en-US',
+                            label: Text('美音'),
+                            icon: Icon(Icons.volume_up),
+                          ),
+                          ButtonSegment(
+                            value: 'en-GB',
+                            label: Text('英音'),
+                            icon: Icon(Icons.volume_up),
+                          ),
+                        ],
+                        selected: {widget.store.ttsAccent()},
+                        onSelectionChanged: (s) async {
+                          await widget.store.setTtsAccent(s.first);
+                          widget.onRefresh();
+                          setState(() {});
+                        },
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        '学习页点喇叭时使用该口音（依赖系统已安装的语音包）。',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                      if (_englishVoiceOk == false) ...[
+                        const SizedBox(height: 8),
+                        Text(
+                          '还没有英文语音包。请到系统设置里安装英文语音，装好后喇叭和听音就能用。',
+                          key: const ValueKey('me_accent_tts_hint'),
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: scheme.onSurfaceVariant,
+                              ),
+                        ),
+                      ],
+                      const SizedBox(height: 8),
+                      SwitchListTile(
+                        contentPadding: EdgeInsets.zero,
+                        title: const Text('出现新词时自动朗读'),
+                        value: widget.store.autoSpeak(),
+                        onChanged: (v) async {
+                          await widget.store.setAutoSpeak(v);
+                          widget.onRefresh();
+                          setState(() {});
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 12),
+                _StatsSummaryCard(
+                  learned: widget.store.learnedCount(),
+                  todayNew: today,
+                  streak: widget.store.streakDays(),
+                ),
+              ],
+            ),
           ),
-        ],
+          ),
+          ],
+        ),
       ),
     );
   }
 }
+
 
 class _StatsSummaryCard extends StatelessWidget {
   const _StatsSummaryCard({

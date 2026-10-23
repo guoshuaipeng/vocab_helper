@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'support/expand_me_more.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vocab_helper/screens/me_screen.dart';
 import 'package:vocab_helper/services/progress_store.dart';
@@ -26,6 +27,10 @@ ThemeData withCjk(ThemeData base) {
     primaryTextTheme: base.primaryTextTheme.apply(fontFamily: 'ShotCJK'),
   );
 }
+
+
+
+
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -90,6 +95,7 @@ void main() {
       await tester.drag(list.first, const Offset(0, -280));
       await tester.pump(const Duration(milliseconds: 300));
     }
+    await expandMeMore(tester);
     expect(find.byKey(const ValueKey('me_quiz_card_subtitle')), findsOneWidget);
 
     await tester.runAsync(() async {

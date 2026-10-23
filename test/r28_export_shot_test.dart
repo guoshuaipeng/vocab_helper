@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'support/expand_me_more.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vocab_helper/screens/me_screen.dart';
 import 'package:vocab_helper/services/progress_store.dart';
@@ -22,6 +23,10 @@ ThemeData withCjk(ThemeData base) => base.copyWith(
       textTheme: base.textTheme.apply(fontFamily: 'ShotCJK'),
       primaryTextTheme: base.primaryTextTheme.apply(fontFamily: 'ShotCJK'),
     );
+
+
+
+
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -95,6 +100,7 @@ void main() {
     for (var i = 0; i < 50; i++) {
       await tester.pump(const Duration(milliseconds: 50));
     }
+    await expandMeMore(tester);
     expect(find.byKey(const ValueKey('export_progress')), findsOneWidget);
     await tester.ensureVisible(find.byKey(const ValueKey('export_progress')));
     await tester.pump();
@@ -113,6 +119,7 @@ void main() {
   }
 
   Future<void> openExportSheet(WidgetTester tester) async {
+    await expandMeMore(tester);
     await tester.tap(find.byKey(const ValueKey('export_progress')));
     await tester.pump(); // start async load
     // wait until sheet title appears, then settle animation

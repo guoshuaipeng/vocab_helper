@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'support/expand_me_more.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vocab_helper/screens/me_screen.dart';
 import 'package:vocab_helper/services/progress_store.dart';
 import 'package:vocab_helper/services/wordbook_repository.dart';
 import 'package:vocab_helper/theme/app_theme.dart';
+
+
+
+
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -21,8 +26,10 @@ void main() {
 
 
   Future<void> scrollToStats(WidgetTester tester) async {
+    await expandMeMore(tester);
     for (var i = 0; i < 12; i++) {
-      if (find.byKey(const ValueKey('me_stats_summary')).evaluate().isNotEmpty) {
+      if (find.byKey(const ValueKey('me_stats_summary'), skipOffstage: false).evaluate().isNotEmpty) {
+        await tester.ensureVisible(find.byKey(const ValueKey('me_stats_summary'), skipOffstage: false));
         return;
       }
       final list = find.byType(Scrollable);
@@ -68,7 +75,8 @@ void main() {
     await pumpMe(tester, store);
     await scrollToStats(tester);
 
-    expect(find.byKey(const ValueKey('me_stats_summary')), findsOneWidget);
+    await expandMeMore(tester);
+    expect(find.byKey(const ValueKey('me_stats_summary'), skipOffstage: false), findsOneWidget);
     expect(find.byKey(const ValueKey('me_stat_learned')), findsOneWidget);
     expect(find.byKey(const ValueKey('me_stat_today')), findsOneWidget);
     expect(find.byKey(const ValueKey('me_stat_streak')), findsOneWidget);
@@ -119,6 +127,7 @@ void main() {
     await scrollToStats(tester);
 
     expect(tester.takeException(), isNull);
-    expect(find.byKey(const ValueKey('me_stats_summary')), findsOneWidget);
+    await expandMeMore(tester);
+    expect(find.byKey(const ValueKey('me_stats_summary'), skipOffstage: false), findsOneWidget);
   });
 }

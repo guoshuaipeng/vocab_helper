@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'support/expand_me_more.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vocab_helper/screens/me_screen.dart';
 import 'package:vocab_helper/services/progress_store.dart';
@@ -23,6 +24,10 @@ ThemeData withCjk(ThemeData base) => base.copyWith(
       textTheme: base.textTheme.apply(fontFamily: 'ShotCJK'),
       primaryTextTheme: base.primaryTextTheme.apply(fontFamily: 'ShotCJK'),
     );
+
+
+
+
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -92,12 +97,14 @@ void main() {
       await tester.pump(const Duration(milliseconds: 50));
     }
     for (var i = 0; i < 20; i++) {
+      await expandMeMore(tester);
       if (find.byKey(const ValueKey('me_accent_tts_hint')).evaluate().isNotEmpty) break;
       final list = find.byType(Scrollable);
       if (list.evaluate().isEmpty) break;
       await tester.drag(list.first, const Offset(0, -300));
       await tester.pump(const Duration(milliseconds: 50));
     }
+    await expandMeMore(tester);
     expect(find.byKey(const ValueKey('me_accent_tts_hint')), findsOneWidget);
     // Bring accent card fully into view (hint near bottom of card).
     final list = find.byType(Scrollable);

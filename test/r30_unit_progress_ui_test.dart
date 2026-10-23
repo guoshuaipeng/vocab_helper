@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'support/expand_me_more.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vocab_helper/screens/me_screen.dart';
 import 'package:vocab_helper/services/progress_store.dart';
@@ -7,10 +8,18 @@ import 'package:vocab_helper/services/word_speaker.dart';
 import 'package:vocab_helper/services/wordbook_repository.dart';
 import 'package:vocab_helper/theme/app_theme.dart';
 
+
+
+
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   Future<void> pumpMe(WidgetTester tester, {required Map<String, Object> prefs}) async {
+    tester.view.physicalSize = const Size(390, 900);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
     SharedPreferences.setMockInitialValues(prefs);
     final store = await ProgressStore.open();
     await tester.pumpWidget(
@@ -52,6 +61,10 @@ void main() {
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pump();
     final store = await ProgressStore.open();
+    tester.view.physicalSize = const Size(390, 900);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
     var wentLearn = false;
     await tester.pumpWidget(
       MaterialApp(
@@ -77,6 +90,7 @@ void main() {
       await tester.pump(const Duration(milliseconds: 50));
     }
 
+    await expandMeMore(tester);
     expect(find.byKey(const ValueKey('me_unit_progress')), findsOneWidget);
     await tester.ensureVisible(find.byKey(const ValueKey('me_unit_progress')));
     await tester.tap(find.byKey(const ValueKey('me_unit_progress')));
@@ -104,6 +118,7 @@ void main() {
       'streak_days': 0,
       'today_date': ProgressStore.dateKey(DateTime.now()),
     });
+    await expandMeMore(tester);
     final entry = find.byKey(const ValueKey('me_unit_progress'));
     expect(entry, findsOneWidget);
     final btn = tester.widget<TextButton>(entry);

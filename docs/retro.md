@@ -302,3 +302,10 @@
 - 顺利：复用 QuizMode.wrong / buildQuizPool，零改引擎；book 模式 Chip 测仍绿
 - 注意：我的卡与 sheet 同文案「测这些」→ find.text 会双命中，断言用 descendant(of: key)
 - 预防：从清单进场的模式应用锁态，避免用户一脚切回「全部词」冲淡闭环；下一轮 R47 我的页信息层级
+
+## Round 47 · 我的页信息层级（2026-10-23）
+- 计划：B05 RICE 12.3 — Hero+行动+「更多设置」折叠；对齐学/测纸卡+teal；旧测绿；三图自验；push github
+- 实际：`me_screen` 信息架构重排；共享 `test/support/expand_me_more.dart`（skipOffstage+scrollUntilVisible）；r47 单测+shot；requirements/retro/PRD 收口
+- 卡住：ListView 折下 ExpansionTile 默认 finder skipOffstage→旧测找不到 key；已统一 helper
+- 预防：折叠区验收/回归必须 skipOffstage:false 或先 expand；viewport 先设再 pump
+- 下一轮：按迭代 RICE 表继续（非空转）

@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'support/expand_me_more.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vocab_helper/screens/me_screen.dart';
 import 'package:vocab_helper/services/progress_store.dart';
 import 'package:vocab_helper/services/word_speaker.dart';
 import 'package:vocab_helper/services/wordbook_repository.dart';
 import 'package:vocab_helper/theme/app_theme.dart';
+
+
+
+
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -47,13 +52,7 @@ void main() {
     for (var i = 0; i < 40; i++) {
       await tester.pump(const Duration(milliseconds: 50));
     }
-    for (var i = 0; i < 16; i++) {
-      if (find.text('朗读口音').evaluate().isNotEmpty) break;
-      final list = find.byType(Scrollable);
-      if (list.evaluate().isEmpty) break;
-      await tester.drag(list.first, const Offset(0, -280));
-      await tester.pump(const Duration(milliseconds: 50));
-    }
+    await expandMeMore(tester);
   }
 
   testWidgets('无英文语音包时口音卡显示可行动提示', (tester) async {
