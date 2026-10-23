@@ -246,15 +246,18 @@ class ProgressStore {
     await _prefs.setBool(_kAutoSpeak, v);
   }
 
-  /// `meaning` = 看义选词；`listen` = 听音选义.
+  /// `meaning` | `word` | `listen` | `spell` | `dictation` (听写).
   String quizVariant() {
     final v = _prefs.getString(_kQuizVariant);
-    if (v == 'listen' || v == 'spell' || v == 'word') return v!;
+    if (v == 'listen' || v == 'spell' || v == 'word' || v == 'dictation') return v!;
     return 'meaning';
   }
 
   Future<void> setQuizVariant(String variant) async {
-    final v = (variant == 'listen' || variant == 'spell' || variant == 'word')
+    final v = (variant == 'listen' ||
+            variant == 'spell' ||
+            variant == 'word' ||
+            variant == 'dictation')
         ? variant
         : 'meaning';
     await _prefs.setString(_kQuizVariant, v);

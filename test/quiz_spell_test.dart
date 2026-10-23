@@ -44,6 +44,8 @@ void main() {
     expect(store.quizVariant(), 'spell');
     await store.setQuizVariant('listen');
     expect(store.quizVariant(), 'listen');
+    await store.setQuizVariant('dictation');
+    expect(store.quizVariant(), 'dictation');
     await store.setQuizVariant('nope');
     expect(store.quizVariant(), 'meaning');
   });

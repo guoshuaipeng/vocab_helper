@@ -56,7 +56,7 @@ class _QuizScreenState extends State<QuizScreen> {
   int _wrongCount = 0;
   late final WordSpeaker _speaker;
   bool _ownsSpeaker = false;
-  /// Effective variant: meaning | word | listen | spell.
+  /// Effective variant: meaning | word | listen | spell | dictation.
   String _variant = 'meaning';
   bool _listenAvailable = true;
   /// After TTS failure, force meaning for the rest of the round.
@@ -85,7 +85,7 @@ class _QuizScreenState extends State<QuizScreen> {
 
   Future<void> _prepareAndBoot() async {
     _listenAvailable = await _speaker.englishVoiceAvailable();
-    if (!_listenAvailable && _variant == 'listen') {
+    if (!_listenAvailable && (_variant == 'listen' || _variant == 'dictation')) {
       _variant = 'meaning';
     }
     if (_forceMeaning) _variant = 'meaning';
@@ -303,6 +303,12 @@ class _QuizScreenState extends State<QuizScreen> {
 
   bool get _isSpell => _variant == 'spell' && !_forceMeaning;
 
+  /// 听写：听音后默写（判分前不露拼写/中文）.
+  bool get _isDictation =>
+      !_forceMeaning && _variant == 'dictation' && _listenAvailable;
+
+  bool get _usesSpellInput => _isSpell || _isDictation;
+
   /// 看词选义：英文题干 + 中文义选项.
   bool get _isWordPick => !_forceMeaning && _variant == 'word';
 
@@ -314,6 +320,7 @@ class _QuizScreenState extends State<QuizScreen> {
     if (_isWordPick) return 'word';
     if (_effectiveListen) return 'listen';
     if (_isSpell) return 'spell';
+    if (_isDictation) return 'dictation';
     return 'meaning';
   }
 
@@ -324,9 +331,13 @@ class _QuizScreenState extends State<QuizScreen> {
     final grade = QuizEngine.gradeSpell(input: _spellCtrl.text, target: q.target.word);
     if (grade == SpellGrade.empty) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('先写出单词')),
-      );
+      if (_isDictation) {
+        _spellFocus.requestFocus();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('先写出单词')),
+        );
+      }
       return;
     }
     final ok = grade == SpellGrade.correct;
@@ -360,13 +371,22 @@ class _QuizScreenState extends State<QuizScreen> {
   }
 
   Future<void> _speakCurrentIfListen() async {
-    if (!_effectiveListen) return;
     final q = _current;
     if (q == null) return;
-    try {
-      await _speak(q.target.word);
-    } catch (_) {
-      await _degradeToMeaning();
+    if (_effectiveListen) {
+      try {
+        await _speak(q.target.word);
+      } catch (_) {
+        await _degradeToMeaning();
+      }
+      return;
+    }
+    if (_isDictation) {
+      try {
+        await _speak(q.target.word);
+      } catch (_) {
+        await _degradeDictation();
+      }
     }
   }
 
@@ -376,6 +396,17 @@ class _QuizScreenState extends State<QuizScreen> {
     _variant = 'meaning';
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('暂时没法朗读，已改为看中文选英文')),
+    );
+    setState(() {});
+    await _boot();
+  }
+
+  Future<void> _degradeDictation() async {
+    if (!mounted) return;
+    _forceMeaning = true;
+    _variant = 'meaning';
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('没法朗读，先检查系统语音包')),
     );
     setState(() {});
     await _boot();
@@ -410,7 +441,13 @@ class _QuizScreenState extends State<QuizScreen> {
   }
 
   Future<void> _onVariantChanged(String next) async {
-    if (next == 'listen' && !_listenAvailable) return;
+    if ((next == 'listen' || next == 'dictation') && !_listenAvailable) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('没法朗读，先检查系统语音包')),
+      );
+      return;
+    }
     await widget.store.setQuizVariant(next);
     setState(() {
       _variant = next;
@@ -425,7 +462,11 @@ class _QuizScreenState extends State<QuizScreen> {
     try {
       await _speak(q.target.word);
     } catch (_) {
-      await _degradeToMeaning();
+      if (_isDictation) {
+        await _degradeDictation();
+      } else {
+        await _degradeToMeaning();
+      }
     }
   }
 
@@ -568,6 +609,14 @@ class _QuizScreenState extends State<QuizScreen> {
               return AnimatedSize(
                 duration: const Duration(milliseconds: 150),
                 child: SegmentedButton<String>(
+                  style: ButtonStyle(
+                    visualDensity: narrow
+                        ? VisualDensity.compact
+                        : VisualDensity.standard,
+                    tapTargetSize: narrow
+                        ? MaterialTapTargetSize.shrinkWrap
+                        : MaterialTapTargetSize.padded,
+                  ),
                   segments: [
                     ButtonSegment(
                       value: 'meaning',
@@ -594,11 +643,20 @@ class _QuizScreenState extends State<QuizScreen> {
                       tooltip: '拼写默写',
                       icon: narrow ? null : const Icon(Icons.edit_outlined),
                     ),
+                    ButtonSegment(
+                      value: 'dictation',
+                      label: Text(narrow ? '默' : '听写'),
+                      tooltip: '听写',
+                      icon: narrow ? null : const Icon(Icons.record_voice_over_outlined),
+                      enabled: _listenAvailable,
+                    ),
                   ],
                   selected: {_segmentValue},
                   onSelectionChanged: (s) {
                     final v = s.first;
-                    if (v == 'listen' && !_listenAvailable) return;
+                    if ((v == 'listen' || v == 'dictation') && !_listenAvailable) {
+                      return;
+                    }
                     _onVariantChanged(v);
                   },
                 ),
@@ -608,7 +666,7 @@ class _QuizScreenState extends State<QuizScreen> {
           if (!_listenAvailable) ...[
             const SizedBox(height: 6),
             Text(
-              '请安装系统英文语音包后再用听音',
+              '请安装系统英文语音包后再用听音 / 听写',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
             ),
           ],
@@ -638,29 +696,63 @@ class _QuizScreenState extends State<QuizScreen> {
             ),
           ],
           const SizedBox(height: 12),
-          if (_isSpell)
+          if (_usesSpellInput)
             Expanded(
               child: ListView(
-                key: const ValueKey('quiz_spell_pane'),
+                key: ValueKey(_isDictation ? 'quiz_dictation_pane' : 'quiz_spell_pane'),
                 children: [
                   Card(
-                    key: const ValueKey('prompt_spell'),
+                    key: ValueKey(_isDictation ? 'prompt_dictation' : 'prompt_spell'),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 28),
-                      child: Column(
-                        children: [
-                          Text(
-                            q.promptMeaning,
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
+                      child: _isDictation
+                          ? Column(
+                              children: [
+                                Text('听写', style: Theme.of(context).textTheme.labelLarge),
+                                const SizedBox(height: 12),
+                                Icon(Icons.volume_up, size: 56, color: scheme.primary),
+                                const SizedBox(height: 12),
+                                SizedBox(
+                                  height: 48,
+                                  child: OutlinedButton.icon(
+                                    key: const ValueKey('quiz_dictation_replay'),
+                                    onPressed: _replayListen,
+                                    icon: const Icon(Icons.replay),
+                                    label: const Text('再听'),
+                                  ),
+                                ),
+                                if (_answered) ...[
+                                  const SizedBox(height: 12),
+                                  Text(
+                                    q.target.word,
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ],
+                            )
+                          : Column(
+                              children: [
+                                Text(
+                                  q.promptMeaning,
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    fontSize: 28,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
                     ),
                   ),
                   const SizedBox(height: 16),
                   TextField(
-                    key: const ValueKey('quiz_spell_input'),
+                    key: ValueKey(
+                      _isDictation ? 'quiz_dictation_input' : 'quiz_spell_input',
+                    ),
                     controller: _spellCtrl,
                     focusNode: _spellFocus,
                     enabled: !_answered,
@@ -669,34 +761,60 @@ class _QuizScreenState extends State<QuizScreen> {
                     textCapitalization: TextCapitalization.none,
                     style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
                     decoration: InputDecoration(
-                      hintText: '输入英文单词',
+                      hintText: _isDictation ? '写出你听到的单词' : '输入英文单词',
                       filled: true,
                       fillColor: scheme.surfaceContainerHighest,
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 16,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
                     ),
                     onSubmitted: (_) => _checkSpell(),
                   ),
                   const SizedBox(height: 12),
                   if (_answered) ...[
                     if (_spellOk == true)
-                      Text('拼对了', style: TextStyle(color: scheme.primary, fontWeight: FontWeight.w600, fontSize: 16))
+                      Row(
+                        children: [
+                          Icon(Icons.check_circle, color: scheme.primary, size: 20),
+                          const SizedBox(width: 6),
+                          Text(
+                            _isDictation ? '拼对了' : '拼对了',
+                            style: TextStyle(
+                              color: scheme.primary,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
+                      )
                     else
                       Text(
                         '正确答案：${q.target.word}',
-                        style: TextStyle(color: scheme.error, fontWeight: FontWeight.w600, fontSize: 16),
+                        style: TextStyle(
+                          color: scheme.error,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                        ),
                       ),
                     const SizedBox(height: 8),
                   ],
                   FilledButton(
-                    key: ValueKey(_answered ? 'quiz_spell_next' : 'quiz_spell_check'),
+                    key: ValueKey(
+                      _answered
+                          ? (_isDictation ? 'quiz_dictation_next' : 'quiz_spell_next')
+                          : (_isDictation ? 'quiz_dictation_check' : 'quiz_spell_check'),
+                    ),
                     onPressed: _answered ? _next : _checkSpell,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       child: Text(
                         _answered
                             ? (_index + 1 >= _questions.length ? '查看结果' : '下一题')
-                            : '检查',
+                            : (_isDictation ? '提交' : '检查'),
                         style: const TextStyle(fontSize: 18),
                       ),
                     ),

@@ -597,7 +597,7 @@ class _MeScreenState extends State<MeScreen> {
                   Text('学习自测', style: Theme.of(context).textTheme.titleMedium),
                   const SizedBox(height: 8),
                   Text(
-                    '可看义 / 看词 / 听音 / 拼写；答错仍进错词本。',
+                    '可看义 / 看词 / 听音 / 拼写 / 听写；答错仍进错词本。',
                     key: const ValueKey('me_quiz_card_subtitle'),
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
