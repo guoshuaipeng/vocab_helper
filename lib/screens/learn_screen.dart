@@ -45,6 +45,8 @@ class _LearnScreenState extends State<LearnScreen> {
   bool _flipped = false;
   bool _loading = true;
   String? _error;
+  int _queueNewCount = 0;
+  int _queueDueCount = 0;
   late final WordSpeaker _speaker;
   bool _ownsSpeaker = false;
 
@@ -131,6 +133,8 @@ class _LearnScreenState extends State<LearnScreen> {
           setState(() {
             _book = book;
             _queue = ReviewQueue(const []);
+            _queueNewCount = 0;
+            _queueDueCount = 0;
             _flipped = false;
             _loading = false;
             _error = '这个单元暂时没有单词';
@@ -138,13 +142,32 @@ class _LearnScreenState extends State<LearnScreen> {
           return;
         }
         final learned = widget.store.learnedIds();
-        final pending = scoped.where((w) => !learned.contains(w.id)).toList();
-        list = pending.isEmpty ? List<Word>.from(scoped) : pending;
+        final due = <Word>[];
+        final fresh = <Word>[];
+        for (final w in scoped) {
+          if (!learned.contains(w.id)) {
+            fresh.add(w);
+          } else if (widget.store.isReviewDue(w.id)) {
+            due.add(w);
+          }
+        }
+        due.sort((a, b) {
+          final aa = widget.store.reviewAt(a.id) ?? '';
+          final bb = widget.store.reviewAt(b.id) ?? '';
+          return aa.compareTo(bb);
+        });
+        list = [...due, ...fresh];
+        _queueDueCount = due.length;
+        _queueNewCount = fresh.length;
       }
       await widget.store.touchActive();
       setState(() {
         _book = book;
         _queue = ReviewQueue(list);
+        if (widget.reviewWrongOnly) {
+          _queueNewCount = 0;
+          _queueDueCount = 0;
+        }
         _flipped = false;
         _loading = false;
       });
@@ -239,7 +262,9 @@ class _LearnScreenState extends State<LearnScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              widget.reviewWrongOnly ? '错词本本轮复习完啦！' : '本轮单词都过完啦！',
+              widget.reviewWrongOnly
+                  ? '错词本本轮复习完啦！'
+                  : (q.knownCount == 0 ? '今天没有新词和到期复习' : '本轮单词都过完啦！'),
               style: const TextStyle(fontSize: 20),
             ),
             const SizedBox(height: 8),
@@ -259,8 +284,8 @@ class _LearnScreenState extends State<LearnScreen> {
     final goal = widget.store.dailyGoal();
     final streak = widget.store.streakDays();
     final wrongCount = bookId == null ? 0 : widget.store.wrongCountForBook(bookId);
-    final remain = (goal - today).clamp(0, goal);
-    final learnSub = widget.store.todayGoalMet ? '加练' : '还差 $remain';
+    final learnSub = '新词 $_queueNewCount · 复习 $_queueDueCount';
+    final learnShowDot = !widget.reviewWrongOnly && _queueDueCount > 0;
     final wrongSub = wrongCount == 0 ? '暂无错词' : '$wrongCount 词';
     // 今日任务选中：全书错词复习 → 复习；否则默认学新词（自测走独立路由）
     final taskSelected = (widget.reviewWrongOnly && !widget.reviewWrongUnitScoped)
@@ -291,6 +316,7 @@ class _LearnScreenState extends State<LearnScreen> {
                 todayLabel: '今日 $today/$goal · 连续 $streak 天',
                 selected: taskSelected,
                 learnSubtitle: learnSub,
+                learnShowDot: learnShowDot,
                 wrongSubtitle: wrongSub,
                 wrongEnabled: wrongCount > 0,
                 onLearn: () => widget.onLearnNew?.call(),
@@ -317,7 +343,9 @@ class _LearnScreenState extends State<LearnScreen> {
           Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              '剩余 ${q.remaining} · 本轮认识 ${q.knownCount} · 本单元 ${_unitWordCount()}',
+              widget.reviewWrongOnly
+                  ? '剩余 ${q.remaining} · 本轮认识 ${q.knownCount} · 本单元 ${_unitWordCount()}'
+                  : '新词 $_queueNewCount · 复习 $_queueDueCount · 剩余 ${q.remaining}',
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ),
@@ -392,6 +420,16 @@ class _LearnScreenState extends State<LearnScreen> {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Text(word.word, style: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold)),
+                                      if (widget.store.learnedIds().contains(word.id)) ...[
+                                        const SizedBox(height: 6),
+                                        Text(
+                                          '复习',
+                                          key: const ValueKey('review_tag'),
+                                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                                color: Theme.of(context).colorScheme.primary,
+                                              ),
+                                        ),
+                                      ],
                                       if ((word.phonetic ?? '').isNotEmpty) ...[
                                         const SizedBox(height: 8),
                                         Text(word.phonetic!, style: Theme.of(context).textTheme.titleMedium),
@@ -448,6 +486,7 @@ class _TodayTaskBar extends StatelessWidget {
     required this.todayLabel,
     required this.selected,
     required this.learnSubtitle,
+    this.learnShowDot = false,
     required this.wrongSubtitle,
     required this.wrongEnabled,
     required this.onLearn,
@@ -458,6 +497,7 @@ class _TodayTaskBar extends StatelessWidget {
   final String todayLabel;
   final _TodayTask selected;
   final String learnSubtitle;
+  final bool learnShowDot;
   final String wrongSubtitle;
   final bool wrongEnabled;
   final VoidCallback? onLearn;
@@ -486,6 +526,7 @@ class _TodayTaskBar extends StatelessWidget {
                     subtitle: learnSubtitle,
                     icon: Icons.menu_book,
                     selected: selected == _TodayTask.learn,
+                    showDot: learnShowDot,
                     onTap: onLearn,
                   ),
                 ),
@@ -541,6 +582,7 @@ class _TodayTaskButton extends StatelessWidget {
     required this.icon,
     required this.selected,
     required this.onTap,
+    this.showDot = false,
   });
 
   final String title;
@@ -548,6 +590,7 @@ class _TodayTaskButton extends StatelessWidget {
   final IconData icon;
   final bool selected;
   final VoidCallback? onTap;
+  final bool showDot;
 
   @override
   Widget build(BuildContext context) {
@@ -585,7 +628,26 @@ class _TodayTaskButton extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(icon, size: 24, color: titleColor),
+                Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Icon(icon, size: 24, color: titleColor),
+                    if (showDot)
+                      Positioned(
+                        right: -2,
+                        top: -2,
+                        child: Container(
+                          key: const ValueKey('learn_due_dot'),
+                          width: 8,
+                          height: 8,
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.primary,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
                 const SizedBox(height: 2),
                 Text(
                   title,
