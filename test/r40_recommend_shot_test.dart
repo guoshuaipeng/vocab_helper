@@ -7,7 +7,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:vocab_helper/screens/books_screen.dart';
 import 'package:vocab_helper/screens/setup_screen.dart';
 import 'package:vocab_helper/services/progress_store.dart';
 import 'package:vocab_helper/services/wordbook_repository.dart';
@@ -45,26 +44,69 @@ void main() {
     });
   }
 
-  testWidgets('capture r40 setup preselect', (tester) async {
+  Future<void> captureSetup(
+    WidgetTester tester, {
+    required Size size,
+    required ThemeData theme,
+    required String outName,
+  }) async {
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
     SharedPreferences.setMockInitialValues({});
-    tester.view.physicalSize = const Size(390, 844);
+    tester.view.physicalSize = size;
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
     final store = await ProgressStore.open();
     await tester.pumpWidget(MaterialApp(
-      theme: withCjk(AppTheme.light()),
+      key: ValueKey('app_$outName'),
+      theme: withCjk(theme),
       builder: (context, child) => RepaintBoundary(
         key: const ValueKey('shot_root'),
-        child: child ?? const SizedBox.shrink(),
+        child: ColoredBox(
+          color: theme.scaffoldBackgroundColor,
+          child: child ?? const SizedBox.shrink(),
+        ),
       ),
-      home: SetupScreen(store: store, repo: WordbookRepository(), onDone: () {}),
+      home: SetupScreen(
+        key: ValueKey('setup_$outName'),
+        store: store,
+        repo: WordbookRepository(),
+        onDone: () {},
+      ),
     ));
     for (var i = 0; i < 50; i++) {
       await tester.pump(const Duration(milliseconds: 50));
     }
     expect(find.byKey(const ValueKey('setup_recommend_hint')), findsOneWidget);
     expect(find.byKey(const ValueKey('setup_book_recommended')), findsOneWidget);
-    await saveShot(tester, 'r40-setup-preselect-narrow-light.png');
+    await saveShot(tester, outName);
+  }
+
+  testWidgets('capture r40 setup preselect 4 variants', (tester) async {
+    await captureSetup(
+      tester,
+      size: const Size(390, 844),
+      theme: AppTheme.light(),
+      outName: 'r40-setup-preselect-narrow-light.png',
+    );
+    await captureSetup(
+      tester,
+      size: const Size(390, 844),
+      theme: AppTheme.dark(),
+      outName: 'r40-setup-preselect-narrow-dark.png',
+    );
+    await captureSetup(
+      tester,
+      size: const Size(900, 700),
+      theme: AppTheme.light(),
+      outName: 'r40-setup-preselect-wide-light.png',
+    );
+    await captureSetup(
+      tester,
+      size: const Size(900, 700),
+      theme: AppTheme.dark(),
+      outName: 'r40-setup-preselect-wide-dark.png',
+    );
   });
 }

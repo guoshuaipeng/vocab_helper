@@ -44,23 +44,35 @@ void main() {
     });
   }
 
-  testWidgets('capture r40 books recommended', (tester) async {
+  Future<void> captureBooks(
+    WidgetTester tester, {
+    required Size size,
+    required ThemeData theme,
+    required String outName,
+  }) async {
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
     SharedPreferences.setMockInitialValues({
       'selected_book_id': WordbookRepository.recommendedBookId,
     });
-    tester.view.physicalSize = const Size(390, 844);
+    tester.view.physicalSize = size;
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
     final store = await ProgressStore.open();
     await tester.pumpWidget(MaterialApp(
-      theme: withCjk(AppTheme.light()),
+      key: ValueKey('app_$outName'),
+      theme: withCjk(theme),
       builder: (context, child) => RepaintBoundary(
         key: const ValueKey('shot_root'),
-        child: child ?? const SizedBox.shrink(),
+        child: ColoredBox(
+          color: theme.scaffoldBackgroundColor,
+          child: child ?? const SizedBox.shrink(),
+        ),
       ),
       home: Scaffold(
         body: BooksScreen(
+          key: ValueKey('books_$outName'),
           store: store,
           repo: WordbookRepository(),
           selectedBookId: WordbookRepository.recommendedBookId,
@@ -74,9 +86,38 @@ void main() {
       if (find.byType(ListView).evaluate().isNotEmpty) break;
     }
     final badge = find.byKey(const ValueKey('books_recommended'));
-    await tester.scrollUntilVisible(badge, 400, scrollable: find.byType(Scrollable).first);
+    // R41 pins recommended at top; still ensureVisible for safety
+    await tester.ensureVisible(badge);
     await tester.pump(const Duration(milliseconds: 100));
     expect(badge, findsOneWidget);
-    await saveShot(tester, 'r40-books-recommended-narrow-light.png');
+    expect(find.textContaining('推荐'), findsWidgets);
+    await saveShot(tester, outName);
+  }
+
+  testWidgets('capture r40 books recommended 4 variants', (tester) async {
+    await captureBooks(
+      tester,
+      size: const Size(390, 844),
+      theme: AppTheme.light(),
+      outName: 'r40-books-recommended-narrow-light.png',
+    );
+    await captureBooks(
+      tester,
+      size: const Size(390, 844),
+      theme: AppTheme.dark(),
+      outName: 'r40-books-recommended-narrow-dark.png',
+    );
+    await captureBooks(
+      tester,
+      size: const Size(900, 700),
+      theme: AppTheme.light(),
+      outName: 'r40-books-recommended-wide-light.png',
+    );
+    await captureBooks(
+      tester,
+      size: const Size(900, 700),
+      theme: AppTheme.dark(),
+      outName: 'r40-books-recommended-wide-dark.png',
+    );
   });
 }
