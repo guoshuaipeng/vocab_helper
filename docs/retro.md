@@ -243,3 +243,9 @@
 - 实际：WrongBookList 组装+截断；MeScreen 入口+sheet；CTA 置标题下以免 drag-handle 滚出首屏；单测+六图自验
 - 卡住：Material 底栏 sheet 在测试里坐标常低于视口；底部 sticky CTA 易不可见
 - 预防：双 CTA 的 sheet 优先「标题下即 CTA」；截图前 ensureVisible
+
+## Round 40（2026-10-23）
+- 计划：无选中词书时 Setup 预选沪教牛津2024七上；Setup/Books 标「推荐」
+- 实际：`WordbookRepository.recommendedBookId`；Setup 顶注+预选；Books subtitle「推荐」；单测拆文件避 prefs 污染；两张窄浅截图自验
+- 卡住：Books ListView 惰性构建导致未滚动找不到推荐卡；同文件多 widget 测试 prefs/索引串扰
+- 预防：推荐卡验收必须 scrollUntilVisible；Books 与 Setup 测试分文件；下一轮考虑词书列表推荐置顶
