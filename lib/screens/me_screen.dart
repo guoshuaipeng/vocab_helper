@@ -13,6 +13,7 @@ class MeScreen extends StatefulWidget {
     required this.onChangeBook,
     required this.onReviewWrong,
     required this.onReviewWrongCurrentUnit,
+    required this.onQuizBook,
     required this.onQuizUnit,
     required this.onQuizWrong,
   });
@@ -23,6 +24,7 @@ class MeScreen extends StatefulWidget {
   final VoidCallback onChangeBook;
   final VoidCallback onReviewWrong;
   final VoidCallback onReviewWrongCurrentUnit;
+  final VoidCallback onQuizBook;
   final VoidCallback onQuizUnit;
   final VoidCallback onQuizWrong;
 
@@ -270,20 +272,38 @@ class _MeScreenState extends State<MeScreen> {
                       final unit = bookId == null ? null : widget.store.unitFilterForBook(bookId);
                       final hasUnit = unit != null && unit.isNotEmpty;
                       final hasWrong = bookId != null && widget.store.wrongCountForBook(bookId) > 0;
-                      return Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          FilledButton.icon(
-                            onPressed: bookId == null ? null : widget.onQuizUnit,
-                            icon: const Icon(Icons.quiz_outlined),
-                            label: Text(hasUnit ? '自测$unit' : '自测本词书'),
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: [
+                              FilledButton.icon(
+                                onPressed: bookId == null ? null : widget.onQuizBook,
+                                icon: const Icon(Icons.quiz_outlined),
+                                label: const Text('自测本词书'),
+                              ),
+                              FilledButton.tonalIcon(
+                                onPressed: (bookId != null && hasUnit) ? widget.onQuizUnit : null,
+                                icon: const Icon(Icons.filter_list),
+                                label: Text(hasUnit ? '自测$unit' : '自测当前单元'),
+                              ),
+                              FilledButton.tonalIcon(
+                                onPressed: hasWrong ? widget.onQuizWrong : null,
+                                icon: const Icon(Icons.fact_check_outlined),
+                                label: const Text('自测错词'),
+                              ),
+                            ],
                           ),
-                          FilledButton.tonalIcon(
-                            onPressed: hasWrong ? widget.onQuizWrong : null,
-                            icon: const Icon(Icons.fact_check_outlined),
-                            label: const Text('自测错词'),
-                          ),
+                          if (!hasUnit && bookId != null)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8),
+                              child: Text(
+                                '提示：在学习页选一个单元后，可「自测当前单元」。',
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                            ),
                         ],
                       );
                     },

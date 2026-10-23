@@ -139,6 +139,18 @@ class ProgressStore {
     await removeWrong(id);
   }
 
+
+  /// Increment today's activity count without marking a word learned (e.g. quiz correct).
+  Future<void> bumpTodayCount() async {
+    final today = _todayKey();
+    if (_prefs.getString(_kTodayDate) != today) {
+      await _prefs.setString(_kTodayDate, today);
+      await _prefs.setInt(_kTodayCount, 1);
+    } else {
+      await _prefs.setInt(_kTodayCount, todayCount() + 1);
+    }
+    await _updateStreak(today);
+  }
   Future<void> markWrong(String id) async {
     final ids = wrongIds();
     if (ids.contains(id)) return;
@@ -152,6 +164,7 @@ class ProgressStore {
     ids.remove(id);
     await _prefs.setStringList(_kWrong, ids.toList());
   }
+
 
   Future<void> touchActive() async {
     await _updateStreak(_todayKey());

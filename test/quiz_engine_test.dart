@@ -99,7 +99,7 @@ void main() {
           home: QuizScreen(
             store: store,
             repo: WordbookRepository(),
-            mode: QuizMode.unit,
+            mode: QuizMode.book,
             speaker: FakeWordSpeaker(),
             seedQuestions: [qWrong, qRight],
             seedBookTitle: '测试词书',
@@ -128,6 +128,7 @@ void main() {
       expect(find.text('答对了！'), findsOneWidget);
       expect(store.wrongIds().contains('b-2'), isFalse);
       expect(store.wrongIds().contains('b-1'), isTrue);
+      expect(store.todayCount(), 1); // only the correct answer bumps today
     });
   });
 }

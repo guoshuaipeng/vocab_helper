@@ -136,6 +136,11 @@ class _HomeShellState extends State<HomeShell> {
         onNeedSetup: widget.onChangeBook,
         reviewWrongOnly: _reviewWrongOnly,
         reviewWrongUnitScoped: _reviewWrongUnitScoped,
+        onStartQuiz: () {
+          final id = widget.store.selectedBookId();
+          final unit = id == null ? null : widget.store.unitFilterForBook(id);
+          _openQuiz((unit != null && unit.isNotEmpty) ? QuizMode.unit : QuizMode.book);
+        },
       ),
       BooksScreen(
         store: widget.store,
@@ -151,6 +156,7 @@ class _HomeShellState extends State<HomeShell> {
         onChangeBook: widget.onChangeBook,
         onReviewWrong: () => _enterWrongReview(unitScoped: false),
         onReviewWrongCurrentUnit: () => _enterWrongReview(unitScoped: true),
+        onQuizBook: () => _openQuiz(QuizMode.book),
         onQuizUnit: () => _openQuiz(QuizMode.unit),
         onQuizWrong: () => _openQuiz(QuizMode.wrong),
       ),
@@ -163,7 +169,11 @@ class _HomeShellState extends State<HomeShell> {
           if (_index == 0)
             IconButton(
               tooltip: '自测本单元',
-              onPressed: () => _openQuiz(QuizMode.unit),
+              onPressed: () {
+                final id = widget.store.selectedBookId();
+                final unit = id == null ? null : widget.store.unitFilterForBook(id);
+                _openQuiz((unit != null && unit.isNotEmpty) ? QuizMode.unit : QuizMode.book);
+              },
               icon: const Icon(Icons.quiz_outlined),
             ),
         ],

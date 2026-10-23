@@ -2,7 +2,7 @@ import 'dart:math';
 
 import '../models/word.dart';
 
-/// One multiple-choice item: Chinese prompt, four English options.
+/// One multiple-choice item: Chinese prompt + English options.
 class QuizQuestion {
   const QuizQuestion({
     required this.target,
@@ -19,12 +19,20 @@ class QuizQuestion {
   bool isCorrect(int selectedIndex) => selectedIndex == correctIndex;
 }
 
-/// Pure helpers for building and scoring 「看中文选英文」 questions.
+/// Pure helpers for 「看中文选英文」.
 class QuizEngine {
   QuizEngine._();
 
+  /// Session size: min(pool, max(5, dailyGoal)).
+  static int sessionCap({required int poolSize, required int dailyGoal}) {
+    if (poolSize <= 0) return 0;
+    final goal = dailyGoal < 1 ? 20 : dailyGoal;
+    final cap = max(5, goal);
+    return min(poolSize, cap);
+  }
+
   /// Build one question for [target]. Prefer same-unit distractors; fill from [bookWords].
-  /// Returns null if fewer than 2 distinct English options can be formed.
+  /// Returns null only when no second distinct spelling exists (single-word pool).
   static QuizQuestion? buildQuestion({
     required Word target,
     required List<Word> bookWords,
@@ -56,9 +64,11 @@ class QuizEngine {
 
     takeFrom(sameUnit, 3);
     takeFrom(others, 3);
-    if (distractors.isEmpty) return null;
+    if (distractors.isEmpty) {
+      // Pool of 1: still return a single-option question for UI empty-hint path.
+      return QuizQuestion(target: target, options: [target], correctIndex: 0);
+    }
 
-    // Prefer 4 options; allow 2–3 when the book is tiny.
     final optionCount = (distractors.length + 1).clamp(2, 4);
     final picked = distractors.take(optionCount - 1).toList();
     final options = <Word>[target, ...picked]..shuffle(rng);
@@ -66,16 +76,18 @@ class QuizEngine {
     return QuizQuestion(target: target, options: options, correctIndex: correctIndex);
   }
 
-  /// Build a session: one question per word in [pool], order shuffled.
+  /// Build a session: shuffle pool, cap by [dailyGoal], one question per target.
   static List<QuizQuestion> buildSession({
     required List<Word> pool,
     required List<Word> bookWords,
+    int dailyGoal = 20,
     Random? random,
   }) {
     final rng = random ?? Random();
     final targets = List<Word>.from(pool)..shuffle(rng);
+    final limit = sessionCap(poolSize: targets.length, dailyGoal: dailyGoal);
     final out = <QuizQuestion>[];
-    for (final t in targets) {
+    for (final t in targets.take(limit)) {
       final q = buildQuestion(target: t, bookWords: bookWords, random: rng);
       if (q != null) out.add(q);
     }

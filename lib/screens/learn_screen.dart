@@ -16,6 +16,7 @@ class LearnScreen extends StatefulWidget {
     this.reviewWrongOnly = false,
     this.reviewWrongUnitScoped = false,
     this.speaker,
+    this.onStartQuiz,
   });
 
   final ProgressStore store;
@@ -26,6 +27,7 @@ class LearnScreen extends StatefulWidget {
   /// When [reviewWrongOnly], limit to ProgressStore unit filter (same as learn).
   final bool reviewWrongUnitScoped;
   final WordSpeaker? speaker;
+  final VoidCallback? onStartQuiz;
 
   @override
   State<LearnScreen> createState() => _LearnScreenState();
@@ -251,6 +253,21 @@ class _LearnScreenState extends State<LearnScreen> {
       padding: const EdgeInsets.all(20),
       child: Column(
         children: [
+          if (!widget.reviewWrongOnly && widget.onStartQuiz != null) ...[
+            const SizedBox(height: 8),
+            SegmentedButton<String>(
+              segments: const [
+                ButtonSegment(value: 'learn', label: Text('认读'), icon: Icon(Icons.style)),
+                ButtonSegment(value: 'quiz', label: Text('自测'), icon: Icon(Icons.quiz_outlined)),
+              ],
+              selected: const {'learn'},
+              onSelectionChanged: (s) {
+                if (s.contains('quiz')) {
+                  widget.onStartQuiz?.call();
+                }
+              },
+            ),
+          ],
           Align(
             alignment: Alignment.centerLeft,
             child: Text(

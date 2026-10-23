@@ -8,9 +8,11 @@ import '../services/word_speaker.dart';
 import '../services/wordbook_repository.dart';
 
 enum QuizMode {
-  /// Current unit (or whole book if no unit filter).
+  /// Whole selected book.
+  book,
+  /// Current unit filter (falls back to book if none).
   unit,
-  /// Wrong-book words only (optionally scoped to current unit).
+  /// Wrong-book words.
   wrong,
 }
 
@@ -24,6 +26,7 @@ class QuizScreen extends StatefulWidget {
     this.speaker,
     this.seedQuestions,
     this.seedBookTitle,
+    this.embedded = false,
   });
 
   final ProgressStore store;
@@ -31,9 +34,10 @@ class QuizScreen extends StatefulWidget {
   final QuizMode mode;
   final bool wrongUnitScoped;
   final WordSpeaker? speaker;
-  /// When set (tests), skip asset load and use these questions.
   final List<QuizQuestion>? seedQuestions;
   final String? seedBookTitle;
+  /// When true, omit Scaffold/AppBar (embed under LearnScreen).
+  final bool embedded;
 
   @override
   State<QuizScreen> createState() => _QuizScreenState();
@@ -128,7 +132,15 @@ class _QuizScreenState extends State<QuizScreen> {
           });
           return;
         }
-      } else {
+      } else if (widget.mode == QuizMode.unit) {
+        if (unitFilter == null || unitFilter.isEmpty) {
+          setState(() {
+            _book = book;
+            _loading = false;
+            _error = '请先在学习页选择一个单元，再自测当前单元';
+          });
+          return;
+        }
         pool = QuizEngine.poolForUnit(bookWords: book.words, unitFilter: unitFilter);
         if (pool.isEmpty) {
           setState(() {
@@ -138,9 +150,11 @@ class _QuizScreenState extends State<QuizScreen> {
           });
           return;
         }
+      } else {
+        pool = List<Word>.from(book.words);
       }
 
-      final session = QuizEngine.buildSession(pool: pool, bookWords: book.words);
+      final session = QuizEngine.buildSession(pool: pool, bookWords: book.words, dailyGoal: widget.store.dailyGoal());
       if (session.isEmpty) {
         setState(() {
           _book = book;
@@ -187,6 +201,7 @@ class _QuizScreenState extends State<QuizScreen> {
     });
     if (ok) {
       await widget.store.removeWrong(q.target.id);
+      await widget.store.bumpTodayCount();
     } else {
       await widget.store.markWrong(q.target.id);
     }
@@ -204,28 +219,31 @@ class _QuizScreenState extends State<QuizScreen> {
     });
   }
 
-  Future<void> _speakCorrect() async {
-    final q = _current;
-    if (q == null) return;
+  Future<void> _speak(String text) async {
     await _speaker.setAccent(widget.store.ttsAccent());
-    await _speaker.speak(q.target.word);
+    await _speaker.speak(text);
   }
 
   String get _title {
-    if (widget.mode == QuizMode.wrong) {
-      return widget.wrongUnitScoped ? '自测错词·当前单元' : '自测错词';
+    switch (widget.mode) {
+      case QuizMode.wrong:
+        return widget.wrongUnitScoped ? '自测错词·当前单元' : '自测错词';
+      case QuizMode.unit:
+        final id = widget.store.selectedBookId();
+        final unit = id == null ? null : widget.store.unitFilterForBook(id);
+        return unit == null || unit.isEmpty ? '自测当前单元' : '自测 · $unit';
+      case QuizMode.book:
+        return '自测本词书';
     }
-    final id = widget.store.selectedBookId();
-    final unit = id == null ? null : widget.store.unitFilterForBook(id);
-    if (unit != null && unit.isNotEmpty) return '自测 · $unit';
-    return '自测本词书';
   }
 
   @override
   Widget build(BuildContext context) {
+    final body = _buildBody(context);
+    if (widget.embedded) return body;
     return Scaffold(
       appBar: AppBar(title: Text(_title)),
-      body: _buildBody(context),
+      body: body,
     );
   }
 
@@ -242,7 +260,8 @@ class _QuizScreenState extends State<QuizScreen> {
             children: [
               Text(_error!, textAlign: TextAlign.center),
               const SizedBox(height: 12),
-              FilledButton(onPressed: () => Navigator.pop(context), child: const Text('返回')),
+              if (!widget.embedded)
+                FilledButton(onPressed: () => Navigator.pop(context), child: const Text('返回')),
               TextButton(onPressed: _boot, child: const Text('重试')),
             ],
           ),
@@ -251,6 +270,8 @@ class _QuizScreenState extends State<QuizScreen> {
     }
 
     if (_index >= _questions.length) {
+      final total = _correctCount + _wrongCount;
+      final rate = total == 0 ? 0 : ((_correctCount * 100) / total).round();
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(24),
@@ -259,12 +280,13 @@ class _QuizScreenState extends State<QuizScreen> {
             children: [
               Text('本轮自测结束', style: Theme.of(context).textTheme.headlineSmall),
               const SizedBox(height: 12),
-              Text('答对 $_correctCount · 答错 $_wrongCount', style: Theme.of(context).textTheme.titleMedium),
+              Text('答对 $_correctCount · 答错 $_wrongCount · 正确率 $rate%', style: Theme.of(context).textTheme.titleMedium),
               const SizedBox(height: 8),
-              Text('答错已进错词本；答对且曾在错词本已移出。', style: Theme.of(context).textTheme.bodySmall, textAlign: TextAlign.center),
+              Text('答错已进错词本；答对且曾在错词本已移出。答对计入今日目标。', style: Theme.of(context).textTheme.bodySmall, textAlign: TextAlign.center),
               const SizedBox(height: 16),
               FilledButton(onPressed: _boot, child: const Text('再测一轮')),
-              TextButton(onPressed: () => Navigator.pop(context), child: const Text('返回')),
+              if (!widget.embedded)
+                TextButton(onPressed: () => Navigator.pop(context), child: const Text('返回')),
             ],
           ),
         ),
@@ -323,15 +345,26 @@ class _QuizScreenState extends State<QuizScreen> {
                 }
                 return SizedBox(
                   height: 56,
-                  child: OutlinedButton(
-                    style: OutlinedButton.styleFrom(
-                      backgroundColor: bg,
-                      foregroundColor: fg,
-                      side: side,
-                      alignment: Alignment.center,
-                    ),
-                    onPressed: _answered ? null : () => _onSelect(i),
-                    child: Text(opt.word, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            backgroundColor: bg,
+                            foregroundColor: fg,
+                            side: side,
+                            alignment: Alignment.center,
+                          ),
+                          onPressed: _answered ? null : () => _onSelect(i),
+                          child: Text(opt.word, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
+                        ),
+                      ),
+                      IconButton(
+                        tooltip: '朗读',
+                        onPressed: () => _speak(opt.word),
+                        icon: const Icon(Icons.volume_up),
+                      ),
+                    ],
                   ),
                 );
               },
@@ -340,20 +373,9 @@ class _QuizScreenState extends State<QuizScreen> {
           if (_answered) ...[
             const SizedBox(height: 8),
             if (_selected != q.correctIndex)
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      '正解：${q.target.word}',
-                      style: TextStyle(color: scheme.error, fontWeight: FontWeight.w600, fontSize: 16),
-                    ),
-                  ),
-                  IconButton(
-                    tooltip: '朗读正解',
-                    onPressed: _speakCorrect,
-                    icon: const Icon(Icons.volume_up),
-                  ),
-                ],
+              Text(
+                '正解：${q.target.word}',
+                style: TextStyle(color: scheme.error, fontWeight: FontWeight.w600, fontSize: 16),
               )
             else
               Text('答对了！', style: TextStyle(color: scheme.primary, fontWeight: FontWeight.w600, fontSize: 16)),
@@ -371,5 +393,3 @@ class _QuizScreenState extends State<QuizScreen> {
     );
   }
 }
-
-

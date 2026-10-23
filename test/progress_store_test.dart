@@ -77,6 +77,16 @@ void main() {
     expect(store.ttsAccent(), 'en-US');
   });
 
+  test('bumpTodayCount increments without learned', () async {
+    final store = await ProgressStore.open();
+    expect(store.todayCount(), 0);
+    expect(store.learnedCount(), 0);
+    await store.bumpTodayCount();
+    await store.bumpTodayCount();
+    expect(store.todayCount(), 2);
+    expect(store.learnedCount(), 0);
+  });
+
   test('autoSpeak defaults false', () async {
     final store = await ProgressStore.open();
     expect(store.autoSpeak(), isFalse);
