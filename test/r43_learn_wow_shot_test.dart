@@ -19,6 +19,14 @@ Future<void> loadCjkFont() async {
   await (FontLoader('ShotCJK')..addFont(Future.value(data))).load();
 }
 
+/// Material Icons otherwise render as empty boxes in golden/shot captures.
+Future<void> loadMaterialIconsFont() async {
+  final path = r'C:\Users\user\flutter\bin\cache\artifacts\material_fonts\materialicons-regular.otf';
+  final bytes = await File(path).readAsBytes();
+  final data = ByteData.sublistView(Uint8List.fromList(bytes));
+  await (FontLoader('MaterialIcons')..addFont(Future.value(data))).load();
+}
+
 ThemeData withCjk(ThemeData base) => base.copyWith(
       textTheme: base.textTheme.apply(fontFamily: 'ShotCJK'),
       primaryTextTheme: base.primaryTextTheme.apply(fontFamily: 'ShotCJK'),
@@ -29,7 +37,10 @@ void main() {
   final update = Platform.environment['UPDATE_SHOTS'] == '1';
 
   setUpAll(() async {
-    if (update) await loadCjkFont();
+    if (update) {
+      await loadCjkFont();
+      await loadMaterialIconsFont();
+    }
   });
 
   Future<void> capture(
