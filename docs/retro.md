@@ -65,3 +65,9 @@
 - 实际：Word.unit；withUnits 每 15 词一组；学习页 FilterChip；按词书记住筛选
 - 卡住：公开词库多数无单元字段
 - 预防：模型预留 unit，导入真数据时可直接用
+
+## Round 10（2026-10-23）
+- 计划：英音/美音切换
+- 实际：ProgressStore.ttsAccent；我的 SegmentedButton；朗读前 setAccent
+- 卡住：系统未装对应语音包时听感可能无差别
+- 预防：文案标明依赖系统语音包
