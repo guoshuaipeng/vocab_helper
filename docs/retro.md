@@ -19,3 +19,9 @@
 - 实际：ProgressStore 按词书前缀清理；MeScreen 卡片与确认框；learn 完成态；progress_store_test
 - 卡住：无
 - 预防：进度键带词书前缀，便于按书清理
+
+## Round 4（2026-10-23）
+- 计划：学习卡英文 TTS 朗读按钮；设计说明；测试
+- 实际：flutter_tts + WordSpeaker 抽象；卡片右上角喇叭；FakeWordSpeaker 测试
+- 卡住：Windows TTS 依赖本机语音包，真机听感需用户确认
+- 预防：TTS 用接口隔离，便于测试与换引擎
