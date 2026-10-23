@@ -397,7 +397,7 @@ class _LearnScreenState extends State<LearnScreen> {
                       behavior: HitTestBehavior.opaque,
                       onTap: () => setState(() => _flipped = !_flipped),
                       child: Center(
-                        child: Padding(
+                        child: SingleChildScrollView(
                           padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
                           child: AnimatedSwitcher(
                             duration: const Duration(milliseconds: 200),
@@ -409,7 +409,11 @@ class _LearnScreenState extends State<LearnScreen> {
                                       Text(word.meaning, style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
                                       if ((word.example ?? '').isNotEmpty) ...[
                                         const SizedBox(height: 16),
-                                        Text(word.example!, textAlign: TextAlign.center, style: const TextStyle(fontSize: 16)),
+                                        Text(
+                                          word.example!,
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(fontSize: 16, height: 1.35),
+                                        ),
                                       ],
                                       const SizedBox(height: 12),
                                       Text('点按卡片可翻回', style: Theme.of(context).textTheme.bodySmall),
@@ -432,7 +436,12 @@ class _LearnScreenState extends State<LearnScreen> {
                                       ],
                                       if ((word.phonetic ?? '').isNotEmpty) ...[
                                         const SizedBox(height: 8),
-                                        Text(word.phonetic!, style: Theme.of(context).textTheme.titleMedium),
+                                        Text(
+                                          word.phonetic!,
+                                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                              ),
+                                        ),
                                       ],
                                       const SizedBox(height: 16),
                                       Text('点按卡片看中文', style: Theme.of(context).textTheme.bodySmall),
