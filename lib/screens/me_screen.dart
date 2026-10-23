@@ -5,6 +5,7 @@ import 'package:share_plus/share_plus.dart';
 import '../models/word.dart';
 import '../services/progress_export.dart';
 import '../services/progress_store.dart';
+import '../services/word_speaker.dart';
 import '../services/wordbook_repository.dart';
 
 class MeScreen extends StatefulWidget {
@@ -20,6 +21,7 @@ class MeScreen extends StatefulWidget {
     required this.onQuizUnit,
     required this.onQuizWrong,
     required this.onStartDueReview,
+    this.speaker,
   });
 
   final ProgressStore store;
@@ -33,6 +35,8 @@ class MeScreen extends StatefulWidget {
   final VoidCallback onQuizWrong;
   /// Switch to learn · 认读 (R20 queue: due first). Used by due-review sheet.
   final VoidCallback onStartDueReview;
+  /// Optional TTS; when null, probes with a short-lived FlutterWordSpeaker.
+  final WordSpeaker? speaker;
 
   @override
   State<MeScreen> createState() => _MeScreenState();
@@ -41,12 +45,30 @@ class MeScreen extends StatefulWidget {
 class _MeScreenState extends State<MeScreen> {
   WordBookMeta? _book;
   bool _loadingBook = true;
+  /// null = still probing; false = missing English voice pack.
+  bool? _englishVoiceOk;
 
   @override
   void initState() {
     super.initState();
     _loadBook();
     _rollDay();
+    _probeEnglishVoice();
+  }
+
+  Future<void> _probeEnglishVoice() async {
+    WordSpeaker? owned;
+    final speaker = widget.speaker ?? (owned = FlutterWordSpeaker(languageCode: widget.store.ttsAccent()));
+    try {
+      final ok = await speaker.englishVoiceAvailable();
+      if (!mounted) return;
+      setState(() => _englishVoiceOk = ok);
+    } catch (_) {
+      if (!mounted) return;
+      setState(() => _englishVoiceOk = false);
+    } finally {
+      owned?.dispose();
+    }
   }
 
   Future<void> _rollDay() async {
@@ -465,7 +487,20 @@ class _MeScreenState extends State<MeScreen> {
                     },
                   ),
                   const SizedBox(height: 8),
-                  Text('学习页点喇叭时使用该口音（依赖系统已安装的语音包）。', style: Theme.of(context).textTheme.bodySmall),
+                  Text(
+                    '学习页点喇叭时使用该口音（依赖系统已安装的语音包）。',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                  if (_englishVoiceOk == false) ...[
+                    const SizedBox(height: 8),
+                    Text(
+                      '还没有英文语音包。请到系统设置里安装英文语音，装好后喇叭和听音就能用。',
+                      key: const ValueKey('me_accent_tts_hint'),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          ),
+                    ),
+                  ],
                   const SizedBox(height: 8),
                   SwitchListTile(
                     contentPadding: EdgeInsets.zero,
