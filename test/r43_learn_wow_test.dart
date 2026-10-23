@@ -123,6 +123,10 @@ void main() {
     expect(store.learnedIds().length, greaterThan(before));
     expect((tester.widget(find.byKey(const ValueKey('learn_wow_word'))) as Text).data, isNot(equals(firstWord)));
 
+    // Drain thumb-flight overlay timers before disposing tree (no thumb asset change).
+    await tester.pump(const Duration(milliseconds: 500));
+    await tester.pumpAndSettle(const Duration(milliseconds: 100));
+
     // --- wide ---
     await clearTree(tester);
     await pumpStudying(tester, size: const Size(1024, 700));

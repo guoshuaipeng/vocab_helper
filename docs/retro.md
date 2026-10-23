@@ -309,3 +309,11 @@
 - 卡住：ListView 折下 ExpansionTile 默认 finder skipOffstage→旧测找不到 key；已统一 helper
 - 预防：折叠区验收/回归必须 skipOffstage:false 或先 expand；viewport 先设再 pump
 - 下一轮：按迭代 RICE 表继续（非空转）
+
+## Round 48 · 单元 overflow 路径可读（2026-10-23）
+- 计划：B04 RICE 14.0 — overflow 内「选择单元」首屏可见；顶栏持久单元；不挡 CTA；不恢复芯片墙
+- 实际：unit 行置顶 + teal 已筛勾；thin chrome \今日 · 书 · 单元\；单测顺序断言 + 三图自验；r43 测侧 drain 拇指飞行 timer（未改 thumb 资源）
+- 顺利：复用既有 unit_picker / quiet hint；零改引擎
+- 预防：overflow 项序以 key Y 坐标断言，勿用 children 下标；点「认识」后若有 Overlay 动画须 pump 净再 dispose
+- 下一轮：按迭代 RICE 未完成最高（B06 到期复习开练 / B08 今日达成视觉 / 有纸质则 B07）
+

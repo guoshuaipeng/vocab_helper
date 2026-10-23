@@ -60,6 +60,11 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('learn_overflow_menu')));
     await tester.pumpAndSettle();
     expect(find.byKey(const ValueKey('unit_picker_button')), findsOneWidget);
+    // R48: unit row is first (above 学新词)
+    expect(
+      tester.getTopLeft(find.byKey(const ValueKey('unit_picker_button'))).dy,
+      lessThan(tester.getTopLeft(find.byKey(const ValueKey('today_task_learn'))).dy),
+    );
 
     await tester.tap(find.byKey(const ValueKey('unit_picker_button')));
     await tester.pumpAndSettle();

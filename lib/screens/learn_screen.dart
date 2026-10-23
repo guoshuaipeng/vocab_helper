@@ -377,6 +377,27 @@ class _LearnScreenState extends State<LearnScreen> {
                   padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
                   child: Text('更多练习', style: Theme.of(ctx).textTheme.titleLarge),
                 ),
+                // R48 B04: 选择单元置顶，跟课换单元首屏可见
+                if ((!widget.reviewWrongOnly || widget.reviewWrongUnitScoped) && units.isNotEmpty)
+                  ListTile(
+                    key: const ValueKey('unit_picker_button'),
+                    leading: Icon(
+                      Icons.filter_list,
+                      color: (selectedUnit != null && selectedUnit.isNotEmpty)
+                          ? const Color(0xFF0D9488)
+                          : null,
+                    ),
+                    title: const Text('选择单元'),
+                    subtitle: Text(
+                      selectedUnit == null || selectedUnit.isEmpty
+                          ? '全部 · ${units.length} 单元'
+                          : selectedUnit,
+                    ),
+                    trailing: (selectedUnit != null && selectedUnit.isNotEmpty)
+                        ? const Icon(Icons.check, color: Color(0xFF0D9488))
+                        : null,
+                    onTap: () => Navigator.pop(ctx, 'unit'),
+                  ),
                 ListTile(
                   key: const ValueKey('today_task_learn'),
                   leading: const Icon(Icons.menu_book),
@@ -399,18 +420,6 @@ class _LearnScreenState extends State<LearnScreen> {
                   enabled: widget.onStartQuiz != null,
                   onTap: widget.onStartQuiz != null ? () => Navigator.pop(ctx, 'quiz') : null,
                 ),
-                if ((!widget.reviewWrongOnly || widget.reviewWrongUnitScoped) && units.isNotEmpty)
-                  ListTile(
-                    key: const ValueKey('unit_picker_button'),
-                    leading: const Icon(Icons.filter_list),
-                    title: const Text('选择单元'),
-                    subtitle: Text(
-                      selectedUnit == null || selectedUnit.isEmpty
-                          ? '全部 · ${units.length} 单元'
-                          : selectedUnit,
-                    ),
-                    onTap: () => Navigator.pop(ctx, 'unit'),
-                  ),
               ],
             ),
           ),
@@ -561,8 +570,16 @@ class _LearnScreenState extends State<LearnScreen> {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          '今日 $today/$goal'
-                          '${_book?.title != null ? ' · ${_book!.title}' : ''}',
+                          () {
+                            final parts = <String>['今日 $today/$goal'];
+                            final title = _book?.title;
+                            if (title != null && title.isNotEmpty) parts.add(title);
+                            // R48: persistent unit in thin chrome when filtered
+                            if (selectedUnit != null && selectedUnit.isNotEmpty) {
+                              parts.add(selectedUnit);
+                            }
+                            return parts.join(' · ');
+                          }(),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: Theme.of(context).textTheme.bodySmall?.copyWith(

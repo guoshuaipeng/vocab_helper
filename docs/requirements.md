@@ -7,7 +7,7 @@
 
 ## 进行中
 
-（空 · R47 已收口 2026-10-23）
+（空 · R48 已收口 2026-10-23）
 
 ---
 
@@ -45,6 +45,7 @@
 | R45 | 自测页视觉对齐学习页（B01） | [design-r45.md](design-r45.md) · [prd-r45-quiz-chrome.md](prd-r45-quiz-chrome.md) | **已完成** |
 | R46 | 错词本→自测闭环（B03） | [design-r46.md](design-r46.md) · [prd-r46-wrong-quiz-loop.md](prd-r46-wrong-quiz-loop.md) | **已完成** |
 | R47 | 我的页信息层级（B05） | [design-r47.md](design-r47.md) · [prd-r47-mine-hierarchy.md](prd-r47-mine-hierarchy.md) | **已完成** |
+| R48 | 单元 overflow 路径可读（B04） | [design-r48.md](design-r48.md) · [prd-r48-unit-overflow.md](prd-r48-unit-overflow.md) | **已完成** |
 
 ---
 
@@ -80,6 +81,7 @@
 - [x] **R45** 自测页视觉对齐学习页（迭代 PRD B01；**UI 自验通过** 2026-10-23 · docs/shots/r45-ui-acceptance.md）
 - [x] **R46** 错词本→自测一键闭环（迭代 PRD B03；**UI 自验通过** 2026-10-23 · docs/shots/r46-ui-acceptance.md）
 - [x] **R47** 我的页信息层级（迭代 PRD B05；**UI 自验通过** 2026-10-23 · docs/shots/r47-ui-acceptance.md）
+- [x] **R48** 单元 overflow 路径可读（迭代 PRD B04；**UI 自验通过** 2026-10-23 · docs/shots/r48-ui-acceptance.md）
 
 ## P2（体验）
 
@@ -93,6 +95,16 @@
 
 
 
+
+### Round 48 · 单元 overflow 路径可读（已完成）
+
+**PRD**：[prd-r48-unit-overflow.md](prd-r48-unit-overflow.md) · **设计**：[design-r48.md](design-r48.md) · **RICE** B04（14.0）  
+**状态**：**已完成**（UI 自验 · docs/shots/r48-ui-acceptance.md）
+
+- [x] overflow「选择单元」置顶为首项
+- [x] 细顶栏有筛选时持久「· {单元}」；弱 hint 不挡双 CTA
+- [x] 已筛选单元行 teal 勾；既有 unit/today_task keys 保留
+- [x] 截图 r48-overflow 浅深 + filtered；git push github master
 
 ### Round 47 · 我的页信息层级（已完成）
 
@@ -383,6 +395,7 @@
 
 | 日期 | 说明 |
 |------|------|
+| 2026-10-23 | **R48 UI 自验通过**：单元 overflow 路径可读（B04）；选择单元置顶 + 顶栏持久单元；tip 见 HEAD |
 | 2026-10-23 | **RICE 迭代 PRD**：叫停未开工 quiz 编码；现状→缺口→RICE→prd-iteration-rice-2026-10-23；R44 设计就绪待开发；dev-rules §16 出需求门禁 |
 | 2026-10-23 | **R43 UI 自验通过**：学习页眼前一亮大改（大词卡+双 CTA+overflow；slide；teal 认识）· r43-ui-acceptance.md |
 | 2026-10-23 | **R42 UI 自验通过**：非推荐弱提示收口；R43 升可开发（未开工） |
