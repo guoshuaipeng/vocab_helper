@@ -45,6 +45,12 @@ class _SetupScreenState extends State<SetupScreen> {
         if (current != null && catalog.any((b) => b.id == current)) {
           _bookId = current;
           _version = catalog.firstWhere((b) => b.id == current).version;
+        } else {
+          final rec = catalog.where((b) => b.id == WordbookRepository.recommendedBookId);
+          if (rec.isNotEmpty) {
+            _bookId = rec.first.id;
+            _version = rec.first.version;
+          }
         }
         _loading = false;
       });
@@ -86,6 +92,14 @@ class _SetupScreenState extends State<SetupScreen> {
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
+          Text(
+            '默认跟课：沪教牛津 2024 七上（可改）',
+            key: const ValueKey('setup_recommend_hint'),
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+          ),
+          const SizedBox(height: 12),
           Text('教材版本', style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 8),
           Wrap(
@@ -108,15 +122,16 @@ class _SetupScreenState extends State<SetupScreen> {
           const SizedBox(height: 8),
           ...books.map((b) {
             final selected = b.id == _bookId;
+            final recommended = b.id == WordbookRepository.recommendedBookId;
+            final base = b.sourceLabel.isEmpty
+                ? '${b.title} · 共 ${b.wordCount} 词'
+                : '${b.title} · 共 ${b.wordCount} 词 · ${b.sourceLabel}';
             return Card(
+              key: recommended ? const ValueKey('setup_book_recommended') : null,
               color: selected ? Theme.of(context).colorScheme.primaryContainer : null,
               child: ListTile(
                 title: Text(b.grade),
-                subtitle: Text(
-                  b.sourceLabel.isEmpty
-                      ? '${b.title} · 共 ${b.wordCount} 词'
-                      : '${b.title} · 共 ${b.wordCount} 词 · ${b.sourceLabel}',
-                ),
+                subtitle: Text(recommended ? '$base · 推荐' : base),
                 trailing: selected ? const Icon(Icons.check_circle) : null,
                 onTap: () => setState(() => _bookId = b.id),
               ),

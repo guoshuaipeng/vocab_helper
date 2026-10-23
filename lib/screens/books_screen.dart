@@ -208,17 +208,18 @@ class _BooksScreenState extends State<BooksScreen> {
                 const SizedBox(height: 8),
                 ...books.map((b) {
                   final selected = b.id == widget.selectedBookId;
+                  final recommended = b.id == WordbookRepository.recommendedBookId;
+                  final base = b.sourceLabel.isEmpty
+                      ? '${b.grade} · 共 ${b.wordCount} 词'
+                      : '${b.grade} · 共 ${b.wordCount} 词 · ${b.sourceLabel}';
                   return Card(
+                    key: recommended ? const ValueKey('books_recommended') : null,
                     elevation: 0,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                     color: selected ? scheme.primaryContainer : null,
                     child: ListTile(
                       title: Text(b.title),
-                      subtitle: Text(
-                        b.sourceLabel.isEmpty
-                            ? '${b.grade} · 共 ${b.wordCount} 词'
-                            : '${b.grade} · 共 ${b.wordCount} 词 · ${b.sourceLabel}',
-                      ),
+                      subtitle: Text(recommended ? '$base · 推荐' : base),
                       trailing: selected ? const Icon(Icons.check_circle) : const Icon(Icons.chevron_right),
                       onTap: () => _selectBook(b),
                     ),

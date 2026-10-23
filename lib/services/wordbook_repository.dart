@@ -7,6 +7,9 @@ import 'cross_book_search.dart';
 import 'custom_word_overlay.dart';
 
 class WordbookRepository {
+  /// Default follow-along book (R40): 沪教牛津 2024 七上.
+  static const recommendedBookId = 'hj-ox-7a-2024';
+
   List<WordBookMeta>? _catalog;
   final Map<String, WordBook> _cache = {};
   final CrossBookSearchIndex searchIndex = CrossBookSearchIndex();
