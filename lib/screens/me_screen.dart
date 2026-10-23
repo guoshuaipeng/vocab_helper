@@ -243,11 +243,12 @@ class _MeScreenState extends State<MeScreen> {
                           onPressed: widget.store.wrongCountForBook(bookId) == 0
                               ? null
                               : () async {
+                                  final messenger = ScaffoldMessenger.of(context);
                                   final n = await widget.store.clearWrongForBook(bookId);
+                                  if (!mounted) return;
                                   widget.onRefresh();
                                   setState(() {});
-                                  if (!mounted) return;
-                                  ScaffoldMessenger.of(context).showSnackBar(
+                                  messenger.showSnackBar(
                                     SnackBar(content: Text(n == 0 ? '错词本已空' : '已清空 $n 个错词')),
                                   );
                                 },
