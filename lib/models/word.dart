@@ -5,6 +5,7 @@ class Word {
     required this.meaning,
     this.phonetic,
     this.example,
+    this.unit,
   });
 
   final String id;
@@ -12,6 +13,7 @@ class Word {
   final String meaning;
   final String? phonetic;
   final String? example;
+  final String? unit;
 
   factory Word.fromJson(Map<String, dynamic> json) {
     return Word(
@@ -20,6 +22,18 @@ class Word {
       meaning: json['meaning'] as String,
       phonetic: json['phonetic'] as String?,
       example: json['example'] as String?,
+      unit: json['unit'] as String?,
+    );
+  }
+
+  Word copyWith({String? unit}) {
+    return Word(
+      id: id,
+      word: word,
+      meaning: meaning,
+      phonetic: phonetic,
+      example: example,
+      unit: unit ?? this.unit,
     );
   }
 }
@@ -85,5 +99,50 @@ class WordBook {
       source: (json['source'] as String?) ?? '',
       words: list,
     );
+  }
+
+  /// Ensure every word has a unit label. Missing units are filled as 第N组 (15 words each).
+  WordBook withUnits({int chunkSize = 15}) {
+    final hasAny = words.any((w) => (w.unit ?? '').isNotEmpty);
+    if (hasAny) {
+      return WordBook(
+        id: id,
+        version: version,
+        grade: grade,
+        title: title,
+        wordCount: wordCount,
+        source: source,
+        words: [
+          for (var i = 0; i < words.length; i++)
+            (words[i].unit ?? '').isNotEmpty
+                ? words[i]
+                : words[i].copyWith(unit: '第${(i ~/ chunkSize) + 1}组'),
+        ],
+      );
+    }
+    return WordBook(
+      id: id,
+      version: version,
+      grade: grade,
+      title: title,
+      wordCount: wordCount,
+      source: source,
+      words: [
+        for (var i = 0; i < words.length; i++)
+          words[i].copyWith(unit: '第${(i ~/ chunkSize) + 1}组'),
+      ],
+    );
+  }
+
+  List<String> unitNames() {
+    final seen = <String>{};
+    final out = <String>[];
+    for (final w in words) {
+      final u = w.unit ?? '';
+      if (u.isEmpty || seen.contains(u)) continue;
+      seen.add(u);
+      out.add(u);
+    }
+    return out;
   }
 }

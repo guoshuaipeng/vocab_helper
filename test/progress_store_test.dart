@@ -58,4 +58,13 @@ void main() {
     expect(cleared, 1);
     expect(store.wrongIds().contains('pep-ps-3-9'), isTrue);
   });
+
+  test('unit filter per book', () async {
+    final store = await ProgressStore.open();
+    expect(store.unitFilterForBook('hj-ps-3'), isNull);
+    await store.setUnitFilterForBook('hj-ps-3', '第1组');
+    expect(store.unitFilterForBook('hj-ps-3'), '第1组');
+    await store.setUnitFilterForBook('hj-ps-3', null);
+    expect(store.unitFilterForBook('hj-ps-3'), isNull);
+  });
 }

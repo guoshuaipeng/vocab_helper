@@ -87,24 +87,42 @@ class _LearnScreenState extends State<LearnScreen> {
         });
         return;
       }
+      final unitFilter = widget.store.unitFilterForBook(id);
+      var scoped = book.words;
+      if (unitFilter != null && unitFilter.isNotEmpty) {
+        scoped = book.words.where((w) => w.unit == unitFilter).toList();
+      }
+
       List<Word> list;
       if (widget.reviewWrongOnly) {
         final wrong = widget.store.wrongIds();
-        list = book.words.where((w) => wrong.contains(w.id)).toList();
+        list = scoped.where((w) => wrong.contains(w.id)).toList();
         if (list.isEmpty) {
           setState(() {
             _book = book;
             _queue = ReviewQueue(list);
             _flipped = false;
             _loading = false;
-            _error = '错词本是空的，先在学习里点「不认识」吧';
+            _error = unitFilter == null
+                ? '错词本是空的，先在学习里点「不认识」吧'
+                : '当前单元没有错词，可换单元或学完全书后再复习';
           });
           return;
         }
       } else {
         final learned = widget.store.learnedIds();
-        final pending = book.words.where((w) => !learned.contains(w.id)).toList();
-        list = pending.isEmpty ? List<Word>.from(book.words) : pending;
+        final pending = scoped.where((w) => !learned.contains(w.id)).toList();
+        list = pending.isEmpty ? List<Word>.from(scoped) : pending;
+        if (scoped.isEmpty) {
+          setState(() {
+            _book = book;
+            _queue = ReviewQueue(list);
+            _flipped = false;
+            _loading = false;
+            _error = '这个单元暂时没有单词';
+          });
+          return;
+        }
       }
       await widget.store.touchActive();
       setState(() {
@@ -143,6 +161,13 @@ class _LearnScreenState extends State<LearnScreen> {
     });
   }
 
+
+  Future<void> _pickUnit(String? unit) async {
+    final id = widget.bookId;
+    if (id == null) return;
+    await widget.store.setUnitFilterForBook(id, unit);
+    await _boot();
+  }
   Future<void> _speakCurrent() async {
     final word = _queue?.current;
     if (word == null) return;

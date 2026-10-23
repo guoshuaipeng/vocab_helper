@@ -26,7 +26,7 @@ class WordbookRepository {
       orElse: () => throw StateError('词书不存在：$id'),
     );
     final raw = await rootBundle.loadString('assets/wordbooks/${meta.file}');
-    final book = WordBook.fromJson(jsonDecode(raw) as Map<String, dynamic>);
+    final book = WordBook.fromJson(jsonDecode(raw) as Map<String, dynamic>).withUnits();
     _cache[id] = book;
     return book;
   }

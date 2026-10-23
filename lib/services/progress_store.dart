@@ -13,6 +13,7 @@ class ProgressStore {
   static const _kLastActive = 'last_active_date';
   static const _kBookId = 'selected_book_id';
   static const _kDailyGoal = 'daily_goal';
+  static const _kUnitFilterPrefix = 'unit_filter_';
 
   static Future<ProgressStore> open() async {
     final prefs = await SharedPreferences.getInstance();
@@ -88,6 +89,17 @@ class ProgressStore {
   }
 
   bool get todayGoalMet => todayCount() >= dailyGoal();
+
+  String? unitFilterForBook(String bookId) => _prefs.getString('$_kUnitFilterPrefix$bookId');
+
+  Future<void> setUnitFilterForBook(String bookId, String? unit) async {
+    final key = '$_kUnitFilterPrefix$bookId';
+    if (unit == null || unit.isEmpty) {
+      await _prefs.remove(key);
+    } else {
+      await _prefs.setString(key, unit);
+    }
+  }
 
   Future<void> markLearned(String id) async {
     final ids = learnedIds();
